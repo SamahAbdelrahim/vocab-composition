@@ -1,0 +1,37 @@
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.option_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 500px;
+    height: 400px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.instruction-container {
+    max-width: 800px; /* Set a maximum width for the instructions */
+    margin: 0 auto; /* Center the container horizontally */
+    text-align: center; /* Center the text inside the container */
+}
+
+.option {
+    font-size: 24px;
+}
+
+.jspsych-survey-multi-choice-question {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+
+
