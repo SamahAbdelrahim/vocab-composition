@@ -5,11 +5,9 @@ var jsPsych = initJsPsych({
     }
   });
   
-function test1() {
-    console.log('test1')
-}
 
-function logExpData() {
+
+/*function logExpData() {
     const logData = {
         rt: 5,
         trial_type: 'hg',
@@ -30,7 +28,7 @@ function logExpData() {
     .then(response => response.text())
     .then(data => console.log(data))
     .catch(error => console.error('Error logging action:', error));
-};
+};*/
 
 // const jsPsych = initJsPsych({
 //     on_finish: function () {
@@ -114,11 +112,22 @@ shuffleArray(words_array);
 var selectedWords = words_array.slice(0, 5);
 
 console.log(selectedWords);
-console.log('test') ;
 
-test1();
 
-logExpData();
+// USE THIS FUNCTION TO LOG VARIABLES
+console.log('Logging Variables') ;
+
+// --- Example Variables to log
+let example_data = {
+    rt: Math.random() * 10,
+    trial_type: 'hg',
+    trial_index: Math.random() * 10,
+    time_elapsed: Math.random() * 10, 
+    internal_node_id: Math.random() * 10,
+    subject: 'jhjgfgh'
+};
+
+logExpData(example_data);
 
 
 var block1 = {

@@ -2,14 +2,14 @@ function test1() {
     console.log('test1')
 }
 
-function logExpData() {
+function logExpData(data) {
     const logData = {
-        rt: 5,
-        trial_type: 'hg',
-        trial_index: 2,
-        time_elapsed: 2,
-        internal_node_id:2,
-        subject: 'jhjgfgh',
+        rt: data.rt,
+        trial_type: data.trial_type,
+        trial_index: data.trial_index,
+        time_elapsed: data.time_elpased,
+        internal_node_id: data.internal_node_id,
+        subject: data.subject,
         
     };
 
