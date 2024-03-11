@@ -4,6 +4,33 @@ var jsPsych = initJsPsych({
       jsPsych.data.displayData();
     }
   });
+  
+function test1() {
+    console.log('test1')
+}
+
+function logExpData() {
+    const logData = {
+        rt: 5,
+        trial_type: 'hg',
+        trial_index: 2,
+        time_elapsed: 2,
+        internal_node_id:2,
+        subject: 'jhjgfgh',
+        
+    };
+
+    fetch('/api/log', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(logData),
+    })
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error logging action:', error));
+};
 
 // const jsPsych = initJsPsych({
 //     on_finish: function () {
@@ -25,7 +52,7 @@ jsPsych.data.addProperties({
 //              '<br>' + 
 //     '<img src="stanford.png"></img>' +
 //     'By answering the following questions, you are participating in a study being performed by cognitive scientists in the Stanford Department of Psychology. If you have questions about this research, please contact us at languagecoglab@gmail.com. You must be at least 18 years old to participate. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured. ',
-//     'In this experiment, you will see a couple of pics, you are asked about your object judgments.. Click next to begin.',
+//     'In this experiment, you will see a couple of word, you are asked to make some judgments about these words. Click next to begin.',
 //     ],
 //     show_clickable_nav: true
 // }
@@ -39,7 +66,7 @@ var trial1 = {
         '<p>You must be at least 18 years old to participate. Your participation in this research is voluntary.</p>' +
         '<p>You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences.</p>' +
         '<p>Your anonymity is assured.</p>' +
-        '<p>In this experiment, you will see a couple of pics, you are asked about your object judgments.. Click next to begin.</p>',
+        '<p>In this experiment, you will see a couple of words, you are asked to make some judgments about these words. Click next to begin.</p>',
     ],
     show_clickable_nav: true
 };
@@ -48,7 +75,16 @@ timeline.push(trial1)
 
 const instructions = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: '<p><font size="3"> you will use a slider to make judgements about objects.</font></p>',
+    stimulus: '<p> For example: <p>' +
+    '<p><font size="4"> </bold>In the sentence: I need several pens</bold>. </font></p>' +
+    '<p> Pen is a solid object </p>' +
+    '<p> Pen is a count noun </p>' +
+    '<p> Pen belongs to a category of entities organized by their shape i.e. all pens have the same shape, but could have different colors, or made of different materials. </p>' +
+    '<P> -------------- <P>' +
+    '<p><font size="4"> In the sentence: I need some water. </font></p>' +
+    '<p> Water is a non solid </p>' +
+    '<p> Water is a mass noun </p>' +
+    '<p> Water belongs to a category of entities organized by material </p>' ,
     choices: ['Continue']
 };
 timeline.push(instructions);
@@ -78,7 +114,11 @@ shuffleArray(words_array);
 var selectedWords = words_array.slice(0, 5);
 
 console.log(selectedWords);
+console.log('test') ;
 
+test1();
+
+logExpData();
 
 
 var block1 = {
