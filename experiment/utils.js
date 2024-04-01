@@ -7,9 +7,11 @@ function logExpData(data) {
         rt: data.rt,
         trial_type: data.trial_type,
         trial_index: data.trial_index,
-        time_elapsed: data.time_elpased,
-        internal_node_id: data.internal_node_id,
+        time_elapsed: data.time_elapsed,
+        internal_node_id: parseFloat(data.internal_node_id), // Parse string to number
         subject: data.subject,
+        response: data.response,
+        theword: data.word,
         
     };
 

@@ -2,33 +2,21 @@ var jsPsych = initJsPsych({
     use_webaudio: false,
     on_finish: function(){
       jsPsych.data.displayData();
+      
+      var all_trials = jsPsych.data.get().values();
+      all_trials.forEach(trial => {
+        logExpData(trial);
+      });
+
+      // Log all trials to console
+      console.log(all_trials);
     }
-  });
-  
+});
 
-
-/*function logExpData() {
-    const logData = {
-        rt: 5,
-        trial_type: 'hg',
-        trial_index: 2,
-        time_elapsed: 2,
-        internal_node_id:2,
-        subject: 'jhjgfgh',
-        
-    };
-
-    fetch('/api/log', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(logData),
-    })
-    .then(response => response.text())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error logging action:', error));
-};*/
+// var all_data = jsPsych.data.get();
+// logExpData(all_data.trials);
+// // get csv representation of data and log to console
+// console.log(all_data.trials);
 
 // const jsPsych = initJsPsych({
 //     on_finish: function () {
@@ -39,9 +27,7 @@ var jsPsych = initJsPsych({
 let timeline = [];
 var subject_id = jsPsych.randomization.randomID(15);
 
-jsPsych.data.addProperties({
-    subject: subject_id,
-  });
+
 // push experiment logic the timeline here...
 // ......
 // var trial1 = {
@@ -55,6 +41,8 @@ jsPsych.data.addProperties({
 //     show_clickable_nav: true
 // }
 
+
+// trial: 0
 var trial1 = {
     type: jsPsychInstructions,
     pages: [
@@ -64,25 +52,24 @@ var trial1 = {
         '<p>You must be at least 18 years old to participate. Your participation in this research is voluntary.</p>' +
         '<p>You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences.</p>' +
         '<p>Your anonymity is assured.</p>' +
-        '<p>In this experiment, you will see a couple of words, you are asked to make some judgments about these words. Click next to begin.</p>',
+        '<p> Click next to begin.</p>',
     ],
     show_clickable_nav: true
 };
 timeline.push(trial1)
 
-
+// trial : 1
 const instructions = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: '<p> For example: <p>' +
-    '<p><font size="4"> </bold>In the sentence: I need several pens</bold>. </font></p>' +
-    '<p> Pen is a solid object </p>' +
-    '<p> Pen is a count noun </p>' +
-    '<p> Pen belongs to a category of entities organized by their shape i.e. all pens have the same shape, but could have different colors, or made of different materials. </p>' +
-    '<P> -------------- <P>' +
-    '<p><font size="4"> In the sentence: I need some water. </font></p>' +
-    '<p> Water is a non solid </p>' +
-    '<p> Water is a mass noun </p>' +
-    '<p> Water belongs to a category of entities organized by material </p>' ,
+    stimulus:
+    '<p> <font size="4"> In this experiment, you will see a couple of words, you are asked to make some judgments about these words.<font> <p>' +
+    '<p> <font size="4"> For example, in the sentence: I need several pens. <font> <p>' +
+    '<p> <font size="4"> Pen is a solid object </font></p>' +
+    '<P> ------------------------------------------------------------------------ <P>' +
+    '<p> <font size="4"> In the sentence: I need some water. <font> <p>' +
+    '<p> <font size="4"> Water is a non solid <font> </p>' +
+    '<p> ------------------------------------------------------------------------ <p>' +
+    '<p> <font size="4"> Now, lets begin <font> <p> ',
     choices: ['Continue']
 };
 timeline.push(instructions);
@@ -113,23 +100,28 @@ var selectedWords = words_array.slice(0, 5);
 
 console.log(selectedWords);
 
+jsPsych.data.addProperties({
+    subject: subject_id,
+  });
 
 // USE THIS FUNCTION TO LOG VARIABLES
 console.log('Logging Variables') ;
 
 // --- Example Variables to log
-let example_data = {
-    rt: Math.random() * 10,
-    trial_type: 'hg',
-    trial_index: Math.random() * 10,
-    time_elapsed: Math.random() * 10, 
-    internal_node_id: Math.random() * 10,
-    subject: 'jhjgfgh'
-};
 
-logExpData(example_data);
+// let example_data = {
+//     rt: Math.random() * 10,
+//     trial_type: 'hg',
+//     trial_index: Math.random() * 10,
+//     time_elapsed: Math.random() * 10, 
+//     internal_node_id: Math.random() * 10,
+//     subject: 'jhjgfgh'
+// };
+
+// logExpData(example_data);
 
 
+// trial: 2 to length of words-1 ( 2 and 5 words = 6 trials now )
 var block1 = {
     timeline: [
         {
@@ -137,20 +129,118 @@ var block1 = {
             questions: [
                 {
                     prompt: jsPsych.timelineVariable('uni_lemma'),
-                    options: ['solid', 'unclear', 'non solid'],
-                    required: true ,
-                    on_finish: function(data){
-                          data.word = selectedWords['uni_lemma'];
-                        }
+                    options: ['solid', 'non solid', 'unclear/unknown'],
+                    required: true,
+                    on_finish: function(data) {
+                        // Access the value of 'uni_lemma' for the current trial
+                        var currentWord = jsPsych.timelineVariable('uni_lemma');
+                        jsPsych.data.addDataToLastTrial({
+                            word: currentWord
+                          });
+                        // Add the 'word' property to the jsPsych data for this trial
+                        //jsPsych.data.addProperties({ word: currentWord });
+                    }
                 }
-            ],
-        },
+            ]
+        }
     ],
     timeline_variables: selectedWords,
     randomize_order: true
 };
 
-
 timeline.push(block1);
 
+//trial: 7
+const instructions2 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus:
+    '<p> <font size="4"> </bold> Now, a noun that refers to objects that can be divided into individual units, counted, and indicates discrete entities is a count noun. <font> <p>' +
+    '<p> <font size="4"> </bold> For example, in the sentence: I need several pens, </bold>. <font> <p>' +
+    '<p> <font size="4">Pen is a count noun</font> <p>' +
+    '<P> ----------------------------------------------------- <P>' +
+    '<p> <font size="4"> </bold> 	A noun that refers to undifferentiated and uncountable substances is called a mass noun. <font> <p>' +
+    '<p> <font size="4"> For example, in the sentence: I need some water, <font> <p>' +
+    '<p> <font size="4"> Water is a mass noun <font> <p>'+ 
+    '<P> ------------------------------------------------------ <P>' +
+    '<p> <font size="4"> Now you will be asked to make some judgments of words <font> <p>',
+    choices: ['Continue']
+};
+timeline.push(instructions2);
+
+// Shuffle the words_array to randomize the order
+shuffleArray(words_array);
+
+// Select the first 100 rows
+var selectedWords2 = words_array.slice(0, 5);
+
+var block2 = {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: jsPsych.timelineVariable('uni_lemma'),
+                    options: ['count noun', 'mass noun' , 'unclear/unknown'],
+                    required: true ,
+                    on_finish: function(data){
+                          data.word = selectedWords2['uni_lemma'];
+                        }
+                }
+            ],
+        },
+    ],
+    timeline_variables: selectedWords2,
+    randomize_order: true
+};
+
+
+timeline.push(block2);
+
+const instructions3 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: 
+    '<p> <font size="4"> In the sentence: I need several pens, <font> <p>' +
+    '<p> <font size="4"> Pen belongs to a category that is organized by shape, i.e. all pens have the same shape but could have different colors, or made of different materials.<font> <p>' +
+    '<P> -------------- <P>' +
+    '<p> <font size="4"> In the sentence: I need some water. <font> <p>' +
+    '<p> <font size="4"> Water belongs to a category of entities organized by material  <font> <p>'+
+    '<P> -------------- <P>' +
+    '<p> <font size="4"> Now you will be asked to make some judgments of words referents, and their category membership.<font> <p>',
+    choices: ['Continue']
+};
+timeline.push(instructions3);
+
+
+shuffleArray(words_array);
+
+// Select the first 100 rows
+var selectedWords3 = words_array.slice(0, 5);
+
+var block3 = {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    // prompt: jsPsych.timelineVariable('uni_lemma') + 'belongs to a category that is organized by: ' ,
+                    prompt: () => `${jsPsych.timelineVariable('uni_lemma')} belongs to a category that is organized by:`,
+                    options: ['shape', 'color', 'material'],
+                    required: true ,
+                    on_finish: function(data){
+                          data.word = selectedWords3['uni_lemma'];
+                        }
+                }
+            ],
+        },
+    ],
+    timeline_variables: selectedWords3,
+    randomize_order: true
+};
+console.log(jsPsych.timelineVariable('uni_lemma'));
+
+timeline.push(block3);
+
+
 jsPsych.run(timeline)
+
+//https://github.com/levante-framework/core-tasks/blob/main/task-launcher/src/tasks/math/trials/sliderStimulus.js
