@@ -8,9 +8,6 @@ var jsPsych = initJsPsych({
         logExpData(trial);
       });
 
-      // Log all trials to console
-      //console.log('all trials')
-      //console.log(all_trials);
     }
 });
 
@@ -86,19 +83,6 @@ jsPsych.data.addProperties({
 // USE THIS FUNCTION TO LOG VARIABLES
 console.log('Logging Variables') ;
 
-// --- Example Variables to log
-
-// let example_data = {
-//     rt: Math.random() * 10,
-//     trial_type: 'hg',
-//     trial_index: Math.random() * 10,
-//     time_elapsed: Math.random() * 10, 
-//     internal_node_id: Math.random() * 10,
-//     subject: 'jhjgfgh'
-// };
-
-// logExpData(example_data);
-
 
 // trial: 2 to length of words-1 ( 2 and 5 words = 6 trials now )
 var block1 = {
@@ -112,17 +96,15 @@ var block1 = {
                     required: true,
                     on_finish: function(data) {
                         // Access the value of 'uni_lemma' for the current trial
-                        //var currentWord = jsPsych.timelineVariable('uni_lemma');
-                        data.currentWord = "banana";
-                        data.correct = "banana";
+                        var currentWord = jsPsych.timelineVariable('uni_lemma');
                         console.log("currentWord");
-                        //console.log(currentWord);
+                        console.log(currentWord);
                         //jsPsych.data.get().last(1).addToAll({
-                        //console.log(jsPsych.data);
-                       // console.log(jsPsych.data.get().values());
-                       // jsPsych.data.addDataToLastTrial({
-                        //    word: "banana"
-                        //  });
+                        console.log(jsPsych.data);
+                        console.log(jsPsych.data.get().values());
+                        jsPsych.data.addDataToLastTrial({
+                            word: "banana"
+                          });
                         // Add the 'word' property to the jsPsych data for this trial
                         //jsPsych.data.addProperties({ word: currentWord });
                     }
@@ -166,9 +148,6 @@ var block2 = {
                     prompt: jsPsych.timelineVariable('uni_lemma'),
                     options: ['count noun', 'mass noun' , 'unclear/unknown'],
                     required: true ,
-                    // on_finish: function(data){
-                    //       data.word = selectedWords2['uni_lemma'];
-                    //     }
                 }
             ],
         },
@@ -223,18 +202,6 @@ console.log(jsPsych.timelineVariable('uni_lemma'));
 
 timeline.push(block3);
 
-
-var goodbye = {
-    type: jsPsychInstructions,
-    pages: [
-        '<div style="text-align: center; margin: 50px;"><img src="stanford.png"></div>' +
-        '<div style="text-align: center; margin: 0 auto; max-width: 600px; font-size: 30px;">' +
-        '<p> <b>Thank you for your participation and we appreciate you helping science. </b> </p>' +
-        '</div>'
-    ],
-
-};
- timeline.push(goodbye);
 
 jsPsych.run(timeline)
 

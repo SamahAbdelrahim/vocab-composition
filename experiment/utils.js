@@ -14,6 +14,7 @@ function logExpData(data) {
         theword: data.word,
         
     };
+    
 
     fetch('/api/log', {
         method: 'POST',
