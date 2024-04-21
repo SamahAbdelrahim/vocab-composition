@@ -110,24 +110,25 @@ var block1 = {
                     prompt: jsPsych.timelineVariable('uni_lemma'),
                     options: ['solid', 'non-solid', 'unclear/unknown'],
                     required: true,
-                    on_finish: function(data) {
-                        // Access the value of 'uni_lemma' for the current trial
-                        //var currentWord = jsPsych.timelineVariable('uni_lemma');
-                        data.currentWord = "banana";
-                        data.correct = "banana";
-                        console.log("currentWord");
-                        //console.log(currentWord);
-                        //jsPsych.data.get().last(1).addToAll({
-                        //console.log(jsPsych.data);
-                       // console.log(jsPsych.data.get().values());
-                       // jsPsych.data.addDataToLastTrial({
-                        //    word: "banana"
-                        //  });
-                        // Add the 'word' property to the jsPsych data for this trial
-                        //jsPsych.data.addProperties({ word: currentWord });
-                    }
                 }
-            ]
+      
+            ],
+            on_finish: function(data) {
+                // Access the value of 'uni_lemma' for the current trial
+                var currentWord = jsPsych.timelineVariable('uni_lemma');
+                //console.log("currentWord");
+                //console.log(currentWord);
+                //jsPsych.data.get().last(1).addToAll({
+                console.log("data");
+                console.log(jsPsych.data);
+                console.log("values");
+                console.log(jsPsych.data.get().values());
+                jsPsych.data.addDataToLastTrial({
+                    word: currentWord
+                });
+                // Add the 'word' property to the jsPsych data for this trial
+                //jsPsych.data.addProperties({ word: currentWord });
+            } 
         }
     ],
     timeline_variables: selectedWords,

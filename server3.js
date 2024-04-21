@@ -31,9 +31,9 @@ mongoose.connect(mongoDBUri)
 
 // Logging
 app.post('/api/log', (req, res) => {
-    const { rt, trial_type, trial_index, time_elapsed, internal_node_id, subject, response } = req.body;
+    const { rt, trial_type, trial_index, time_elapsed, internal_node_id, subject, response, word } = req.body;
   
-    const newLog = new varlog({ rt, trial_type, trial_index, time_elapsed, internal_node_id, subject, response });
+    const newLog = new varlog({ rt, trial_type, trial_index, time_elapsed, internal_node_id, subject, response, word });
 
     newLog.save()
         .then(() => res.send('Action logged successfully'))

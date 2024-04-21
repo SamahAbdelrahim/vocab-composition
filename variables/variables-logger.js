@@ -7,7 +7,9 @@ const varlogschema = new mongoose.Schema( {
     time_elapsed: Number,
     internal_node_id: Number,
     subject: String,
+    response: String,
+    theword: String,
 }) ;
-
+console.log("hello")
 const varlog = mongoose.model('varlog', varlogschema);
 module.exports = varlog ;
