@@ -1,18 +1,55 @@
 var jsPsych = initJsPsych({
     use_webaudio: false,
     on_finish: function(){
-      jsPsych.data.displayData();
-      
-      var all_trials = jsPsych.data.get().values();
-      all_trials.forEach(trial => {
-        logExpData(trial);
-      });
+        jsPsych.data.displayData();
+        var all_trials = jsPsych.data.get().values();
+        console.log("Starting to log data");
 
-      // Log all trials to console
-      //console.log('all trials')
-      //console.log(all_trials);
+        Promise.all(all_trials.map(trial => logExpData(trial)))
+            .then(() => {
+                console.log("All data logged, redirecting...");
+                window.location.href = "https://app.prolific.com/submissions/complete?cc=C1O4GW39";
+            })
+            .catch(error => {
+                console.error("Failed to log all data", error);
+                alert("There was an error saving your data. Please contact the study administrator.");
+            });
     }
 });
+
+
+// var jsPsych = initJsPsych({ 
+//     // on_finish: function(){
+//     //     // jsPsych.data.displayData();
+//     //     // var all_trials = jsPsych.data.get().values();
+
+//     //     // // Assuming logExpData is asynchronous and returns a Promise
+//     //     // Promise.all(all_trials.map(trial => logExpData(trial)))
+//     //     //     .then(() => {
+//     //     //         // All data has been successfully logged
+//     //     //         window.location.href = "https://app.prolific.com/submissions/complete?cc=C1O4GW39";
+//     //     //     })
+//     //     //     .catch(error => {
+//     //     //         // Handle any errors that occurred during logging
+//     //     //         console.error("Failed to log all data", error);
+//     //     //         alert("There was an error saving your data. Please contact the study administrator.");
+//     //     //     });
+//     // }
+// });
+
+
+
+  // capture info from Prolific
+  var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+  var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+  var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+
+  jsPsych.data.addProperties({
+    subject_id: subject_id,
+    study_id: study_id,
+    session_id: session_id
+  });
+
 
 let timeline = [];
 var subject_id = jsPsych.randomization.randomID(15);
@@ -236,6 +273,15 @@ var goodbye = {
 
 };
  timeline.push(goodbye);
+
+//  var final_trial = {
+//     type: jsPsychHtmlKeyboardResponse,
+//     stimulus: `<p>You've finished the last task. Thanks for participating!</p>
+//       <p><a href="https://app.prolific.com/submissions/complete?cc=C1O4GW39">Click here to return to Prolific and complete the study</a>.</p>`,
+//     choices: "NO_KEYS"
+//   }
+
+//   timeline.push(final_trial);
 
 jsPsych.run(timeline)
 
