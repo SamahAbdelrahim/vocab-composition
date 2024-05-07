@@ -3,9 +3,10 @@ function test1() {
 }
 
 function logExpData(data) {
-    // console.log("data")
+    console.log("utils data")
     // //console.log(data)
-    // console.log(data.response)
+    console.log("data.session_id");
+    console.log(data.session_id);
     const logData = {
         rt: data.rt,
         trial_type: data.trial_type,
@@ -19,6 +20,8 @@ function logExpData(data) {
         study_id: data.study_id,
         session_id: data.session_id,
     };
+    console.log("logdata from function");
+    console.log(logData);
     
 
     fetch('/api/log', {
@@ -27,8 +30,12 @@ function logExpData(data) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(logData),
+
     })
+    
     .then(response => response.text())
     .then(data => console.log(data))
     .catch(error => console.error('Error logging action:', error));
+    console.log("req.body");
+    console.log(body); // Log req.b
 };

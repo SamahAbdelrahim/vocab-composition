@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
-const varlog = require('./variables/variables-logger'); // Import the model
+const varlog = require('./variables/variables-logger.js'); // Import the model
 
 const app = express();
 const port = process.env.PORT || 3002;
@@ -31,6 +31,8 @@ mongoose.connect(mongoDBUri)
 
 // Logging
 app.post('/api/log', (req, res) => {
+    console.log("req.body");
+    console.log(req.body); // Log req.body to check the presence of study_id, session_id, and block
     const { rt, trial_type, trial_index, time_elapsed, internal_node_id, subject, response, theword, block, study_id, session_id } = req.body;
   
     const newLog = new varlog({ rt, trial_type, trial_index, time_elapsed, internal_node_id, subject, response, theword , block, study_id, session_id});

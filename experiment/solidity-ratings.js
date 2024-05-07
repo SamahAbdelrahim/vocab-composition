@@ -1,3 +1,5 @@
+
+
 var jsPsych = initJsPsych({
     use_webaudio: false,
     on_finish: function(data){
@@ -7,14 +9,17 @@ var jsPsych = initJsPsych({
         var all_trials = jsPsych.data.get().values();
         console.log("Starting to log data");
         console.log(all_trials)
-        // all_trials.forEach(trial => {
-        //     logExpData(trial);
-        // });
+        all_trials.forEach(trial => {
+             //logExpData(trial);
+             console.log("one trial");
+             console.log(trial);
+
+         });
 
         Promise.all(all_trials.map(trial => logExpData(trial)))
             .then(() => {
                 console.log("All data logged, redirecting...");
-                window.location.href = "https://app.prolific.com/submissions/complete?cc=C1O4GW39";
+                //window.location.href = "https://app.prolific.com/submissions/complete?cc=C1O4GW39";
             })
             .catch(error => {
                 console.error("Failed to log all data", error);
@@ -60,16 +65,11 @@ var arrayof_arrays = [words1, words2, words3];
 var chosenarrayindex = Math.floor(Math.random() * arrayof_arrays.length);
 var chosenarray = arrayof_arrays[chosenarrayindex];
 
-//console.log("here")
-//console.log(arrayof_arrays[chosenarrayindex]);
- //= jsPsych.randomization.sampleWithReplacement(arrayof_arrays, 1);
-//console.log(chosenarray)
-//console.log(arrayof_arrays.indexOf(chosenarray));
 
 // Shuffle the words_array to randomize the order
 shuffleArray(chosenarray);
 // Select the first 100 rows
-var selectedWords = chosenarray.slice(0, 5);
+var selectedWords = chosenarray.slice(0, 2);
 
 
 var trial1 = {
@@ -97,56 +97,6 @@ timeline.push(trial1)
 // USE THIS FUNCTION TO LOG VARIABLES
 console.log('Logging Variables') ;
 
-// --- Example Variables to log
-
-// let example_data = {
-//     rt: Math.random() * 10,
-//     trial_type: 'hg',
-//     trial_index: Math.random() * 10,
-//     time_elapsed: Math.random() * 10, 
-//     internal_node_id: Math.random() * 10,
-//     subject: 'jhjgfgh'
-// };
-
-// logExpData(example_data);
-
-// var testtrial = {
-//     type: jsPsychSurvey,
-//     pages: [
-      
-//         {
-//           type: 'html',
-//           prompt: 'Please answer the following questions:',
-//         },
-//         {
-//             type: jsPsychSurveyMultiChoice,
-//             prompt: jsPsych.timelineVariable('uni_lemma'),
-//             options: ['solid', 'non-solid', 'unclear/unknown'],
-//             required: true,
-//         },
-//         on_finish: function(data) {
-//             // Access the value of 'uni_lemma' for the current trial
-//             var currentWord = jsPsych.timelineVariable('uni_lemma');
-//             //console.log("currentWord");
-//             //console.log(currentWord);
-//             //jsPsych.data.get().last(1).addToAll({
-//             // console.log("data3");
-//             // console.log(jsPsych.data);
-//             // console.log("values");
-//             // console.log(jsPsych.data.get().values());
-
-//             jsPsych.data.addDataToLastTrial({
-//                 theword: currentWord,
-//                 theblock: "solidity",
-//             });
-//             // Add the 'word' property to the jsPsych data for this trial
-//             //jsPsych.data.addProperties({ word: currentWord });
-//         } 
-//         ],
-
-//         };
-
-//   timeline.push(testtrial)
 
 var opening = {
     type: jsPsychInstructions,
@@ -155,11 +105,69 @@ var opening = {
         '<div style="text-align: center; margin: 0 auto; max-width: 600px; font-size: 30px;">' +'<p> <font size="4">In this experiment, on each trial you will see an individual word. We will ask you to make a judgment about this word.<font> <p>'  +
         '</div>'   
     ],
+    on_finish: function(data) {// capture info from Prolific
+        var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+        var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+        var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+        
+        console.log(study_id, session_id, subject_id);
+        
+        jsPsych.data.addProperties({
+            subject_id: subject_id,
+            study_id: study_id,
+            session_id: session_id,
+        });
+        console.log("from object data")
+        console.log(data.subject_id, data.study_id, data.session_id) },
     show_clickable_nav: true,
 
 };
 
 timeline.push(opening);
+
+var practice_solidity= {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: "A block of metal",
+                    options: ['solid', 'non-solid'],
+                    required: true,
+                },
+    
+            ],
+            on_finish: function(data) {
+                var currentWord = "A block of metal";
+                console.log("testing");
+                //console.log(jsPsych.data.get().values()[2].response.Q0);
+                console.log(jsPsych.data.getLastTrialData().values()[0].response.Q0);
+
+                //var response = JSON.parse(jsPsych.data.get().values()[2].response.Q0); 
+                //var response = JSON.parse(data.response).Q0; // Get the participant's response
+                //var response = jsPsych.data.get().values()[2].response.Q0; 
+                var response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
+                var isCorrect = response === 'solid'; 
+                var blockname = "solidity";
+
+                jsPsych.data.addDataToLastTrial({
+                    theword: currentWord,
+                    theblock: blockname,
+                });
+
+                jsPsych.data.addDataToLastTrial({
+                    correct: isCorrect,
+                });
+
+
+                var feedbackMessage = isCorrect ? "Correct! Now let's begin" : "Incorrect! a block of metal is a solid object. Now let's begin! "; 
+                alert(feedbackMessage); 
+                
+            } 
+        }
+    ],
+};
+//timeline.push(practice_solidity);
 
 // trial : 1
 const instructions_solidity = {
@@ -168,28 +176,17 @@ const instructions_solidity = {
             type: jsPsychHtmlButtonResponse,
             stimulus:
             '<p> <font size="4"> One judgment is whether the word refers to something solid. <font> <p>' +
-            '<p> <font size="4"> For example, consider the sentence <b>“I need several pens.”</b> <font><p>' +
-            '<p> <font size="4"> In this sentence, <b>“pen”</b> refers to a <b>solid object</b>.<font> <p>' +
-            '<p> <font size="4"> Now think about the sentence  “I need some water.” Water is <b>not solid</b>. <font> <p>' +
+            '<p> <font size="4"> For example, consider the sentence <b>“I need several pens”</b>. <font><p>' +
+            '<p> <font size="4"> In this sentence, <b>[pen]</b> refers to a <b>solid object</b>.<font> <p>' +
+            '<p> <font size="4"> Now think about the sentence <b>“I need some water”</b>, <b>[Water]</b> is <b>not solid</b>. <font> <p>' +
+            '<p> <font size="4"> <b>Note</b>: when you see the word <b>"PURPLE"</b> click <b>"Solid"</b> <font> <p>' +
             '<p> <font size="4"> Now, lets begin <font> <p> ',
             choices: ['Continue'], 
-            on_finish: function(data) {// capture info from Prolific
-                var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
-                var study_id = jsPsych.data.getURLVariable('STUDY_ID');
-                var session_id = jsPsych.data.getURLVariable('SESSION_ID');
-                
-                console.log(study_id, session_id, subject_id);
-                
-                jsPsych.data.addProperties({
-                    subject_id: subject_id,
-                    study_id: study_id,
-                    session_id: session_id,
-                });
-                console.log("from object data")
-                console.log(data.subject_id, data.study_id, data.session_id) }
+
         }, ]
 }
 //timeline.push(instructions_solidity);
+
 
 // trial: 2 to length of words-1 ( 2 and 5 words = 6 trials now )
 var block_solidity = {
@@ -204,20 +201,16 @@ var block_solidity = {
                 }
       
             ],
+            
             on_finish: function(data) {
                 // Access the value of 'uni_lemma' for the current trial
                 var currentWord = jsPsych.timelineVariable('uni_lemma');
-                //console.log("currentWord");
-                //console.log(currentWord);
-                //jsPsych.data.get().last(1).addToAll({
-                // console.log("data3");
-                // console.log(jsPsych.data);
-                // console.log("values");
-                // console.log(jsPsych.data.get().values());
+                var blockname = "solidity";
+
 
                 jsPsych.data.addDataToLastTrial({
                     theword: currentWord,
-                    theblock: "solidity",
+                    theblock: blockname,
                 });
                 // Add the 'word' property to the jsPsych data for this trial
                 //jsPsych.data.addProperties({ word: currentWord });
@@ -228,10 +221,32 @@ var block_solidity = {
     randomize_order: true
 };
 
+var attention = {
+    type: jsPsychSurveyMultiChoice,
+    questions: [
+      {
+        prompt: "PURPLE", 
+        options: ['solid', 'non-solid', 'unclear/unknown'], 
+        required: true,
+        horizontal: false
+      }, 
+    ],
+    on_finish: function(data) {
+        // Access the value of 'uni_lemma' for the current trial
+        var currentWord = "PURPLE";
+        var blockname = "attention";
 
+
+        jsPsych.data.addDataToLastTrial({
+            theword: currentWord,
+            theblock: blockname,
+        });
+
+  },
+};
 
 var solidity = {
-    timeline: [instructions_solidity, block_solidity], 
+    timeline: [instructions_solidity, practice_solidity, block_solidity, attention], 
     randomization: false,
 }
 
@@ -241,22 +256,55 @@ var solidity = {
 const instructions_countmass = {
     type: jsPsychHtmlButtonResponse,
     stimulus:
-    '<p> <font size="4"> </bold>one Judegment is whether a word is a count or a mass noun. A count noun refers to objects that can be divided into <b>individual units and counted</b>.<font> <p>' +
-    '<p> <font size="4"> </bold>For example, consider the sentence “I need several pens.”<font> <p>' +
-    '<p> <font size="4"> [<b>Pens</b>] is a count noun.</font> <p>' +
+    '<p> <font size="4"> One Judegment is whether a word is a count or a mass noun. A <b>count noun</b> refers to objects that can be divided into <b>individual units and counted</b>.<font> <p>' +
+    '<p> <font size="4"> For example, consider the sentence: <b>“I need several pens”</b>. <font> <p>' +
+    '<p> <font size="4"> [<b>Pen</b>] is a count noun.</font> <p>' +
     '<p> <font size="4">A noun that refers to <b>undifferentiated and uncountable substances</b> is called a <b>mass noun</b>. <font> <p>' +
-    '<p> <font size="4"> For example, consider the sentence: “I need some water.” <font> <p>' +
+    '<p> <font size="4"> For example, consider the sentence: <b>“I need some water”</b>. <font> <p>' +
     '<p> <font size="4"> [<b>Water</b>] is a mass noun.<font> <p>'+ 
-    '<p> <font size="4"> Let’s begin!<font> <p>',
+    '<p> <font size="4"> <b>Note</b>: when you see the word <b>"GREY"</b> click <b>"count noun"</b> <font> <p>' +
+    '<p> <font size="4"> Lets begin!<font> <p>',
     choices: ['Continue']
 };
 //timeline.push(instructions_countmass);
 
-// Shuffle the words_array to randomize the order
-shuffleArray(words_array);
 
+// Shuffle the words_array to randomize the order
+shuffleArray(chosenarray);
 // Select the first 100 rows
-var selectedWords2 = words_array.slice(0, 5);
+var selectedWords2 = chosenarray.slice(0, 2);
+
+var practice_countmass= {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: "Would you like a chair? chair is a",
+                    options: ['count noun', 'Mass noun'],
+                    required: true,
+                },
+            ],
+            on_finish: function(data) {
+                var currentWord = "Would you like a chair? chair is a";
+                console.log("testing");
+                console.log(jsPsych.data.get().values()[2].response.Q0);
+                var response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
+                var isCorrect = response === 'count noun'; 
+                blockname = "count_mass";
+
+                jsPsych.data.addDataToLastTrial({
+                    theword: currentWord,
+                    theblock: blockname,
+                    correct: isCorrect,
+                });
+
+                var feedbackMessage = isCorrect ? "Correct! Now let's begin" : "Incorrect! chair is a count noun. Now let's begin!"; 
+                alert(feedbackMessage); 
+            } 
+        }
+    ],
+};
 
 var block_countmass = {
     timeline: [
@@ -265,7 +313,7 @@ var block_countmass = {
             questions: [
                 {
                     prompt: jsPsych.timelineVariable('uni_lemma'),
-                    options: ['count noun', 'mass noun' , 'unclear/unknown'],
+                    options: ['Count noun', 'Mass noun' , 'Unclear/unknown'],
                     required: true ,
                     // on_finish: function(data){
                     //       data.word = selectedWords2['uni_lemma'];
@@ -275,9 +323,11 @@ var block_countmass = {
             on_finish: function(data) {
                 // Access the value of 'uni_lemma' for the current trial
                 var currentWord = jsPsych.timelineVariable('uni_lemma');
+                var blockname= "count_mass";
+
                 jsPsych.data.addDataToLastTrial({
                     theword: currentWord, 
-                    theblock: "count_mass",
+                    theblock: blockname,
                 });
             }
         },
@@ -286,31 +336,88 @@ var block_countmass = {
     randomize_order: true
 };
 
+var attention2 = {
+    type: jsPsychSurveyMultiChoice,
+    questions: [
+      {
+        prompt: "grey", 
+        options: ['count noun', 'mass noun' , 'unclear/ unknown'], 
+        required: true,
+        horizontal: false
+      }, 
+    ],
+    on_finish: function(data) {
+        // Access the value of 'uni_lemma' for the current trial
+        var currentWord = "grey";
+        var blockname = "attention";
+
+
+        jsPsych.data.addDataToLastTrial({
+            theword: currentWord,
+            theblock: blockname,
+        });
+
+  },
+};
+
 var countmass = {
-    timeline: [instructions_countmass, block_countmass], 
+    timeline: [instructions_countmass, practice_countmass, block_countmass, attention2], 
     randomization: false,
 }
 
 //timeline.push(countmass);
 
+// Shuffle the words_array to randomize the order
+shuffleArray(chosenarray);
+// Select the first 100 rows
+var selectedWords3 = chosenarray.slice(0, 2);
+
 const instructions_category = {
     type: jsPsychHtmlButtonResponse,
     stimulus: 
-    '<p> <font size="4"> One judgment is about the word category. Consider the sentence “I need several pens.”<font> <p>' +
-    '<p> <font size="4"> <b>Pen</b> belongs to a <b>category that is organized by shape</b>. All pens have the same shape but could have different colors, or made of different materials.<font> <p>' +
-    '<p> <font size="4"> Now consider the sentence “I need some water.”<font> <p>' +
-    '<p> <font size="4"> <b>Water</b> belongs to a category of entities organized by <b>material</b>. Water can be many colors and can take many shapes but it always has to be made of water.  <font> <p>'+
+    '<p> <font size="4"> One judgment is about the word category. Consider the sentence: <b>“I need several pens”</b>. <font> <p>' +
+    '<p> <font size="4"> <b>[Pen]</b> belongs to a <b>category that is organized by shape</b>. All pens have the same shape but could have different colors, or made of different materials.<font> <p>' +
+    '<p> <font size="4"> Now consider the sentence: <b>“I need some water”</b>.<font> <p>' +
+    '<p> <font size="4"> <b>[Water]</b> belongs to a category of entities organized by <b>material</b>. Water can be many colors and can take many shapes but it always has to be made of water.  <font> <p>'+
     '<p> <font size="4"> Now you will be asked to make some judgments about other words and how they are organized. Some of these may be tricky, but just try your best.<font> <p>'+
-    '<p><font size="4"> Let’s begin! <font> <p>' ,
+    '<p> <font size="4"> <b>Note</b>: when you see the word <b>"LAVENDER"</b> click <b>"color"</b> <font> <p>' +
+    '<p><font size="4"> Lets begin! <font> <p>' ,
     choices: ['Continue']
 };
 //timeline.push(instructions_category);
 
+var practice_category= {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: "A square belongs to a category that is organized by",
+                    options: ['shape', 'material', 'color'],
+                    required: true,
+                },
+            ],
+            on_finish: function(data) {
+                var currentWord = "A square belongs to a category that is organized by";
+                console.log("testing");
+                console.log(jsPsych.data.get().values()[2].response.Q0);
+                var response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
+                var isCorrect = response === 'shape'; 
+                var blockname = "category" ;
 
-shuffleArray(words_array);
+                jsPsych.data.addDataToLastTrial({
+                    theword: currentWord,
+                    theblock: blockname,
+                    correct: isCorrect
+                });
 
-// Select the first 100 rows
-var selectedWords3 = words_array.slice(0, 5);
+                var feedbackMessage = isCorrect ? "Correct!, Now let's begin" : "Incorrect! square is organized around shape, all squares are of the same shape. Now let's begin!"; 
+                alert(feedbackMessage); 
+            } 
+        }
+    ],
+};
+
 
 var block_category = {
     timeline: [
@@ -332,9 +439,10 @@ var block_category = {
             on_finish: function(data) {
                 // Access the value of 'uni_lemma' for the current trial
                 var currentWord = jsPsych.timelineVariable('uni_lemma');
+                var blockname = "category_organization";
                 jsPsych.data.addDataToLastTrial({
                     theword: currentWord, 
-                    theblock: "category_organization",
+                    theblock: blockname,
                 });
             },
         },
@@ -342,18 +450,40 @@ var block_category = {
     timeline_variables: selectedWords3,
     randomize_order: true
 };
+
+var attention3 = {
+    type: jsPsychSurveyMultiChoice,
+    questions: [
+      {
+        prompt: "lavender", 
+        options: ['shape', 'color', 'material', 'none of these'], 
+        required: true,
+        horizontal: false
+      }, 
+    ],
+    on_finish: function(data) {
+        // Access the value of 'uni_lemma' for the current trial
+        var currentWord = "lavender";
+        var blockname = "attention";
+
+
+        jsPsych.data.addDataToLastTrial({
+            theword: currentWord,
+            theblock: blockname,
+        });
+
+  },
+};
 console.log(jsPsych.timelineVariable('uni_lemma'));
 
 //timeline.push(block_category);
 
 var category = {
-    timeline: [instructions_category, block_category],
+    timeline: [instructions_category,practice_category, block_category, attention3],
     randomization: false,
 }
 
-// var solidity_arr = [instructions_solidity, block_solidity];
-// var countmass_arr = [instructions_countmass, block_countmass];
-// var category_arr = [instructions_category, block_category];
+
 
 var block_array = [solidity, countmass, category];
 //var blocks = shuffleArray(block_array);
@@ -362,13 +492,6 @@ var blocks = jsPsych.randomization.sampleWithoutReplacement(block_array, 3);
 console.log("blockarray");
 console.log(blocks);
 console.log(blocks[0]); 
-
-
-// var experiment = {
-//     timeline: [blocks],
-//     //randomization: true,
-
-// }
 
 
 timeline.push(blocks[0]); 
