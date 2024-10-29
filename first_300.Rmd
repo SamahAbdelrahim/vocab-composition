@@ -16,6 +16,7 @@ library(jsonlite)
 ```
 
 ``` {r function for getting the first 300 words by AoA}
+
 calculate_first300 <- function(chosenlanguage) {
   ws_data <- get_instrument_data(language = chosenlanguage,
                                      form = "WS",
@@ -32,17 +33,25 @@ calculate_first300 <- function(chosenlanguage) {
   
   return(first_300)
 }
+
 ```
 
 ```{r}
-languages <- c("English (American)", "Mandarin (Beijing)", "Korean")
+languages <- c("English (American)", "Mandarin (Beijing)", "Korean", "English (Australian)", "Cantonese", "Catalan" , "Japanese", "Turkish" , "Spanish (Mexican)", "Russian", "Kiswahili", "Mandarin (Taiwanese)", "Spanish (Peruvian)", "Spanish (European)", "Hebrew", "French (French)")
+
+# arabic, spanish chile, english uk , "Persian" , "Kigiriama", "Slovak", , "Spanish (Chilean)"
 
 # Use purrr::map_df to apply the function and bind the results
 allangs <- map_df(languages, ~ calculate_first300(chosenlanguage = .x))
+#write_csv(allangs, "alllangs.csv")
 
-words <- allangs %>% select(uni_lemma) %>% unique() 
+words <- allangs %>% 
+  select(uni_lemma, language) %>% 
+  filter(!is.na(uni_lemma)) |>
+  mutate(uni_lemma = str_to_lower(uni_lemma)) |>
+  unique()
 
-str(words)
+words |> filter( uni_lemma == "cracker")
 toJSON(words)
 
 ```

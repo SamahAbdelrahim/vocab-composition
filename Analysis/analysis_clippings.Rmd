@@ -1,0 +1,108 @@
+# 80% cutoff approach
+
+ doing the 80# cutoff
+```{r}
+result <- category_counts %>%
+  group_by(theword, block) %>%
+  mutate(judgement = if (any(proportion >= 0.8)) response[which.max(proportion)] else "ambiguous")  %>%
+  # Filter rows per group based on the new 'judgement' column and conditions
+  filter((proportion >= 0.8 & response == judgement) | (all(proportion < 0.8) & row_number() == 1)) %>%
+  ungroup() 
+
+result <- result %>% select(theword, block, judgement) %>% pivot_wider(names_from = block, values_from = judgement) 
+
+
+```
+
+``` {r}
+
+result <- result %>% 
+  mutate(across(c(category_organization, solidity, count_mass)))
+
+chisq.test(result$count_mass, result$solidity, correct=FALSE)
+
+
+```
+
+visualization 80% cutoff:
+
+
+
+``` {r}
+#data_all <- data_all %>% replace(solidity, solidity == "unclear/unknown", "ambiguous")
+result <- result %>%
+  mutate(solidity = case_when(
+    solidity == "unclear/unknown" ~ "ambiguous",
+    TRUE ~ solidity
+  ))
+
+result <- result %>%
+  mutate(count_mass = case_when(
+    count_mass == "unclear/unknown" ~ "ambiguous",
+    TRUE ~ count_mass
+  ))
+
+solidonly <- result %>% filter( solidity == "solid")
+nonsolidonly <- result %>% filter(solidity == "non-solid")
+
+
+ggplot(data = result, aes(y= solidity, fill = count_mass )) +
+  geom_bar()  +
+  coord_flip()
+
+# + coord_polar("y", start = 0)
+
+ggplot(data = result, aes(y= solidity, fill = category_organization )) +
+  geom_bar()  +
+  coord_flip()
+
+ggplot()
+```
+
+broken by languages: the 80% cutoff
+
+``` {r}
+
+result <- result %>% filter(!is.na(solidity), !is.na(count_mass))
+
+data_alllangs <- merge(x = result, y=languages, by = "theword")
+
+data_alllangs %>% filter (theword == "cracker")
+
+data_alllangs %>% filter(is.na(count_mass))
+data_alllangs %>% filter(is.na(solidity))
+data_alllangs %>% filter(is.na(category_organization))
+
+data_alllangs %>%
+  group_by(language, category_organization) %>%
+  summarize(count = n()) %>%
+  ungroup() %>%
+  group_by(language) %>%
+  mutate(prop = count / sum(count)) %>%
+  ungroup() %>% filter (category_organization == "shape")
+
+
+solidityprops <- data_alllangs %>%
+  group_by(language, solidity) %>%
+  summarize(count = n()) %>%
+  ungroup() %>%
+  group_by(language) %>%
+  mutate(prop = count / sum(count)) %>%
+  ungroup() %>% filter (solidity == "solid")
+
+
+shapeprops <- data_alllangs %>%
+  group_by(language, category_organization) %>%
+  summarize(count = n()) %>%
+  ungroup() %>%
+  group_by(language) %>%
+  mutate(prop = count / sum(count)) %>%
+  ungroup() %>% filter (category_organization == "shape")
+```
+
+``` {r}
+full_solidity <- category_counts %>% filter(block == "solidity")
+full_countmass <- category_counts %>% filter(block == "count_mass")
+full_category <-  category_counts %>% filter(block == "category_organization")
+```
+

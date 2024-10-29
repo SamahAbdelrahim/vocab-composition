@@ -1,0 +1,302 @@
+_id,rt,trial_type,trial_index,time_elapsed,internal_node_id,subject,__v,response,theword
+6636fe74bf39dcf9df9406c4,5897,instructions,0,5897,0,653048d5d815e00c2baa7296,0,,
+6636fe74bf39dcf9df9406c6,1538,instructions,1,7436,0,653048d5d815e00c2baa7296,0,,
+6636fe74bf39dcf9df9406c8,1318,html-button-response,2,8755,0,653048d5d815e00c2baa7296,0,0,
+6636fe74bf39dcf9df9406ca,5724,survey-multi-choice,4,18605,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",calf
+6636fe74bf39dcf9df9406cc,2698,survey-multi-choice,3,11455,0,653048d5d815e00c2baa7296,0,"{""Q0"":""color""}",A square belongs to a category that is organized by
+6636fe74bf39dcf9df9406ce,3563,survey-multi-choice,5,22169,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",
+6636fe74bf39dcf9df9406d0,2835,survey-multi-choice,6,25005,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",tofu
+6636fe74bf39dcf9df9406d2,3488,survey-multi-choice,7,28494,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",sugar
+6636fe74bf39dcf9df9406d4,1804,survey-multi-choice,8,30298,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",dumpling
+6636fe74bf39dcf9df9406d6,1409,survey-multi-choice,9,31708,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",dustpan
+6636fe74bf39dcf9df9406d8,2440,survey-multi-choice,11,35431,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",voice recorder
+6636fe74bf39dcf9df9406da,1282,survey-multi-choice,10,32990,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",sneaker
+6636fe74bf39dcf9df9406dc,1342,survey-multi-choice,12,36774,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",panda
+6636fe74bf39dcf9df9406de,1250,survey-multi-choice,13,38025,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",gun
+6636fe74bf39dcf9df9406e0,2055,survey-multi-choice,14,40080,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",pot
+6636fe74bf39dcf9df9406e2,1447,survey-multi-choice,15,41528,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",dog
+6636fe74bf39dcf9df9406e4,1903,survey-multi-choice,16,43431,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",rope
+6636fe74bf39dcf9df9406e6,7256,survey-multi-choice,17,50688,0,653048d5d815e00c2baa7296,0,"{""Q0"":""material""}",gas
+6636fe74bf39dcf9df9406e8,2015,survey-multi-choice,18,52704,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",kefir
+6636fe74bf39dcf9df9406ea,3253,survey-multi-choice,19,55958,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",puddle
+6636fe74bf39dcf9df9406ec,35745,survey-multi-choice,20,91702,0,653048d5d815e00c2baa7296,0,"{""Q0"":""material""}",soil
+6636fe74bf39dcf9df9406ee,1523,survey-multi-choice,21,93226,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",thumb
+6636fe74bf39dcf9df9406f0,1532,survey-multi-choice,22,94758,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",hedgehog
+6636fe74bf39dcf9df9406f2,1895,survey-multi-choice,23,96653,0,653048d5d815e00c2baa7296,0,"{""Q0"":""none of these""}",coke
+6636fe74bf39dcf9df9406f4,15809,html-button-response,25,115276,0,653048d5d815e00c2baa7296,0,0,
+6636fe74bf39dcf9df9406f6,2813,survey-multi-choice,24,99466,0,653048d5d815e00c2baa7296,0,"{""Q0"":""color""}",lavender
+6636fe74bf39dcf9df9406f8,5642,survey-multi-choice,26,120918,0,653048d5d815e00c2baa7296,0,"{""Q0"":""count noun""}",Would you like a chair? chair is a
+6636fe74bf39dcf9df9406fa,3206,survey-multi-choice,27,125778,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Unclear/unknown""}",crocodile
+6636fe74bf39dcf9df9406fc,1850,survey-multi-choice,28,127628,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Count noun""}",rice
+6636fe74bf39dcf9df9406fe,2358,survey-multi-choice,29,129987,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Mass noun""}",noodles
+6636fe74bf39dcf9df940700,2509,survey-multi-choice,30,132496,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Mass noun""}",sugar
+6636fe74bf39dcf9df940702,1577,survey-multi-choice,31,134073,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Count noun""}",coke
+6636fe74bf39dcf9df940704,3010,survey-multi-choice,32,137084,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Unclear/unknown""}",hanger
+6636fe74bf39dcf9df940706,1426,survey-multi-choice,33,138510,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Unclear/unknown""}",gorilla
+6636fe74bf39dcf9df940708,3730,survey-multi-choice,34,142240,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Mass noun""}",scallion
+6636fe74bf39dcf9df94070a,1417,survey-multi-choice,35,143658,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Count noun""}",goat
+6636fe74bf39dcf9df94070c,1463,survey-multi-choice,36,145122,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Unclear/unknown""}",eyebrow
+6636fe74bf39dcf9df94070e,1759,survey-multi-choice,37,146881,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Mass noun""}",gun
+6636fe74bf39dcf9df940710,1926,survey-multi-choice,38,148808,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Unclear/unknown""}",seesaw
+6636fe74bf39dcf9df940712,1773,survey-multi-choice,39,150581,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Unclear/unknown""}",taxi
+6636fe74bf39dcf9df940714,1630,survey-multi-choice,41,153774,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Unclear/unknown""}",mosquito
+6636fe74bf39dcf9df940716,1562,survey-multi-choice,40,152144,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Mass noun""}",waist
+6636fe74bf39dcf9df940718,2054,survey-multi-choice,42,155828,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Count noun""}",skirt
+6636fe75bf39dcf9df94071a,2434,survey-multi-choice,45,162903,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Count noun""}",hippopotamus
+6636fe75bf39dcf9df94071c,3177,survey-multi-choice,43,159006,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Mass noun""}",sweet potato
+6636fe75bf39dcf9df94071e,1462,survey-multi-choice,44,160468,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Count noun""}",thumb
+6636fe75bf39dcf9df940720,1758,survey-multi-choice,46,164662,0,653048d5d815e00c2baa7296,0,"{""Q0"":""Count noun""}",mushroom
+6636fe75bf39dcf9df940722,29351,html-button-response,48,196358,0,653048d5d815e00c2baa7296,0,0,
+6636fe75bf39dcf9df940724,2343,survey-multi-choice,47,167006,0,653048d5d815e00c2baa7296,0,"{""Q0"":""count noun""}",grey
+6636fe75bf39dcf9df940726,1910,survey-multi-choice,50,265804,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",newspaper
+6636fe75bf39dcf9df940728,1433,survey-multi-choice,52,268807,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",hot dog
+6636fe75bf39dcf9df94072a,65897,survey-multi-choice,49,262256,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",A block of metal
+6636fe75bf39dcf9df94072c,1570,survey-multi-choice,51,267374,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",tray
+6636fe75bf39dcf9df94072e,1584,survey-multi-choice,53,270392,0,653048d5d815e00c2baa7296,0,"{""Q0"":""non-solid""}",song
+6636fe75bf39dcf9df940730,1350,survey-multi-choice,54,271742,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",fingernail
+6636fe75bf39dcf9df940732,1198,survey-multi-choice,55,272940,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",microwave
+6636fe75bf39dcf9df940734,4458,survey-multi-choice,57,279286,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",handkerchief
+6636fe75bf39dcf9df940736,1880,survey-multi-choice,59,283198,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",piano
+6636fe75bf39dcf9df940738,2032,survey-multi-choice,58,281318,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",mop (object)
+6636fe75bf39dcf9df94073a,1887,survey-multi-choice,56,274827,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",board game
+6636fe75bf39dcf9df94073c,3670,survey-multi-choice,60,286868,0,653048d5d815e00c2baa7296,0,"{""Q0"":""unclear/unknown""}",scallion
+6636fe75bf39dcf9df94073e,1387,survey-multi-choice,61,288255,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",trampoline
+6636fe75bf39dcf9df940740,2707,survey-multi-choice,62,290962,0,653048d5d815e00c2baa7296,0,"{""Q0"":""unclear/unknown""}",snake
+6636fe75bf39dcf9df940742,2184,survey-multi-choice,63,293147,0,653048d5d815e00c2baa7296,0,"{""Q0"":""unclear/unknown""}",mushroom
+6636fe75bf39dcf9df940744,1956,survey-multi-choice,65,296225,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",goat
+6636fe75bf39dcf9df940746,1122,survey-multi-choice,64,294269,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",rice
+6636fe75bf39dcf9df940748,3525,survey-multi-choice,66,299751,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",fly (animal)
+6636fe75bf39dcf9df94074a,2471,survey-multi-choice,67,302223,0,653048d5d815e00c2baa7296,0,"{""Q0"":""non-solid""}",puddle
+6636fe75bf39dcf9df94074c,1281,survey-multi-choice,70,306855,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",PURPLE
+6636fe75bf39dcf9df94074e,2896,instructions,71,309752,0,653048d5d815e00c2baa7296,0,,
+6636fe75bf39dcf9df940750,1729,survey-multi-choice,69,305574,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",rope
+6636fe75bf39dcf9df940752,1622,survey-multi-choice,68,303845,0,653048d5d815e00c2baa7296,0,"{""Q0"":""solid""}",back (body part)
+6636ff66bf39dcf9df940754,4667,instructions,0,4669,0,66282357a9a4bc747511fa49,0,,
+6636ff66bf39dcf9df940756,35948,html-button-response,2,45467,0,66282357a9a4bc747511fa49,0,0,
+6636ff66bf39dcf9df940758,4844,instructions,1,9514,0,66282357a9a4bc747511fa49,0,,
+6636ff66bf39dcf9df94075a,12337,survey-multi-choice,3,57809,0,66282357a9a4bc747511fa49,0,"{""Q0"":""shape""}",A square belongs to a category that is organized by
+6636ff66bf39dcf9df94075c,9762,survey-multi-choice,4,70269,0,66282357a9a4bc747511fa49,0,"{""Q0"":""none of these""}",camel
+6636ff66bf39dcf9df94075e,21970,survey-multi-choice,5,92243,0,66282357a9a4bc747511fa49,0,"{""Q0"":""material""}",rice cake
+6636ff66bf39dcf9df940760,14438,survey-multi-choice,6,106684,0,66282357a9a4bc747511fa49,0,"{""Q0"":""material""}",hanger
+6636ff66bf39dcf9df940762,4259,survey-multi-choice,7,110946,0,66282357a9a4bc747511fa49,0,"{""Q0"":""material""}",clothes
+6636ff66bf39dcf9df940764,6144,survey-multi-choice,9,125298,0,66282357a9a4bc747511fa49,0,"{""Q0"":""none of these""}",spinach
+6636ff66bf39dcf9df940766,9068,survey-multi-choice,10,134368,0,66282357a9a4bc747511fa49,0,"{""Q0"":""none of these""}",tangerine
+6636ff66bf39dcf9df940768,11273,survey-multi-choice,11,145643,0,66282357a9a4bc747511fa49,0,"{""Q0"":""shape""}",pear
+6636ff66bf39dcf9df94076a,8203,survey-multi-choice,8,119151,0,66282357a9a4bc747511fa49,0,"{""Q0"":""shape""}",scarf
+6636ff66bf39dcf9df94076c,4599,survey-multi-choice,12,150245,0,66282357a9a4bc747511fa49,0,"{""Q0"":""material""}",boulder
+6636ff66bf39dcf9df94076e,5773,survey-multi-choice,13,156021,0,66282357a9a4bc747511fa49,0,"{""Q0"":""material""}",faucet
+6636ff66bf39dcf9df940770,4684,survey-multi-choice,14,160707,0,66282357a9a4bc747511fa49,0,"{""Q0"":""material""}",blood
+6636ff66bf39dcf9df940772,5905,survey-multi-choice,15,166614,0,66282357a9a4bc747511fa49,0,"{""Q0"":""material""}",dried seaweed
+6636ff66bf39dcf9df940774,6779,survey-multi-choice,16,173395,0,66282357a9a4bc747511fa49,0,"{""Q0"":""none of these""}",calf
+6636ff66bf39dcf9df940776,4167,survey-multi-choice,18,187532,0,66282357a9a4bc747511fa49,0,"{""Q0"":""none of these""}",radish
+6636ff66bf39dcf9df940778,9965,survey-multi-choice,17,183364,0,66282357a9a4bc747511fa49,0,"{""Q0"":""none of these""}",liver (food)
+6636ff66bf39dcf9df94077a,4523,survey-multi-choice,19,192058,0,66282357a9a4bc747511fa49,0,"{""Q0"":""none of these""}",eagle
+6636ff66bf39dcf9df94077c,4861,survey-multi-choice,20,196921,0,66282357a9a4bc747511fa49,0,"{""Q0"":""material""}",toothpaste
+6636ff66bf39dcf9df94077e,8862,survey-multi-choice,21,205785,0,66282357a9a4bc747511fa49,0,"{""Q0"":""material""}",dress shoe
+6636ff66bf39dcf9df940780,5445,survey-multi-choice,22,211232,0,66282357a9a4bc747511fa49,0,"{""Q0"":""none of these""}",fingernail
+6636ff66bf39dcf9df940782,5438,survey-multi-choice,23,216673,0,66282357a9a4bc747511fa49,0,"{""Q0"":""material""}",wood
+6636ff66bf39dcf9df940784,4372,survey-multi-choice,24,221045,0,66282357a9a4bc747511fa49,0,"{""Q0"":""color""}",lavender
+6636ff66bf39dcf9df940786,13680,html-button-response,25,234729,0,66282357a9a4bc747511fa49,0,0,
+6636ff66bf39dcf9df940788,4529,survey-multi-choice,26,239260,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",A block of metal
+6636ff66bf39dcf9df94078a,7342,survey-multi-choice,27,249107,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",tofu
+6636ff66bf39dcf9df94078c,5058,survey-multi-choice,28,254168,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",swallow (animal)
+6636ff66bf39dcf9df94078e,4068,survey-multi-choice,29,258238,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",robot
+6636ff66bf39dcf9df940790,4415,survey-multi-choice,30,262654,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",kite
+6636ff66bf39dcf9df940792,3882,survey-multi-choice,31,266538,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",liver (food)
+6636ff66bf39dcf9df940794,2949,survey-multi-choice,32,269489,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",bag
+6636ff66bf39dcf9df940796,2772,survey-multi-choice,33,272263,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",crocodile
+6636ff66bf39dcf9df940798,3188,survey-multi-choice,34,275454,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",fruit
+6636ff66bf39dcf9df94079a,3054,survey-multi-choice,35,278510,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",pot
+6636ff66bf39dcf9df94079c,3069,survey-multi-choice,36,281579,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",thumb
+6636ff66bf39dcf9df94079e,2871,survey-multi-choice,37,284453,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",leaf
+6636ff66bf39dcf9df9407a0,2701,survey-multi-choice,38,287157,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",cucumber
+6636ff66bf39dcf9df9407a2,2654,survey-multi-choice,39,289813,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",sugar
+6636ff66bf39dcf9df9407a4,2759,survey-multi-choice,40,292574,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",battery
+6636ff66bf39dcf9df9407a6,4028,survey-multi-choice,41,296605,0,66282357a9a4bc747511fa49,0,"{""Q0"":""non-solid""}",fire
+6636ff66bf39dcf9df9407a8,3127,survey-multi-choice,42,299734,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",sweet potato
+6636ff66bf39dcf9df9407aa,2729,survey-multi-choice,43,302465,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",dumpling
+6636ff66bf39dcf9df9407ac,2949,survey-multi-choice,44,305415,0,66282357a9a4bc747511fa49,0,"{""Q0"":""non-solid""}",puddle
+6636ff66bf39dcf9df9407ae,2921,survey-multi-choice,45,308339,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",dried seaweed
+6636ff66bf39dcf9df9407b0,3106,survey-multi-choice,46,311447,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",traffic light
+6636ff66bf39dcf9df9407b2,2738,survey-multi-choice,47,314188,0,66282357a9a4bc747511fa49,0,"{""Q0"":""solid""}",PURPLE
+6636ff66bf39dcf9df9407b4,20788,html-button-response,48,334980,0,66282357a9a4bc747511fa49,0,0,
+6636ff66bf39dcf9df9407b6,6155,survey-multi-choice,49,341136,0,66282357a9a4bc747511fa49,0,"{""Q0"":""count noun""}",Would you like a chair? chair is a
+6636ff66bf39dcf9df9407b8,3707,survey-multi-choice,50,346884,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",wallet
+6636ff66bf39dcf9df9407ba,9574,survey-multi-choice,51,356458,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Unclear/unknown""}",body
+6636ff66bf39dcf9df9407bc,3270,survey-multi-choice,52,359729,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",tofu
+6636ff66bf39dcf9df9407be,3080,survey-multi-choice,53,362810,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",swallow (animal)
+6636ff66bf39dcf9df9407c0,3519,survey-multi-choice,54,366332,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",Persimmon
+6636ff66bf39dcf9df9407c2,3049,survey-multi-choice,55,369384,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",chick
+6636ff66bf39dcf9df9407c4,3108,survey-multi-choice,56,372494,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",rag
+6636ff66bf39dcf9df9407c6,3013,survey-multi-choice,57,375508,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",neck
+6636ff66bf39dcf9df9407c8,2774,survey-multi-choice,58,378284,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",spinach
+6636ff66bf39dcf9df9407ca,2676,survey-multi-choice,59,380961,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",sled
+6636ff66bf39dcf9df9407cc,2710,survey-multi-choice,60,383672,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",fingernail
+6636ff66bf39dcf9df9407ce,2990,survey-multi-choice,61,386664,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",flour
+6636ff66bf39dcf9df9407d0,2981,survey-multi-choice,62,389647,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",faucet
+6636ff66bf39dcf9df9407d2,2553,survey-multi-choice,63,392202,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",sparrow
+6636ff66bf39dcf9df9407d4,2628,survey-multi-choice,64,394832,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",rice cake
+6636ff66bf39dcf9df9407d6,2742,survey-multi-choice,65,397576,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",jeep
+6636ff66bf39dcf9df9407d8,2625,survey-multi-choice,66,400203,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",pudding
+6636ff66bf39dcf9df9407da,2588,survey-multi-choice,67,402793,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",bun
+6636ff66bf39dcf9df9407dc,2563,survey-multi-choice,69,408042,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",goat
+6636ff66bf39dcf9df9407de,2682,survey-multi-choice,68,405477,0,66282357a9a4bc747511fa49,0,"{""Q0"":""Count noun""}",thumb
+6636ff66bf39dcf9df9407e0,4020,survey-multi-choice,70,412065,0,66282357a9a4bc747511fa49,0,"{""Q0"":""count noun""}",grey
+6636ff66bf39dcf9df9407e2,3150,instructions,71,415217,0,66282357a9a4bc747511fa49,0,,
+6636ffa9bf39dcf9df9407e4,7584,instructions,0,7585,0,602084a1e5330d6c7ad1d17e,0,,
+6636ffa9bf39dcf9df9407e6,20685,html-button-response,2,31403,0,602084a1e5330d6c7ad1d17e,0,0,
+6636ffa9bf39dcf9df9407e8,3131,instructions,1,10717,0,602084a1e5330d6c7ad1d17e,0,,
+6636ffa9bf39dcf9df9407ea,6706,survey-multi-choice,4,46493,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",trash can
+6636ffa9bf39dcf9df9407ec,5017,survey-multi-choice,5,51511,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""unclear/unknown""}",
+6636ffa9bf39dcf9df9407ee,5061,survey-multi-choice,3,36465,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",A block of metal
+6636ffa9bf39dcf9df9407f0,4173,survey-multi-choice,6,55685,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",Persimmon
+6636ffa9bf39dcf9df9407f2,3476,survey-multi-choice,7,59161,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",seesaw
+6636ffa9bf39dcf9df9407f4,4388,survey-multi-choice,8,63549,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""non-solid""}",toothpaste
+6636ffa9bf39dcf9df9407f6,3035,survey-multi-choice,9,66585,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",radish
+6636ffa9bf39dcf9df9407f8,5350,survey-multi-choice,11,74971,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",newspaper
+6636ffa9bf39dcf9df9407fa,3035,survey-multi-choice,10,69621,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""unclear/unknown""}",thing
+6636ffa9bf39dcf9df9407fc,4187,survey-multi-choice,12,79159,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",shrimp
+6636ffa9bf39dcf9df9407fe,2975,survey-multi-choice,14,86239,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",cabbage
+6636ffa9bf39dcf9df940800,4104,survey-multi-choice,13,83263,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",swallow (animal)
+6636ffa9bf39dcf9df940802,3014,survey-multi-choice,15,89253,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",mirror
+6636ffa9bf39dcf9df940804,2813,survey-multi-choice,16,92067,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",tangerine
+6636ffa9bf39dcf9df940806,7356,survey-multi-choice,17,99423,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",taxi
+6636ffaabf39dcf9df940808,2603,survey-multi-choice,18,102027,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",spaghetti
+6636ffaabf39dcf9df94080a,2891,survey-multi-choice,19,104919,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",sparrow
+6636ffaabf39dcf9df94080c,2824,survey-multi-choice,20,107743,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",tofu
+6636ffaabf39dcf9df94080e,2550,survey-multi-choice,21,110293,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",watermelon
+6636ffaabf39dcf9df940810,4399,survey-multi-choice,22,114693,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",bell
+6636ffaabf39dcf9df940812,2973,survey-multi-choice,23,117667,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",sled
+6636ffaabf39dcf9df940814,4329,survey-multi-choice,24,121996,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""solid""}",PURPLE
+6636ffaabf39dcf9df940816,43891,html-button-response,25,165888,0,602084a1e5330d6c7ad1d17e,0,0,
+6636ffaabf39dcf9df940818,3686,survey-multi-choice,27,189469,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",calf
+6636ffaabf39dcf9df94081a,11595,survey-multi-choice,26,177484,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Mass noun""}",Would you like a chair? chair is a
+6636ffaabf39dcf9df94081c,2727,survey-multi-choice,28,192197,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",chopstick
+6636ffaabf39dcf9df94081e,2570,survey-multi-choice,29,194767,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",mushroom
+6636ffaabf39dcf9df940820,3025,survey-multi-choice,30,197793,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Mass noun""}",blood
+6636ffaabf39dcf9df940822,3029,survey-multi-choice,31,200823,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",fruit
+6636ffaabf39dcf9df940824,2658,survey-multi-choice,32,203481,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",seesaw
+6636ffaabf39dcf9df940826,2523,survey-multi-choice,33,206005,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",sprouts
+6636ffaabf39dcf9df940828,2957,survey-multi-choice,35,211901,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",swallow (animal)
+6636ffaabf39dcf9df94082a,2938,survey-multi-choice,34,208943,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Mass noun""}",wood
+6636ffaabf39dcf9df94082c,2564,survey-multi-choice,36,214465,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",umbrella
+6636ffaabf39dcf9df94082e,3428,survey-multi-choice,37,217893,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",dried seaweed
+6636ffaabf39dcf9df940830,3797,survey-multi-choice,38,221691,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",hanger
+6636ffaabf39dcf9df940832,3423,survey-multi-choice,39,225115,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",cabbage
+6636ffaabf39dcf9df940834,3124,survey-multi-choice,40,228239,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",taxi
+6636ffaabf39dcf9df940836,2901,survey-multi-choice,41,231141,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",gorilla
+6636ffaabf39dcf9df940838,2335,survey-multi-choice,42,233477,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",sandal
+6636ffaabf39dcf9df94083a,4401,survey-multi-choice,43,237879,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",fox
+6636ffaabf39dcf9df94083c,2508,survey-multi-choice,44,240387,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",microwave
+6636ffaabf39dcf9df94083e,5246,survey-multi-choice,47,250727,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""count noun""}",grey
+6636ffaabf39dcf9df940840,2573,survey-multi-choice,46,245481,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",Persimmon
+6636ffaabf39dcf9df940842,2519,survey-multi-choice,45,242907,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""Count noun""}",peach
+6636ffaabf39dcf9df940844,59709,html-button-response,48,310437,0,602084a1e5330d6c7ad1d17e,0,0,
+6636ffaabf39dcf9df940846,5842,survey-multi-choice,49,316279,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""shape""}",A square belongs to a category that is organized by
+6636ffaabf39dcf9df940848,9904,survey-multi-choice,50,328207,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""none of these""}",stone
+6636ffaabf39dcf9df94084a,11049,survey-multi-choice,51,339257,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""shape""}",taxi
+6636ffaabf39dcf9df94084c,4290,survey-multi-choice,52,343547,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""material""}",spaghetti
+6636ffaabf39dcf9df94084e,6369,survey-multi-choice,53,349917,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""material""}",kefir
+6636ffaabf39dcf9df940850,9283,survey-multi-choice,54,359201,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""none of these""}",dumpling
+6636ffaabf39dcf9df940852,7048,survey-multi-choice,55,366249,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""none of these""}",rag
+6636ffaabf39dcf9df940854,3991,survey-multi-choice,56,370241,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""none of these""}",clothes
+6636ffaabf39dcf9df940856,4310,survey-multi-choice,58,381435,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""shape""}",snake
+6636ffaabf39dcf9df940858,6883,survey-multi-choice,57,377125,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""none of these""}",sled
+6636ffaabf39dcf9df94085a,8096,survey-multi-choice,59,389531,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""none of these""}",boulder
+6636ffaabf39dcf9df94085c,11569,survey-multi-choice,60,401101,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""shape""}",bag
+6636ffaabf39dcf9df94085e,9484,survey-multi-choice,61,410585,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""none of these""}",sleeve
+6636ffaabf39dcf9df940860,4706,survey-multi-choice,62,415291,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""material""}",sprouts
+6636ffaabf39dcf9df940862,5291,survey-multi-choice,63,420583,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""shape""}",chopstick
+6636ffaabf39dcf9df940864,5282,survey-multi-choice,66,443611,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""shape""}",skirt
+6636ffaabf39dcf9df940866,12812,survey-multi-choice,64,433395,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""color""}",coke
+6636ffaabf39dcf9df940868,4933,survey-multi-choice,65,438329,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""none of these""}",fruit
+6636ffaabf39dcf9df94086a,6535,survey-multi-choice,68,459847,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""none of these""}",gas
+6636ffaabf39dcf9df94086c,9699,survey-multi-choice,67,453311,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""none of these""}",stool
+6636ffaabf39dcf9df94086e,6643,survey-multi-choice,69,466491,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""material""}",Persimmon
+6636ffaabf39dcf9df940870,4184,survey-multi-choice,70,470675,0,602084a1e5330d6c7ad1d17e,0,"{""Q0"":""color""}",lavender
+6636ffaabf39dcf9df940872,3589,instructions,71,474265,0,602084a1e5330d6c7ad1d17e,0,,
+6636ffd2bf39dcf9df940874,22688,instructions,0,22690,0,66343a975aa0513bc7745597,0,,
+6636ffd2bf39dcf9df940876,7573,instructions,1,30263,0,66343a975aa0513bc7745597,0,,
+6636ffd2bf39dcf9df940878,48293,html-button-response,2,78560,0,66343a975aa0513bc7745597,0,0,
+6636ffd2bf39dcf9df94087a,12823,survey-multi-choice,3,91385,0,66343a975aa0513bc7745597,0,"{""Q0"":""Mass noun""}",Would you like a chair? chair is a
+6636ffd2bf39dcf9df94087c,7339,survey-multi-choice,4,107451,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",strawberry
+6636ffd2bf39dcf9df94087e,6090,survey-multi-choice,5,113543,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",hat
+6636ffd2bf39dcf9df940880,8774,survey-multi-choice,6,122318,0,66343a975aa0513bc7745597,0,"{""Q0"":""Mass noun""}",eye
+6636ffd2bf39dcf9df940882,3918,survey-multi-choice,7,126237,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",cracker
+6636ffd2bf39dcf9df940884,16243,survey-multi-choice,8,142481,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",mouse
+6636ffd2bf39dcf9df940886,3704,survey-multi-choice,9,146187,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",pen
+6636ffd2bf39dcf9df940888,2979,survey-multi-choice,10,149167,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",banana
+6636ffd2bf39dcf9df94088a,3204,survey-multi-choice,11,152372,0,66343a975aa0513bc7745597,0,"{""Q0"":""Mass noun""}",water (beverage)
+6636ffd2bf39dcf9df94088c,3516,survey-multi-choice,12,155889,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",chair
+6636ffd2bf39dcf9df94088e,5636,survey-multi-choice,13,161527,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",monkey
+6636ffd2bf39dcf9df940890,3180,survey-multi-choice,14,164708,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",owl
+6636ffd2bf39dcf9df940892,4157,survey-multi-choice,15,168865,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",bowl
+6636ffd2bf39dcf9df940894,4135,survey-multi-choice,16,173002,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",bottle
+6636ffd2bf39dcf9df940896,3549,survey-multi-choice,17,176551,0,66343a975aa0513bc7745597,0,"{""Q0"":""Mass noun""}",grass
+6636ffd2bf39dcf9df940898,5582,survey-multi-choice,18,182134,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",fish (food)
+6636ffd2bf39dcf9df94089a,8578,survey-multi-choice,19,190713,0,66343a975aa0513bc7745597,0,"{""Q0"":""Mass noun""}",mouth
+6636ffd2bf39dcf9df94089c,4082,survey-multi-choice,20,194795,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",teddybear
+6636ffd2bf39dcf9df94089e,7128,survey-multi-choice,21,201925,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",brush (object)
+6636ffd2bf39dcf9df9408a0,4728,survey-multi-choice,22,206654,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",key
+6636ffd2bf39dcf9df9408a2,7647,survey-multi-choice,23,214301,0,66343a975aa0513bc7745597,0,"{""Q0"":""Count noun""}",rock (object)
+6636ffd2bf39dcf9df9408a4,6738,survey-multi-choice,24,221041,0,66343a975aa0513bc7745597,0,"{""Q0"":""count noun""}",grey
+6636ffd2bf39dcf9df9408a6,25884,html-button-response,25,246927,0,66343a975aa0513bc7745597,0,0,
+6636ffd2bf39dcf9df9408a8,9479,survey-multi-choice,26,256407,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",A block of metal
+6636ffd2bf39dcf9df9408aa,18337,survey-multi-choice,27,278679,0,66343a975aa0513bc7745597,0,"{""Q0"":""non-solid""}",cereal
+6636ffd2bf39dcf9df9408ac,5537,survey-multi-choice,28,284218,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",banana
+6636ffd2bf39dcf9df9408ae,5351,survey-multi-choice,29,289570,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",food
+6636ffd2bf39dcf9df9408b0,7676,survey-multi-choice,30,297247,0,66343a975aa0513bc7745597,0,"{""Q0"":""non-solid""}",puzzle
+6636ffd2bf39dcf9df9408b2,4279,survey-multi-choice,31,301527,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",slide (object)
+6636ffd2bf39dcf9df9408b4,6321,survey-multi-choice,32,307849,0,66343a975aa0513bc7745597,0,"{""Q0"":""non-solid""}",pizza
+6636ffd2bf39dcf9df9408b6,4259,survey-multi-choice,33,312109,0,66343a975aa0513bc7745597,0,"{""Q0"":""non-solid""}",yogurt
+6636ffd2bf39dcf9df9408b8,2792,survey-multi-choice,34,314902,0,66343a975aa0513bc7745597,0,"{""Q0"":""non-solid""}",drink (beverage)
+6636ffd2bf39dcf9df9408ba,4203,survey-multi-choice,35,319107,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",tv
+6636ffd2bf39dcf9df9408bc,3811,survey-multi-choice,36,322919,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",orange (food)
+6636ffd2bf39dcf9df9408be,4326,survey-multi-choice,37,327246,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",doll
+6636ffd2bf39dcf9df9408c0,6639,survey-multi-choice,38,333886,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",nose
+6636ffd2bf39dcf9df9408c2,3955,survey-multi-choice,39,337843,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",airplane
+6636ffd2bf39dcf9df9408c4,2433,survey-multi-choice,40,340277,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",spoon
+6636ffd2bf39dcf9df9408c6,11881,survey-multi-choice,41,352159,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",corn
+6636ffd2bf39dcf9df9408c8,3448,survey-multi-choice,42,355607,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",boat
+6636ffd2bf39dcf9df9408ca,4243,survey-multi-choice,43,359851,0,66343a975aa0513bc7745597,0,"{""Q0"":""non-solid""}",carrot
+6636ffd2bf39dcf9df9408cc,2332,survey-multi-choice,44,362183,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",firetruck
+6636ffd2bf39dcf9df9408ce,3133,survey-multi-choice,45,365317,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",bicycle
+6636ffd2bf39dcf9df9408d0,3349,survey-multi-choice,46,368667,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",hand
+6636ffd2bf39dcf9df9408d2,2363,survey-multi-choice,47,371031,0,66343a975aa0513bc7745597,0,"{""Q0"":""solid""}",PURPLE
+6636ffd2bf39dcf9df9408d4,101482,html-button-response,48,472515,0,66343a975aa0513bc7745597,0,0,
+6636ffd2bf39dcf9df9408d6,10807,survey-multi-choice,49,483323,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",A square belongs to a category that is organized by
+6636ffd2bf39dcf9df9408d8,13782,survey-multi-choice,50,499669,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",bunny
+6636ffd2bf39dcf9df9408da,5487,survey-multi-choice,51,505157,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",finger
+6636ffd2bf39dcf9df9408dc,4158,survey-multi-choice,52,509316,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",orange (food)
+6636ffd2bf39dcf9df9408de,8806,survey-multi-choice,53,518123,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",elephant
+6636ffd3bf39dcf9df9408e0,5841,survey-multi-choice,54,523965,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",pen
+6636ffd3bf39dcf9df9408e2,4657,survey-multi-choice,55,528622,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",owl
+6636ffd3bf39dcf9df9408e4,4611,survey-multi-choice,56,533234,0,66343a975aa0513bc7745597,0,"{""Q0"":""color""}",drink (beverage)
+6636ffd3bf39dcf9df9408e6,10223,survey-multi-choice,57,543458,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",food
+6636ffd3bf39dcf9df9408e8,3257,survey-multi-choice,58,546716,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",tree
+6636ffd3bf39dcf9df9408ea,5436,survey-multi-choice,59,552153,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",tongue
+6636ffd3bf39dcf9df9408ec,3593,survey-multi-choice,60,555747,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",cake
+6636ffd3bf39dcf9df9408ee,11280,survey-multi-choice,61,567028,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",cup
+6636ffd3bf39dcf9df9408f0,3056,survey-multi-choice,62,570085,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",lion
+6636ffd3bf39dcf9df9408f2,3062,survey-multi-choice,63,573148,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",animal
+6636ffd3bf39dcf9df9408f4,7313,survey-multi-choice,65,584691,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",story
+6636ffd3bf39dcf9df9408f6,4227,survey-multi-choice,64,577377,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",cookie
+6636ffd3bf39dcf9df9408f8,3377,survey-multi-choice,66,588069,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",soap
+6636ffd3bf39dcf9df9408fa,3896,survey-multi-choice,67,591965,0,66343a975aa0513bc7745597,0,"{""Q0"":""color""}",grass
+6636ffd3bf39dcf9df9408fc,5495,survey-multi-choice,68,597462,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",bread
+6636ffd3bf39dcf9df9408fe,4064,survey-multi-choice,69,601527,0,66343a975aa0513bc7745597,0,"{""Q0"":""shape""}",car
+6636ffd3bf39dcf9df940900,5149,survey-multi-choice,70,606677,0,66343a975aa0513bc7745597,0,"{""Q0"":""color""}",lavender
+6636ffd3bf39dcf9df940902,6175,instructions,71,612852,0,66343a975aa0513bc7745597,0,,
+6636ffdebf39dcf9df940904,160235,instructions,0,160250,0,65e375be470bd219def568a7,0,,
+6636ffdebf39dcf9df940906,6869,survey-multi-choice,3,205609,0,65e375be470bd219def568a7,0,"{""Q0"":""count noun""}",Would you like a chair? chair is a
+6636ffdebf39dcf9df940908,7714,instructions,1,167964,0,65e375be470bd219def568a7,0,,
+6636ffdebf39dcf9df94090a,3662,survey-multi-choice,4,211682,0,65e375be470bd219def568a7,0,"{""Q0"":""Count noun""}",robot
+6636ffdebf39dcf9df94090c,3096,survey-multi-choice,5,214779,0,65e375be470bd219def568a7,0,"{""Q0"":""Count noun""}",board game
+6636ffdebf39dcf9df94090e,3697,survey-multi-choice,6,218476,0,65e375be470bd219def568a7,0,"{""Q0"":""Mass noun""}",tofu
+6636ffdebf39dcf9df940910,30774,html-button-response,2,198739,0,65e375be470bd219def568a7,0,0,
+6636ffdebf39dcf9df940912,3738,survey-multi-choice,7,222215,0,65e375be470bd219def568a7,0,"{""Q0"":""Count noun""}",boulder
+6636ffdebf39dcf9df940914,2924,survey-multi-choice,8,225139,0,65e375be470bd219def568a7,0,"{""Q0"":""Count noun""}",dress shoe
+6636ffdebf39dcf9df940916,6036,survey-multi-choice,12,239973,0,65e375be470bd219def568a7,0,"{""Q0"":""Count noun""}",watermelon
+6636ffdebf39dcf9df940918,2376,survey-multi-choice,10,229997,0,65e375be470bd219def568a7,0,"{""Q0"":""Mass noun""}",pudding
+6636ffdebf39dcf9df94091a,3938,survey-multi-choice,11,233936,0,65e375be470bd219def568a7,0,"{""Q0"":""Count noun""}",donut
+6636ffdebf39dcf9df94091c,2482,survey-multi-choice,9,227621,0,65e375be470bd219def568a7,0,"{""Q0"":""Count noun""}",battery

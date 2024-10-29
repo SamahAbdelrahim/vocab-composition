@@ -1,0 +1,883 @@
+---
+title: "vocab composition"
+author: "Samah"
+date: "2024-05-05"
+output: html_document
+---
+
+# Preprocessing 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(jsonlite)
+library(tidyverse)
+library(ggrepel)
+library(here)
+source(here("..","helper.R"))
+```
+
+Read in correct data. 
+
+```{r}
+# pilot_data = read_csv("samah.varlogs.pilot.csv")
+# full_data1 = read_csv("samah.varlogs.csv")
+full_data = read_csv("redo.csv")
+```
+
+Apply the helper function to the jsonData column
+
+```{r}
+full_data$response <- sapply(full_data$response, extractValue)
+
+full_data <- full_data %>% filter(trial_type == "survey-multi-choice")
+full_data <- full_data %>%
+  filter(!str_detect(block, "practice") & !str_detect(block, "attention") )
+```
+
+Read in language data. 
+
+```{r}
+word_language_mappings <- read_csv("alllangs.csv") %>% 
+  filter(!is.na(uni_lemma))  %>% 
+  mutate(theword = uni_lemma) %>%
+  select(theword, language)
+```
+Define mapping dictionaries
+ 
+```{r }
+# 
+solidity_map <- c("solid" = 0, "non-solid" = 1, "unclear/unknown" = 2)
+categorical_map <- c("color" = 2, "material" = 1, "shape" = 0, "none of these" = 3)
+syntax_map <- c("count noun" = 0, "mass noun" = 1, "unclear/unknown" = 2)  # Assuming "known" corresponds to a known syntax category
+
+# Define a function to map categories to numeric levels
+map_categories <- function(category, block) {
+  if (block == "solidity") {
+    return(solidity_map[category])
+  } else if (block == "category_organization") {
+    return(categorical_map[category])
+  } else if (block == "count_mass") {
+    return(syntax_map[category])
+  } else {
+    return(NA)  # Handle cases where block is not recognized
+  }
+}
+
+# Apply the mapping function to the response column
+full_data$response_numeric <- mapply(map_categories, full_data$response, full_data$block)
+```
+
+```{r}
+responsecount <- full_data %>% group_by(theword, block) %>% summarize(meanrating = mean(response_numeric), stdev = sd(response_numeric), count = n()) %>% ungroup() 
+
+wide_responsecount <- responsecount %>%
+  select(theword, block, count) %>%
+  # filter(count > 5) %>%
+  pivot_wider(names_from = block, values_from = count)
+
+
+# languages <- merge(x = wide_responsecount, y = languages, by = "theword")
+
+response_counts <- full_join(wide_responsecount, languages)
+
+```
+
+# Inter-rater agreement
+
+binomial and agreemment among raters
+
+``` {r}
+# Group by 'theword' and 'block'
+
+full_datas <- full_data %>% select(theword, subject, response, block)
+
+grouped_data <- full_datas %>%
+  group_by(theword, block) %>%
+  summarise(response_count = n(),
+            most_common_response = max(table(response)),
+            total_responses = n(),
+            .groups = 'drop')
+
+# Calculate the proportion of agreement for the most common response
+grouped_data <- grouped_data %>%
+  mutate(proportion_agreement = most_common_response / total_responses)
+
+# Function to perform binomial test
+perform_binom_test <- function(successes, total) {
+  binom.test(successes, total, p = 0.7, alternative = "greater")
+}
+
+# Apply the binomial test for each group
+results <- grouped_data %>%
+  rowwise() %>%
+  mutate(binom_test = list(perform_binom_test(most_common_response, total_responses)),
+         p_value = binom_test$p.value,
+         significant = p_value < 0.05) %>%
+  select(theword, block, proportion_agreement, p_value, significant)
+
+# View the results
+print(results)
+
+agreement <- grouped_data %>%
+  group_by(block) %>%
+  summarise(m = mean(proportion_agreement),
+            se = sd(proportion_agreement) / sqrt(n()))
+
+ggplot(data = agreement, aes(x = block, y = m)) +
+  geom_col(fill = "skyblue", width = 0.5) +  # Narrow bars
+  geom_errorbar(aes(ymin = m - se, ymax = m + se), width = 0.2) +  # Error bars
+  labs(x = "Block", y = "Proportion of Agreement", title = "Mean Proportion of Agreement by Block") +
+  theme_minimal() +
+  theme(aspect.ratio = 0.5) 
+
+# Save with specific dimensions
+ggsave("agreement_plot.png", width = 5, height = 4)  
+
+```
+
+# Analysis 
+
+proportions :
+
+``` {r}
+
+full_data <- full_data %>% group_by(theword, block) %>%
+  mutate(totcount = n())
+# how many ratings per response per block
+category_counts <- full_data %>%
+  group_by(theword, block, response, totcount) %>%
+  summarise(count = n(), .groups = 'drop') 
+
+prop_shape <- category_counts %>% filter(response == "shape")
+
+
+category_counts <- category_counts %>%
+  mutate(proportion = count/totcount)
+
+lang_df <- full_join(category_counts, languages)
+
+```
+
+``` {r}
+randm_solid <- category_counts %>%
+  filter(block == "solidity") %>% # Step 1: Filter by block
+  {                               # Step 2: Select 50 random unique theword values and filter the dataframe
+    sampled_words <- sample(unique(.$theword), 50, replace = FALSE)
+    filter(., theword %in% sampled_words)
+  }
+
+randm_syntax <- category_counts %>% filter(block == "count_mass") %>% # Step 1: Filter by block
+  {                               # Step 2: Select 50 random unique theword values and filter the dataframe
+    sampled_words <- sample(unique(.$theword), 50, replace = FALSE)
+    filter(., theword %in% sampled_words)
+  }
+
+randm_categ <- category_counts %>% filter(block == "category_organization") %>% # Step 1: Filter by block
+  {                               # Step 2: Select 50 random unique theword values and filter the dataframe
+    sampled_words <- sample(unique(.$theword), 50, replace = FALSE)
+    filter(., theword %in% sampled_words)
+  }
+```
+
+
+Plots
+
+```{r}
+ggplot(randm_solid, aes(x = theword, y = proportion, fill = response)) +           geom_bar(position = "stack", stat = "identity") + coord_flip()
+
+ggplot(randm_syntax, aes(x = theword, y = proportion, fill = response)) +           geom_bar(position = "stack", stat = "identity") + coord_flip()
+
+ggplot(randm_categ, aes(x = theword, y = proportion, fill = response)) +           geom_bar(position = "stack", stat = "identity") + coord_flip()
+```
+
+reorder
+
+```{r}
+# Step 1: Calculate the proportion of "solid" for each word
+solid_proportions <- randm_solid %>%
+  filter(response == "solid") %>%
+  select(theword, solid_proportion = proportion)
+
+# Step 2: Merge the proportion of "solid" back into the main data frame
+randm_solid <- randm_solid %>%
+  left_join(solid_proportions, by = "theword") %>%
+  mutate(solid_proportion = replace_na(solid_proportion, 0))
+
+# Step 3: Reorder 'theword' based on 'solid_proportion'
+randm_solid <- randm_solid %>% 
+  mutate(theword = fct_reorder(theword, solid_proportion, .desc = TRUE))
+```
+
+
+Plotting
+
+```{r}
+# Step 4: Create the plot
+ggplot(randm_solid, aes(x = theword, y = proportion, fill = response)) +
+  geom_bar(position = "stack", stat = "identity") +
+  coord_flip() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Optional: Rotate x-axis text for better readability
+
+```
+
+
+``` {r}
+
+# proportion_solid<- category_counts %>% filter(response == "solid")
+# proportion_count <- category_counts %>% filter(response == "count noun")
+# proportion_shape <-  category_counts %>% filter(response == "shape")
+
+lang_df1 <- lang_df %>% filter(response == "solid" | response == "count noun" | response == "shape" | response == "none of these" )
+lang_df2 <- lang_df %>% filter(response == "shape" | response == "material" | response == "none of these" | response == "color")
+
+
+# Create combined density plot
+ggplot(lang_df1, aes(x = proportion, color = response, fill = response)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of Proportions by Language",
+    x = "Proportion Value",
+    y = "Density (words)"
+  ) +
+  theme_minimal()
+
+# Create combined density plot
+ggplot(lang_df2, aes(x = proportion, color = response, fill = response)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of Proportions by Language",
+    x = "Proportion Value",
+    y = "Density (words)"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+ggplot(filter(lang_df1, response != "none of these"),
+       aes(x = proportion, color = response, fill = response)) +
+  geom_density(alpha = 0.5, aes(y = after_stat(count))) +
+  # geom_histogram(position = "dodge", binwidth = .05)
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of Proportions by Language",
+    x = "Proportion Value",
+    y = "Density"
+  ) +
+  theme_minimal()
+```
+
+
+# Proportion approach
+
+``` {r}
+
+full_solidity <- full_data %>% filter(block == "solidity")
+full_countmass <- full_data %>% filter(block == "count_mass")
+full_category <-  full_data %>% filter(block == "category_organization")
+
+
+
+full_solidity <- full_solidity %>% group_by(theword) |> summarise(p_solid = mean(response == "solid"), sd_solid = sd(response == "solid"))
+
+full_countmass <- full_countmass %>% group_by(theword) %>% summarise(p_count = mean(response == "count noun"), sd_count = sd(response == "count noun"))
+
+full_category <- full_category %>% group_by(theword) %>% summarise(p_shape = mean(response == "shape"), sd_shape = sd(response == "shape"))
+
+
+# full_solidity <- full_solidity %>% group_by(theword) |> summarise(p_solid = mean(response == "solid"))
+
+# pilot_solidity <- pilot_data %>% filter(response == "solid" | response== "non-solid" | response== "unclear/unknown")
+# 
+# pilot_countmass <- pilot_data %>% filter(response == "Count noun" | response== "Mass noun" | response== "Unclear/unknown")
+# 
+# pilot_category <- pilot_data %>% filter(response == "shape" | response == "color" | response== "none of these" | response == "material" )
+
+fulldata_prop <- full_data %>% group_by(theword) |> summarise(p_shape = mean(response == "shape"), p_solid = mean(response == "solid"), p_count = mean(response == "count noun"))
+
+
+
+# full_countmass <- full_countmass %>% group_by(theword) %>% summarise(p_count = mean(response == "count noun"))
+# 
+# full_category <- full_category %>% group_by(theword) %>% summarise(p_shape = mean(response == "shape"))
+```
+
+```{r}
+
+#%>% select(_id, theword, response, block) %>% pivot_wider(names_from = block, values_from = response) 
+
+# Calculate mean and standard deviation
+mean_p_solid <- mean(full_solidity$p_solid)
+sd_p_solid <- sd(full_solidity$p_solid)
+
+# Print mean and standard deviation
+print(paste("Mean of p_solid:", mean_p_solid))
+print(paste("Standard deviation of p_solid:", sd_p_solid))
+
+# Create histogram
+ggplot(full_solidity, aes(x = p_solid)) +
+  geom_histogram(binwidth = 0.1, color = "black", fill = "skyblue", alpha = 0.7) +
+  geom_vline(aes(xintercept = mean_p_solid), color = "red", linetype = "dashed", size = 1) +
+  geom_text(aes(x = mean_p_solid, y = 1, label = paste("Mean =", round(mean_p_solid, 2))), color = "red", vjust = -1) +
+  labs(
+    title = "Distribution of p_solid Values",
+    x = "p_solid",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+
+```
+
+
+
+# plotting: 
+``` {r}
+
+df_lllangs <- merge(x = full_solidity, y=languages, by = "theword")
+df_lllangs <- merge(x = df_lllangs, y = full_countmass, by = "theword")
+
+df_lllangs <- merge(x = df_lllangs, y = full_category, by = "theword")
+
+fulldata_prop <- full_data %>% group_by(theword) |> summarise(p_shape = mean(response == "shape"), p_solid = mean(response == "solid"), p_count = mean(response == "count noun"))
+
+df_lllangs %>%
+  group_by(language) %>%
+  mutate(total_count = n()) %>%
+  filter(p_count >= 0.8) %>%
+  summarize(proportion = n() / first(total_count))
+
+# Get mean and standard deviation for each language group
+summary_stats <- df_lllangs %>%
+  group_by(language) %>%
+  summarize(
+    mean_p_solid = mean(p_solid, na.rm = TRUE),
+    sd_p_solid = sd(p_solid, na.rm = TRUE),
+    mean_p_count = mean(p_count, na.rm = TRUE),
+    sd_p_count = sd(p_count, na.rm = TRUE),
+    mean_p_shape.x = mean(p_shape, na.rm = TRUE),
+    sd_p_shape.x = sd(p_shape, na.rm = TRUE)
+  )
+
+
+```
+
+```{r}
+# Calculate mean and standard deviation for each language
+mean_sd_data_solid <- df_lllangs %>%
+  group_by(language) %>%
+  summarize(mean_p_solid = mean(p_solid), sd_p_solid = sd(p_solid))
+
+# Create faceted density plot
+ggplot(df_lllangs, aes(x = p_solid)) +
+  geom_density(color = "black", fill = "skyblue", alpha = 0.7) +
+  geom_vline(data = mean_sd_data_solid, aes(xintercept = mean_p_solid), color = "red", linetype = "dashed", size = 0.5) +
+  geom_text(data = mean_sd_data_solid, aes(x = mean_p_solid, y = Inf, label = paste("Mean =", round(mean_p_solid, 2))), color = "red", vjust = 1.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of solid proportions by Language",
+    x = "Solid Proportion",
+    y = "Density"
+  ) +
+  theme_minimal()
+
+
+mean_sd_data_count <- df_lllangs %>%
+  group_by(language) %>%
+  summarize(mean_p_count = mean(p_count), sd_p_count = sd(p_count))
+
+# Create faceted density plot
+ggplot(df_lllangs, aes(x = p_count)) +
+  geom_density(color = "black", fill = "skyblue", alpha = 0.7) +
+  geom_vline(data = mean_sd_data_count, aes(xintercept = mean_p_count), color = "red", linetype = "dashed", size = 0.5) +
+  geom_text(data = mean_sd_data_count, aes(x = mean_p_count, y = Inf, label = paste("Mean =", round(mean_p_count, 2))), color = "red", vjust = 1.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of solid proportions by Language",
+    x = "Solid Proportion",
+    y = "Density"
+  ) +
+  theme_minimal()
+
+mean_sd_data_shape <- df_lllangs %>%
+  group_by(language) %>%
+  summarize(mean_p_shape = mean(p_shape), sd_p_shape = sd(p_shape))
+
+# Create faceted density plot
+ggplot(df_lllangs, aes(x = p_shape)) +
+  geom_density(color = "black", fill = "skyblue", alpha = 0.7) +
+  geom_vline(data = mean_sd_data_shape, aes(xintercept = mean_p_shape), color = "red", linetype = "dashed", size = 0.5) +
+  geom_text(data = mean_sd_data_shape, aes(x = mean_p_shape, y = Inf, label = paste("Mean =", round(mean_p_shape, 2))), color = "red", vjust = 1.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of solid proportions by Language",
+    x = "Solid Proportion",
+    y = "Density"
+  ) +
+  theme_minimal()
+
+
+# Reshape data to long format
+long_data <- df_lllangs %>%
+  pivot_longer(cols = c(p_solid, p_count, p_shape),
+               names_to = "measure",
+               values_to = "value")
+
+# Calculate mean and standard deviation for each language and measure
+mean_sd_data <- long_data %>%
+  group_by(language, measure) %>%
+  summarize(mean_value = mean(value, na.rm = TRUE),
+            sd_value = sd(value, na.rm = TRUE))
+
+# Create combined density plot
+ggplot(long_data, aes(x = value, color = measure, fill = measure)) +
+  geom_density(alpha = 0.5) +
+  geom_vline(data = mean_sd_data, aes(xintercept = mean_value, color = measure), linetype = "dashed", size = 0.5)  +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of Proportions by Language",
+    x = "Proportion Value",
+    y = "Density (words)"
+  ) +
+  theme_minimal()
+
+
+```
+``` {R}
+# Reshape data to long format
+long_data <- df_lllangs %>%
+  pivot_longer(cols = c(p_solid, p_count, p_shape), names_to = "measure", values_to = "value") %>%
+  pivot_longer(cols = c(sd_solid, sd_count, sd_shape), names_to = "measure_sd", values_to = "sd_value") %>%
+  filter(substring(measure, 3) == substring(measure_sd, 4))
+
+# Calculate mean and standard deviation for each language and measure
+mean_sd_data <- long_data %>%
+  group_by(language, measure) %>%
+  summarize(mean_value = mean(value, na.rm = TRUE),
+            sd_value = mean(sd_value, na.rm = TRUE), .groups = 'drop')
+
+
+# Create combined density plot
+lexc <- ggplot() +
+  geom_density(data = long_data, aes(x = value, color = measure, fill = measure), alpha = 0.5) +
+  geom_vline(data = mean_sd_data, aes(xintercept = mean_value, color = measure), linetype = "dashed", size = 0.5) +
+  geom_errorbarh(data = mean_sd_data, aes(xmin = mean_value - sd_value, xmax = mean_value + sd_value, y = 0), height = 0.05, color = "black")  +
+  facet_wrap(~ language) +
+  labs(
+    x = "Rating proportion",
+    y = "Density (words)"
+  ) +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Set2") +
+  scale_fill_manual(
+    values = c("p_count" = "darkblue", "p_shape" = "lightgreen", "p_solid" = "lightcoral"),
+    labels = c("p_count" = "Count noun", "p_shape" = "Shape based", "p_solid" = "Solid")
+  ) +
+  scale_color_manual(
+    values = c("p_count" = "darkblue", "p_shape" = "lightgreen", "p_solid" = "lightcoral"),
+    labels = c("p_count" = "Count noun", "p_shape" = "Shape based", "p_solid" = "Solid")
+  )
+
+png("lexc.png" , units = "px")
+print(lexc)
+dev.off()
+
+ggsave <- function(..., bg = 'white') ggplot2::ggsave(..., bg = bg)
+
+
+ggsave("lexc.png", lexc, , width = 40, height = 20, units = "cm")
+
+```
+
+
+```{r}
+# Reshape the data to long format
+solid_long <- df_lllangs %>%
+  pivot_longer(cols = c(p_solid, p_count, p_shape), names_to = "variable", values_to = "value")
+
+# Plot density plots for each variable, faceted by language
+ggplot(solid_long, aes(x = value, fill = variable)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density Plots for p_solid, p_count, and p_shape by Language",
+    x = "Value",
+    y = "Density"
+  ) +
+  scale_fill_manual(values = c("p_solid" = "skyblue", "p_count" = "green", "p_shape" = "red"), 
+                    labels = c("p_solid", "p_count", "p_shape")) +
+  theme_minimal()
+```
+
+
+``` {r}
+# Scatter plot of p_shape.y vs p_count
+ggplot(solid_alllangs, aes(x = p_count, y = p_shape, color = language)) +
+  geom_point(size = 3, alpha = 0.7) +
+  labs(
+    title = "Scatter Plot of p_shape vs. p_count",
+    x = "p_count",
+    y = "p_shape.y"
+  ) +
+  geom_smooth(method = "lm") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_brewer(palette = "Set3") + facet_wrap(~language)
+```
+
+```{R}
+data_long <- solid_alllangs %>%
+  pivot_longer(cols = c(p_solid, p_count), names_to = "type", values_to = "value")
+
+# Create faceted histogram
+ggplot(data_long, aes(x = value, fill = type, color = type)) +
+  geom_histogram(position = "identity", binwidth = 0.1, alpha = 0.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Distribution of p_solid and p_count Values per word by Language",
+    x = "Value",
+    y = "Frequency of words"
+  ) +
+  scale_fill_manual(values = c("skyblue", "orange"), name = "Type") +
+  scale_color_manual(values = c("skyblue", "orange"), name = "Type") +
+  theme_minimal()
+```
+
+
+```{r}
+
+ggplot(data = data_alllangs, aes(y= solidity, fill = count_mass )) +
+  geom_bar()  +
+  facet_wrap(~language) +
+  coord_flip() +
+  theme(text = element_text(size = 10),
+        axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+```
+
+```{r}
+lang_props <- data_alllangs |>
+  group_by(solidity, language, count_mass) |>
+  count() |>
+  group_by(solidity, language) |>
+  mutate(prop = n / sum(n)) 
+
+ggplot(data = lang_props, 
+       aes(x = language, y = prop, col = count_mass )) +
+  geom_point() + 
+  facet_wrap(~solidity) +
+  coord_flip() +
+  theme(text = element_text(size = 10),
+        axis.text.x = element_text(angle = 90, hjust = 1)) 
+```
+
+Category organization
+
+```{r}
+ggplot(data = data_alllangs, aes(y= solidity, fill = category_organization )) +
+  geom_bar()  +
+  facet_wrap(~language) +
+  coord_flip() +
+  theme(text = element_text(size = 10),
+        axis.text.x = element_text(angle = 90, hjust = 1)) 
+```
+
+```{r}
+cat_props <- data_alllangs |>
+  group_by(solidity, language, category_organization) |>
+  count() |>
+  group_by(solidity, language) |>
+  mutate(prop = n / sum(n)) 
+
+ggplot(data = cat_props, 
+       aes(x = language, y = prop, col = category_organization)) +
+  geom_point() + 
+  facet_wrap(~solidity) +
+  coord_flip() +
+  theme(text = element_text(size = 10),
+        axis.text.x = element_text(angle = 90, hjust = 1)) 
+```
+
+
+``` {r}
+MA_estimates <- tibble(
+  language = c("Mandarin (Beijing)", "English (American)", "Spanish (Mexican)", "Korean", "Japanese"),
+estimates = c(0.8260, 1.0327,2.4976,1.682 ,1.1436), 
+se = c(0.8389, 0.8477	, 1.1928	,  0.9035	, 0.9251)
+  
+)
+
+solidityprops <- df_lllangs %>%
+  group_by(language) %>%
+  summarize(meansolid = mean(p_solid)) 
+
+
+MA_estimates <- merge(x = MA_estimates, y = solidityprops, by = "language" )
+  data_alllangs <- merge(x = result, y=languages, by = "theword")
+  
+  ggplot(MA_estimates, aes(x = meansolid, y = estimates, color = language)) +
+  geom_point(size = 1) +
+  geom_errorbar(aes(ymin = estimates - se, ymax = estimates + se), width = 0.001) + 
+
+  labs(
+    x = "Solidity Proportion",
+    y = "Meta-analytic estimates"
+  ) +
+  theme_minimal()
+
+```
+
+
+``` {r}
+ggplot(data = data_alllangs) +
+  geom_bar(aes(x = category_organization), binwidth=1)
+
+data_alllangs %>% filter( category_organization == "none of these")
+
+```
+
+
+```{r}
+data_alllangs %>%
+  group_by(language) %>%
+  summarise(chi = chisq.test(solidity, count_mass)$statistic, p = chisq.test(solidity, count_mass)$p.value, n = n())
+
+
+data_alllangs %>%
+  group_by(language) %>%
+  summarise(chi = chisq.test(solidity, category_organization)$statistic, p = chisq.test(solidity, count_mass)$p.value, n = n())
+
+#distinct(language, theword, solidity, category_organization) %>%
+
+
+useng <- data_alllangs %>% filter(language =="English (American)")
+mand <- data_alllangs %>% filter(language == "Mandarin (Beijing)")
+
+
+chisq.test(useng$solidity, useng$count_mass)
+chisq.test(useng$solidity, useng$category_organization)
+
+x = chisq.test(mand$solidity, mand$count_mass)
+chisq.test(mand$solidity, mand$category_organization)
+
+```
+
+``` {r}
+t.test(solid_alllangs$)
+```
+
+#old snippets:
+
+
+```{r}
+
+# # here:
+# ------------------
+# 
+# data_all <- merge(x = categ_org_wide, y=solidity_wide, by = "theword")
+# data_all <- merge(x = data_all, y=countmass_wide, by = "theword") 
+# 
+# data_all <- data_all%>% select(theword, category_organization, solidity, count_mass)
+# 
+# 
+# -----------------
+categ_org <- result %>% filter(block == "category_organization")
+solidity <- result %>% filter(block == "solidity")
+ount_mass <- result %>% filter(block == "count_mass")
+# 
+# categ_org_wide <- categ_org %>% pivot_wider(names_from = block, values_from = judgement)
+# solidity_wide <- solidity %>% pivot_wider(names_from = block, values_from = judgement)
+# countmass_wide <- count_mass %>% pivot_wider(names_from = block, values_from = judgement)
+  
+
+solidity %>% group_by (judgement) %>% tally() %>% 
+  mutate(freq = prop.table(n))
+
+categ_org %>% group_by (judgement) %>% tally() %>% 
+  mutate(freq = prop.table(n))
+
+count_mass %>% group_by (judgement) %>% tally() %>% 
+  mutate(freq = prop.table(n))
+
+
+data_all <- data_all %>% 
+  mutate(across(c(category_organization, solidity, count_mass))) 
+
+
+```
+
+# 253 class:
+```{r for class}
+class_df <- full_data %>% select(subject, theword, response, block) %>% filter(block =="solidity" ) %>% mutate(response = as.numeric(as.factor(response))-1) %>% group_by(theword) %>% mutate( count = n()) %>% ungroup() %>% filter( count == 10)
+
+wide_classdf <- class_df %>% select(subject, theword, response) %>% pivot_wider(names_from = theword, values_from = response)
+
+class_df %>% group_by(theword) %>% summarize( count = n()) %>% ungroup() %>% filter( count == 7)
+
+```
+
+# widening the data:
+``` {r}
+
+wide_data <- full_data %>% pivot_wider(names_from = block, values_from = response)
+
+wide_data %>% select(solidity, count_mass, category_organization)
+
+#turn the responses to numeric responses
+
+wide_data <- wide_data %>%
+  mutate(
+    n_solidity = as.numeric(as.factor(solidity)) - 1,  # Subtracting 1 to start from 0
+    n_count_mass = as.numeric(as.factor(count_mass)) - 1,
+    n_category_organization = as.numeric(as.factor(category_organization)) - 1
+  )
+
+wide_data %>% filter( theword == "cracker")
+```
+
+
+``` {r}
+
+pilot_solidity %>% nrow()
+pilot_countmass %>% nrow()
+pilot_category %>% nrow()
+pilot_data %>% nrow()
+
+# pilot_solidity %>% group_by (response) %>% tally() %>% 
+#   mutate(freq = prop.table(n))
+# pilot_countmass %>% group_by (response) %>% tally() %>% 
+#   mutate(freq = prop.table(n))
+# pilot_category %>% group_by (response) %>% tally()%>% 
+#   mutate(freq = prop.table(n))
+
+full_solidity %>% group_by (response) %>% tally() %>% 
+  mutate(freq = prop.table(n))
+full_countmass %>% group_by (response) %>% tally() %>% 
+  mutate(freq = prop.table(n))
+full_category %>% group_by (response) %>% tally()%>% 
+  mutate(freq = prop.table(n))
+
+filter(pilot_data, str_detect(theword, "square"))
+
+full_data %>% filter(block == "solidity") %>% group_by(theword, block) %>% tally()
+full_data %>% filter(block == "count_mass") %>% group_by(theword, block) %>% tally()
+full_data %>% filter(block == "category_organization") %>% group_by(theword, block) %>% tally()
+
+full_data %>% tally()
+full_data %>% group_by(subject) %>% tally()
+full_data %>% group_by((rt))
+full_data%>% filter(trial_type == "survey-multi-choice") %>% summarize(meanrt = mean(rt))
+#%>% arrange(desc(rt), .by_group = TRUE)
+full_data %>% select(theword, block, response)
+
+
+```
+
+```{r}
+
+full_data %>% filter(subject =="5c80e889a1d4b900114f2be3")
+full_data %>% filter(theword == "cracker")
+responsecount %>% filter(theword == "cracker")
+
+# Define mapping dictionaries
+solidity_map <- c("solid" = 0, "non-solid" = 1, "unclear/unknown" = 2)
+categorical_map <- c("color" = 0, "material" = 1, "shape" = 2, "none of these" = 3)
+syntax_map <- c("count noun" = 0, "mass noun" = 1, "unclear/unknown" = 2)  # Assuming "known" corresponds to a known syntax category
+
+
+responsecount %>% select(theword, block, meanrating, stdev, count) %>%
+  mutate(category = case_when(
+    block == "solidity" & meanrating <= 0.5 ~ "solid", 
+    block == "solidity" & meanrating <= 1.5 ~ "non-solid", 
+    block == "solidity" & meanrating > 1.5 ~ "unclear/unknown", 
+    block == "count_mass" & meanrating <= 0.5 ~ "count noun", 
+    block == "count_mass" & meanrating <= 1.5 ~ "mass noun", 
+    block == "count_mass" & meanrating > 1.5 ~ "unclear/unknown", 
+    block == "category_organization" & meanrating <= 0.5 ~ "color", 
+    block == "category_organization" & meanrating <= 1.5 ~ "material", 
+    block == "category_organization" & meanrating <= 2.5 ~ "shape", 
+    block == "category_organization" & meanrating > 2.5 ~ "none of these"
+
+  ))
+
+wide_data %>% filter(theword == "cracker") %>% select(theword, solidity, count_mass, category_organization)
+
+ ggplot(full_data) + geom_bar(aes(x = rt)) + scale_x_continuous(limits = c(500, 7000))
+ 
+ full_data %>% filter(rt < 1000)
+ full_data %>% filter( subject == "5fb3cf9a1a48c600089ee853")
+
+```
+
+
+```{r}
+
+ggplot(data = pilot_solidity  ) +
+  geom_bar(aes(x = response))
+
+ggplot(data = pilot_countmass) +
+  geom_bar(aes(x = response))
+
+ggplot(data = pilot_category) +
+  geom_bar(aes(x = response))
+
+
+ggplot(data = responsecount) +
+  geom_histogram(aes(x = count), binwidth=1)
+
+(responsecount %>% filter(count <= 5) %>% nrow())/ nrow(responsecount)
+# [1] 0.5082707
+
+full_data %>% select(theword) %>% unique() 
+
+redo <- responsecount %>% filter(count <= 5)
+
+wordredo <- tibble (word = redo$theword) %>% unique()
+
+toJSON(redo %>% filter(block == "category_organization") %>% select(theword) %>% unique())
+toJSON(redo %>% filter(block == "solidity") %>% select(theword) %>% unique())
+toJSON(redo %>% filter(block == "count_mass") %>% select(theword) %>% unique())
+
+ 
+toJSON(wordredo)
+
+
+
+
+
+```
+
+
+#clustering:
+
+``` {r}
+write.csv(lang_df, "lang_df.csv", row.names = FALSE)
+solid_lang_df <- lang_df %>% filter (block == "solidity")
+syntax_lang_df <- lang_df %>% filter (block == "count_mass")
+category_lang_df <- lang_df %>% filter (block == "category_organization")
+write.csv(syntax_lang_df, "syntax_lang_df.csv", row.names = FALSE)
+write.csv(solid_lang_df, "solid_lang_df.csv", row.names = FALSE)
+write.csv(category_lang_df, "category_lang_df.csv", row.names = FALSE)
+
+
+# dist_shape_turkish <- lang_df %>% filter( response == 'shape' & language == "Turkish")
+
+# dist_shape_MandB <- lang_df %>% filter( response == 'shape'& language == "Mandarin (Beijing)")
+# 
+# dist_shape_MandT <- lang_df %>% filter( response == 'shape'& language == "Mandarin (Taiwanese)")
+# 
+# dist_shape_Cant <- lang_df %>% filter( response == 'shape'& language == "Cantonese")
+# 
+# dist_shape_Russ <- lang_df %>% filter( response == 'shape'& language ==  "Russian")
+# 
+# dist_shape_Kis <- lang_df %>% filter( response == 'shape'& language == "Kiswahili" )
+# 
+# dist_shape_MandT <- lang_df %>% filter( response == 'shape'& language == "Mandarin (Taiwanese)")
+# 
+# dist_shape_MandT <- lang_df %>% filter( response == 'shape'& language == "Mandarin (Taiwanese)")
+
+
+
+```
