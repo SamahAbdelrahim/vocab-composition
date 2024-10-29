@@ -43,7 +43,6 @@ languages <- c("English (American)", "Mandarin (Beijing)", "Korean", "English (A
 
 # Use purrr::map_df to apply the function and bind the results
 allangs <- map_df(languages, ~ calculate_first300(chosenlanguage = .x))
-#write_csv(allangs, "alllangs.csv")
 
 words <- allangs %>% 
   select(uni_lemma, language) %>% 
@@ -53,10 +52,13 @@ words <- allangs %>%
 
 words |> filter( uni_lemma == "cracker")
 toJSON(words)
+write_csv(as.data.frame(words), "alllangs.csv")
+
 
 ```
 
 ``` {r}
+
 #allnouns <- data.frame(unilemma = first_300$uni_lemma, language = first_300$lan)
 #allnouns[nrow(allnouns)+1,] <- 
   
