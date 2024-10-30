@@ -11,8 +11,10 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(jsonlite)
 library(tidyverse)
+library(purrr)
 library(ggrepel)
 library(here)
+library(irr)
 source(here("..","helper.R"))
 ```
 
@@ -86,7 +88,7 @@ grouped_data <- full_datas %>%
             total_responses = n(),
             .groups = 'drop')
 
-# Calculate the proportion of agreement for the most common response
+# proportion of agreement for most common response
 grouped_data <- grouped_data %>%
   mutate(proportion_agreement = most_common_response / total_responses)
 
@@ -95,7 +97,7 @@ perform_binom_test <- function(successes, total) {
   binom.test(successes, total, p = 0.7, alternative = "greater")
 }
 
-# Apply the binomial test for each group
+=
 results <- grouped_data %>%
   rowwise() %>%
   mutate(binom_test = list(perform_binom_test(most_common_response, total_responses)),
@@ -103,7 +105,7 @@ results <- grouped_data %>%
          significant = p_value < 0.05) %>%
   select(theword, block, proportion_agreement, p_value, significant)
 
-# View the results
+
 print(results)
 
 agreement <- grouped_data %>%
@@ -113,13 +115,83 @@ agreement <- grouped_data %>%
 
 ggplot(data = agreement, aes(x = block, y = m)) +
   geom_col(fill = "skyblue", width = 0.5) +  # Narrow bars
-  geom_errorbar(aes(ymin = m - se, ymax = m + se), width = 0.2) +  # Error bars
+  geom_errorbar(aes(ymin = m - se, ymax = m + se), width = 0.2) + 
   labs(x = "Block", y = "Proportion of Agreement", title = "Mean Proportion of Agreement by Block") +
   theme_minimal() +
   theme(aspect.ratio = 0.5) 
 
-# Save with specific dimensions
+# specific dimensions
 ggsave("agreement_plot.png", width = 5, height = 4)  
+
+```
+
+Cohen's Kappa: inter rater agreement:
+Kappa.light is not working becuase we have a lot of NAs
+
+``` {r }
+solid_kappa <- full_data %>% filter(block == "solidity") 
+# %>% select(theword, response_numeric, subject ) %>% pivot_wider(names_from = subject, values_from = response_numeric)
+
+
+ratings_wide <- solid_kappa %>%
+  select(theword, response_numeric, subject) %>%
+  pivot_wider(names_from = subject, values_from = response_numeric)
+
+# matrix is compatible with irr package functions) ?
+ratings_matrix <- as.matrix(ratings_wide %>% select(-theword))
+
+# kappam.light() can handle NAs ?
+kappa_result <- kappam.light(ratings_matrix)
+print(kappa_result)
+
+
+```
+
+using pairwise cohen's kappa: 
+``` {r }
+
+ratings_wide <- solid_kappa %>%
+  select(theword, response_numeric, subject) %>%
+  pivot_wider(names_from = subject, values_from = response_numeric)
+
+#create all unique pairs of raters
+raters <- colnames(ratings_wide)[-1]  # exclude "theword" 
+pairs <- combn(raters, 2, simplify = FALSE)
+
+# calculate pairwise Cohen's Kappa
+pairwise_kappas <- sapply(pairs, function(pair) {
+  ratings_pair <- ratings_wide %>%
+    select(theword, all_of(pair)) %>%
+    drop_na()
+  
+  #are there enough ratings to calculate kappa?
+  if (nrow(ratings_pair) > 1) {
+    kappa2(as.matrix(ratings_pair[, -1]), weight = "unweighted")$value
+  } else {
+    NA 
+  }
+})
+
+
+mean_kappa <- mean(pairwise_kappas, na.rm = TRUE)
+print(mean_kappa)
+
+```
+visualizing Kappa values: 
+``` {r }
+
+pairwise_results <- data.frame(
+  Pair = sapply(pairs, function(x) paste(x, collapse = "-")),
+  Kappa = pairwise_kappas
+)
+print(pairwise_results)
+
+
+library(ggplot2)
+ggplot(pairwise_results, aes(x = Kappa)) +
+  geom_histogram(binwidth = 0.05, fill = "skyblue", color = "black") +
+  labs(title = "Distribution of Pairwise Kappa Scores", x = "Kappa", y = "Frequency") +
+  theme_minimal()
 
 ```
 
@@ -146,24 +218,76 @@ category_counts <- category_counts %>%
 lang_df <- full_join(category_counts, word_language_mappings) %>% filter( !is.na(theword), !is.na(language))
 
 ```
+
+divide the lang_df by block:
+shared words amongst (solidity, syntax, and category) based on proportion
+
+```{r }
+solid_df <- lang_df %>% filter(response == "solid")
+count_df <- lang_df %>% filter(response == "count noun")
+shape_df <- lang_df %>% filter(response == "shape")
+
+
+
+inner_join(solid_df %>% filter(proportion <= 0.5), count_df %>% filter(proportion <= 0.5) , by= "theword") %>% select(theword) %>% unique()
+
+inner_join(solid_df %>% filter(proportion > 0.5), count_df %>% filter(proportion > 0.5) , by= "theword") %>% select(theword) %>% unique()
+
+inner_join(solid_df %>% filter(proportion <= 0.5), count_df %>% filter(proportion > 0.5) , by= "theword") %>% select(theword) %>% unique()
+
+inner_join(solid_df %>% filter(proportion > 0.5), count_df %>% filter(proportion <= 0.5) , by= "theword") %>% select(theword) %>% unique()
+
+inner_join(solid_df %>% filter(proportion <= 0.5), shape_df %>% filter(proportion <= 0.5) , by= "theword") %>% select(theword) %>% unique()
+
+inner_join(solid_df %>% filter(proportion > 0.5), shape_df %>% filter(proportion > 0.5) , by= "theword") %>% select(theword) %>% unique()
+
+inner_join(solid_df %>% filter(proportion <= 0.5), shape_df %>% filter(proportion > 0.5) , by= "theword") %>% select(theword) %>% unique()
+
+inner_join(solid_df %>% filter(proportion > 0.5), shape_df %>% filter(proportion <= 0.5) , by= "theword") %>% select(theword) %>% unique()
+
+
+
+dfs <- list(solid_df, count_df, shape_df)
+names <- c("solid", "count", "shape")
+conditions <- c("low", "high")
+
+# Generate all unique pairs of dataframe and condition combinations
+comparison_combinations <- expand.grid(
+  df1 = names, df2 = names,
+  prop1 = conditions, prop2 = conditions,
+  stringsAsFactors = FALSE
+) %>%
+  filter(df1 != df2)  # no same dataframe comparisons
+
+# Apply over each combination
+results <- comparison_combinations %>%
+  pmap_dfr(~ find_shared_words(
+    dfs[[which(names == ..1)]],
+    dfs[[which(names == ..2)]],
+    ..1, ..2, ..3, ..4
+  ))
+ print(results)
+
+results %>% group_by(source1, source2, condition1, condition2) %>% summarize(count = n())
+
+```
+
 randomly sample 50 words: 
 
 ``` {r}
 randm_solid <- category_counts %>%
-  filter(block == "solidity") %>% # Step 1: Filter by block
-  {                               # Step 2: Select 50 random unique theword values and filter the dataframe
+  filter(block == "solidity") %>% 
+  {                               
     sampled_words <- sample(unique(.$theword), 50, replace = FALSE)
     filter(., theword %in% sampled_words)
   }
 
-randm_syntax <- category_counts %>% filter(block == "count_mass") %>% # Step 1: Filter by block
-  {                               # Step 2: Select 50 random unique theword values and filter the dataframe
+randm_syntax <- category_counts %>% filter(block == "count_mass") %>% 
     sampled_words <- sample(unique(.$theword), 50, replace = FALSE)
     filter(., theword %in% sampled_words)
   }
 
-randm_categ <- category_counts %>% filter(block == "category_organization") %>% # Step 1: Filter by block
-  {                               # Step 2: Select 50 random unique theword values and filter the dataframe
+randm_categ <- category_counts %>% filter(block == "category_organization") %>% 
     sampled_words <- sample(unique(.$theword), 50, replace = FALSE)
     filter(., theword %in% sampled_words)
   }
@@ -171,17 +295,17 @@ randm_categ <- category_counts %>% filter(block == "category_organization") %>% 
 reorder
 
 ```{r}
-# Step 1: Calculate the proportion of "solid" for each word
+
 solid_proportions <- randm_solid %>%
   filter(response == "solid") %>%
   select(theword, solid_proportion = proportion)
 
-# Step 2: Merge the proportion of "solid" back into the main data frame
+# merge the proportion of "solid" back into the main data frame
 randm_solid <- randm_solid %>%
   left_join(solid_proportions, by = "theword") %>%
   mutate(solid_proportion = replace_na(solid_proportion, 0))
 
-# Step 3: Reorder 'theword' based on 'solid_proportion'
+# reorder 'theword' based on 'solid_proportion'
 randm_solid <- randm_solid %>% 
   mutate(theword = fct_reorder(theword, solid_proportion, .desc = TRUE))
 
@@ -201,11 +325,12 @@ ggplot(randm_categ, aes(x = theword, y = proportion, fill = response)) +        
 ordered
 
 ```{r}
-# Step 4: Create the plot
+
 ggplot(randm_solid, aes(x = theword, y = proportion, fill = response)) +
   geom_bar(position = "stack", stat = "identity") +
   coord_flip() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Optional: Rotate x-axis text for better readability
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+# rotate x-axis text for better readability
 
 ```
 
@@ -256,4 +381,5 @@ ggplot(filter(lang_df1, response != "none of these"),
   ) +
   theme_minimal()
 ```
+
 
