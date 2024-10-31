@@ -126,7 +126,7 @@ ggsave("agreement_plot.png", width = 5, height = 4)
 ```
 
 Cohen's Kappa: inter rater agreement:
-Kappa.light is not working becuase we have a lot of NAs
+Kappa.light is not working because we have a lot of NAs
 
 ``` {r }
 solid_kappa <- full_data %>% filter(block == "solidity") 
@@ -244,9 +244,9 @@ inner_join(solid_df %>% filter(proportion > 0.5), shape_df %>% filter(proportion
 inner_join(solid_df %>% filter(proportion <= 0.5), shape_df %>% filter(proportion > 0.5) , by= "theword") %>% select(theword) %>% unique()
 
 inner_join(solid_df %>% filter(proportion > 0.5), shape_df %>% filter(proportion <= 0.5) , by= "theword") %>% select(theword) %>% unique()
+```
 
-
-
+``` {r }
 dfs <- list(solid_df, count_df, shape_df)
 names <- c("solid", "count", "shape")
 conditions <- c("low", "high")
@@ -312,6 +312,7 @@ randm_solid <- randm_solid %>%
 #length(unique(languages$theword))
 
 ```
+
 # Plots
 
 ```{r}
