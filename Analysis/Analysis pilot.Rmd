@@ -35,6 +35,11 @@ full_data <- full_data %>% filter(trial_type == "survey-multi-choice")
 full_data <- full_data %>%
   filter(!str_detect(block, "practice") & !str_detect(block, "attention") ) %>% 
   filter(!is.na(theword))
+
+full_data %>% group_by(theword, block) %>% summarize( count = n()) %>% ungroup() %>% mutate(mean = sum(count)/ n())
+
+print(paste("mean number of ratings per word",  6.33))
+
 ```
 
 Read in language data. 
