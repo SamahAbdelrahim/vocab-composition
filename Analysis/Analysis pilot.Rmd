@@ -97,7 +97,7 @@ perform_binom_test <- function(successes, total) {
   binom.test(successes, total, p = 0.7, alternative = "greater")
 }
 
-=
+
 results <- grouped_data %>%
   rowwise() %>%
   mutate(binom_test = list(perform_binom_test(most_common_response, total_responses)),
@@ -130,6 +130,9 @@ Kappa.light is not working because we have a lot of NAs
 
 ``` {r }
 solid_kappa <- full_data %>% filter(block == "solidity") 
+count_kappa <- full_data %>% filter(block == "count_mass")
+shape_kappa <- full_data %>% filter(block == "category_organization")
+
 # %>% select(theword, response_numeric, subject ) %>% pivot_wider(names_from = subject, values_from = response_numeric)
 
 
@@ -148,19 +151,70 @@ print(kappa_result)
 ```
 
 using pairwise cohen's kappa: 
+Kappa pairwise is not informative because each rater is getting a different set of words, so the kappa score is calculated based on a few words shared amongs raters. which could explain why we are getting many zero agreement scores ? 
+
 ``` {r }
 
-ratings_wide <- solid_kappa %>%
+calculate_kappa <- function(data, block_type) {
+  block_data <- data %>% filter(block == block_type)
+  
+  ratings_wide <- block_data %>%
+    select(theword, response_numeric, subject) %>%
+    pivot_wider(names_from = subject, values_from = response_numeric)
+  #unique pairs of subjects
+  raters <- colnames(ratings_wide)[-1]  # Exclude "theword"
+  pairs <- combn(raters, 2, simplify = FALSE)
+  
+
+  pairwise_kappas <- sapply(pairs, function(pair) {
+    ratings_pair <- ratings_wide %>%
+      select(theword, all_of(pair)) %>%
+      drop_na()
+    
+    if (nrow(ratings_pair) > 1) {
+      suppressWarnings(kappa2(as.matrix(ratings_pair[, -1]), weight = "unweighted")$value)
+    } else {
+      NA
+    }
+  })
+  
+  mean_kappa <- mean(pairwise_kappas, na.rm = TRUE)
+  print(paste("Mean Kappa for", block_type, "block:", mean_kappa))
+  
+  #Kappa distribution
+  pairwise_results <- data.frame(
+    Pair = sapply(pairs, function(x) paste(x, collapse = "-")),
+    Kappa = pairwise_kappas
+  )
+  
+  ggplot(pairwise_results, aes(x = Kappa)) +
+    geom_histogram(binwidth = 0.05, fill = "skyblue", color = "black") +
+    labs(title = paste("Distribution of Pairwise Kappa Scores -", block_type, "Block"), 
+         x = "Kappa", y = "Frequency") +
+    theme_minimal()
+}
+
+
+calculate_kappa(full_data, "solidity")
+calculate_kappa(full_data, "count_mass")
+calculate_kappa(full_data, "category_organization")
+
+```
+ 
+ only solid
+``` {r }
+
+ratings_wide1 <- solid_kappa %>%
   select(theword, response_numeric, subject) %>%
   pivot_wider(names_from = subject, values_from = response_numeric)
 
 #create all unique pairs of raters
-raters <- colnames(ratings_wide)[-1]  # exclude "theword" 
+raters <- colnames(ratings_wide1)[-1]  # exclude "theword" 
 pairs <- combn(raters, 2, simplify = FALSE)
 
 # calculate pairwise Cohen's Kappa
 pairwise_kappas <- sapply(pairs, function(pair) {
-  ratings_pair <- ratings_wide %>%
+  ratings_pair <- ratings_wide1 %>%
     select(theword, all_of(pair)) %>%
     drop_na()
   
@@ -177,7 +231,8 @@ mean_kappa <- mean(pairwise_kappas, na.rm = TRUE)
 print(mean_kappa)
 
 ```
-visualizing Kappa values: 
+
+visualizing Kappa values: only solid
 ``` {r }
 
 pairwise_results <- data.frame(
