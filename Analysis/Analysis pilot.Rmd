@@ -5,6 +5,11 @@ date: "2024-05-05"
 output: html_document
 ---
 
+To do items:
+
+- make table 1 from Samuelson and Smith
+
+
 # Preprocessing 
 
 ```{r setup, include=FALSE}
@@ -15,6 +20,8 @@ library(purrr)
 library(ggrepel)
 library(here)
 library(irr)
+library(ggvenn)
+library(gridExtra)
 source(here("..","helper.R"))
 ```
 
@@ -29,65 +36,162 @@ full_data = read_csv("redo.csv")
 Apply the helper function to the jsonData column
 
 ```{r}
+full_data$word <- full_data$theword
 full_data$response <- sapply(full_data$response, extractValue)
 
 full_data <- full_data %>% filter(trial_type == "survey-multi-choice")
 full_data <- full_data %>%
   filter(!str_detect(block, "practice") & !str_detect(block, "attention") ) %>% 
-  filter(!is.na(theword))
+  filter(!is.na(word))
 
-full_data %>% group_by(theword, block) %>% summarize( count = n()) %>% ungroup() %>% mutate(mean = sum(count)/ n())
+print(paste("mean number of ratings per word"))
 
-print(paste("mean number of ratings per word",  6.926))
+full_data %>% group_by(word, block) %>% summarize( count = n()) %>% ungroup() %>% summarise(mean = sum(count)/ n())
+
+print(paste("mean number of ratings per word"))
+
+full_data %>% group_by(word, block) %>% summarize( count = n()) %>% ungroup() %>% summarise(mean = sum(count)/ n())
 
 ```
 
 Read in language data. 
 
 ```{r}
-test 
 word_language_mappings <- read_csv("alllangs.csv") %>% 
   filter(!is.na(uni_lemma))  %>% 
-  mutate(theword = uni_lemma) %>%
-  select(theword, language)
+  mutate(word = uni_lemma) %>%
+  select(word, language)
 ```
 Define mapping dictionaries
  
 ```{r }
-
 # Apply the mapping function in helper.R to the response column
 full_data$response_numeric <- mapply(map_categories, full_data$response, full_data$block)
 ```
 
-```{r}
-responsecount <- full_data %>% group_by(theword, block) %>% summarize(meanrating = mean(response_numeric), stdev = sd(response_numeric), count = n()) %>% ungroup() 
 
-wide_responsecount <- responsecount %>%
-  select(theword, block, count) %>%
-  # filter(count > 5) %>%
-  pivot_wider(names_from = block, values_from = count)
+# Data processing 
+
+Proportions
+
+``` {r}
+
+full_data <- full_data %>% group_by(word, block) %>%
+  mutate(totcount = n()) %>% ungroup()
+
+# how many ratings per response per block
+category_counts <- full_data %>%
+  group_by(word, block, response, totcount) %>%
+  summarise(count = n(), .groups = 'drop') 
+
+prop_shape <- category_counts %>% filter(response == "shape")
 
 
-# languages <- merge(x = wide_responsecount, y = languages, by = "theword")
-# languages = word_language_mappings
+category_counts <- category_counts %>%
+  mutate(proportion = count/totcount)
 
-response_counts <- full_join(wide_responsecount, word_language_mappings)
-
+#languages = word_language_mappings
+lang_df <- full_join(category_counts, word_language_mappings) %>% 
+  filter( !is.na(word), !is.na(language))
 ```
+
+Divide the lang_df by block. shared words amongst (solidity, syntax, and category) based on proportion.
+
+```{r }
+solid_df <- lang_df %>% filter(response == "solid")
+count_df <- lang_df %>% filter(response == "count noun")
+shape_df <- lang_df %>% filter(response == "shape")
+```
+
+
+# Distribution plots
+
+Within category task:
+
+```{r}
+lang_df |>
+  filter(block == "category_organization") |>
+ggplot(aes(x = proportion, color = response, fill = response)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of Proportions by Language",
+    x = "Proportion Value",
+    y = "Density (words)"
+  ) +
+  theme_minimal()
+```
+```{r}
+lang_df |>
+  filter(block == "count_mass") |>
+ggplot(aes(x = proportion, color = response, fill = response)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of Proportions by Language",
+    x = "Proportion Value",
+    y = "Density (words)"
+  ) +
+  theme_minimal()
+```
+```{r}
+lang_df |>
+  filter(block == "solidity") |>
+ggplot(aes(x = proportion, color = response, fill = response)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of Proportions by Language",
+    x = "Proportion Value",
+    y = "Density (words)"
+  ) +
+  theme_minimal()
+```
+
+Create combined density plot.
+
+``` {r}
+lang_df |>
+  filter(response == "solid" | response == "count noun" | 
+           response == "shape") |>
+ggplot(aes(x = proportion, color = response, fill = response)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of Proportions by Language",
+    x = "Proportion Value",
+    y = "Density (words)"
+  ) +
+  theme_minimal()
+```
+
+
+# Investigation of why shape bias is low!
+
+Languages here don't matter - so we use `category_counts`. 
+
+```{r}
+category_counts |>
+  filter(response == "shape") |>
+  arrange(desc(proportion))
+```
+
+
+
 
 # Inter-rater agreement
 
 binomial and agreemment among raters
 
 ``` {r}
-# Group by 'theword' and 'block'
+# Group by 'word' and 'block'
 
-#full_datas <- full_data %>% select(theword, subject, response, block)
-full_datas <- full_data %>% select(theword, subject, response, block)
+#full_datas <- full_data %>% select(word, subject, response, block)
+full_datas <- full_data %>% select(word, subject, response, block)
 
 
 grouped_data <- full_datas %>%
-  group_by(theword, block) %>%
+  group_by(word, block) %>%
   summarise(response_count = n(),
             most_common_response = max(table(response)),
             total_responses = n(),
@@ -108,7 +212,7 @@ results <- grouped_data %>%
   mutate(binom_test = list(perform_binom_test(most_common_response, total_responses)),
          p_value = binom_test$p.value,
          significant = p_value < 0.05) %>%
-  select(theword, block, proportion_agreement, p_value, significant)
+  select(word, block, proportion_agreement, p_value, significant)
 
 
 print(results)
@@ -138,20 +242,19 @@ solid_kappa <- full_data %>% filter(block == "solidity")
 count_kappa <- full_data %>% filter(block == "count_mass")
 shape_kappa <- full_data %>% filter(block == "category_organization")
 
-# %>% select(theword, response_numeric, subject ) %>% pivot_wider(names_from = subject, values_from = response_numeric)
+# %>% select(word, response_numeric, subject ) %>% pivot_wider(names_from = subject, values_from = response_numeric)
 
 
 ratings_wide <- solid_kappa %>%
-  select(theword, response_numeric, subject) %>%
+  select(word, response_numeric, subject) %>%
   pivot_wider(names_from = subject, values_from = response_numeric)
 
 # matrix is compatible with irr package functions) ?
-ratings_matrix <- as.matrix(ratings_wide %>% select(-theword))
+ratings_matrix <- as.matrix(ratings_wide %>% select(-word))
 
 # kappam.light() can handle NAs ?
 kappa_result <- kappam.light(ratings_matrix)
 print(kappa_result)
-
 
 ```
 
@@ -164,16 +267,16 @@ calculate_kappa <- function(data, block_type) {
   block_data <- data %>% filter(block == block_type)
   
   ratings_wide <- block_data %>%
-    select(theword, response_numeric, subject) %>%
+    select(word, response_numeric, subject) %>%
     pivot_wider(names_from = subject, values_from = response_numeric)
   #unique pairs of subjects
-  raters <- colnames(ratings_wide)[-1]  # Exclude "theword"
+  raters <- colnames(ratings_wide)[-1]  # Exclude "word"
   pairs <- combn(raters, 2, simplify = FALSE)
   
 
   pairwise_kappas <- sapply(pairs, function(pair) {
     ratings_pair <- ratings_wide %>%
-      select(theword, all_of(pair)) %>%
+      select(word, all_of(pair)) %>%
       drop_na()
     
     if (nrow(ratings_pair) > 1) {
@@ -210,17 +313,17 @@ calculate_kappa(full_data, "category_organization")
 ``` {r }
 
 ratings_wide1 <- solid_kappa %>%
-  select(theword, response_numeric, subject) %>%
+  select(word, response_numeric, subject) %>%
   pivot_wider(names_from = subject, values_from = response_numeric)
 
 #create all unique pairs of raters
-raters <- colnames(ratings_wide1)[-1]  # exclude "theword" 
+raters <- colnames(ratings_wide1)[-1]  # exclude "word" 
 pairs <- combn(raters, 2, simplify = FALSE)
 
 # calculate pairwise Cohen's Kappa
 pairwise_kappas <- sapply(pairs, function(pair) {
   ratings_pair <- ratings_wide1 %>%
-    select(theword, all_of(pair)) %>%
+    select(word, all_of(pair)) %>%
     drop_na()
   
   #are there enough ratings to calculate kappa?
@@ -255,56 +358,81 @@ ggplot(pairwise_results, aes(x = Kappa)) +
 
 ```
 
-# Data processing 
+# Venn diagram
 
-proportions :
+Try to get a venn diagram-type representation. 
 
-``` {r}
+```{r}
+threshold <- .5
 
-full_data <- full_data %>% group_by(theword, block) %>%
-  mutate(totcount = n()) %>% ungroup()
-# how many ratings per response per block
-category_counts <- full_data %>%
-  group_by(theword, block, response, totcount) %>%
-  summarise(count = n(), .groups = 'drop') 
+category_thresholds <- category_counts |>
+  filter(response %in% c("solid","count noun","shape")) |>
+  mutate(over_threshold = proportion > threshold) |>
+  select(-block, -totcount, -count, -proportion) |> 
+  pivot_wider(names_from = "response", values_from = "over_threshold", 
+              values_fill = FALSE) |>
+  rename(count_noun = `count noun`)
 
-prop_shape <- category_counts %>% filter(response == "shape")
-
-
-category_counts <- category_counts %>%
-  mutate(proportion = count/totcount)
-
-#languages = word_language_mappings
-lang_df <- full_join(category_counts, word_language_mappings) %>% filter( !is.na(theword), !is.na(language))
-
+category_overlap <- word_language_mappings |>
+  left_join(category_thresholds) |>
+  filter(!is.na(count_noun)) 
 ```
 
-divide the lang_df by block:
-shared words amongst (solidity, syntax, and category) based on proportion
+One example. 
 
-```{r }
-solid_df <- lang_df %>% filter(response == "solid")
-count_df <- lang_df %>% filter(response == "count noun")
-shape_df <- lang_df %>% filter(response == "shape")
-
-
-
-inner_join(solid_df %>% filter(proportion <= 0.5), count_df %>% filter(proportion <= 0.5) , by= "theword") %>% select(theword) %>% unique()
-
-inner_join(solid_df %>% filter(proportion > 0.5), count_df %>% filter(proportion > 0.5) , by= "theword") %>% select(theword) %>% unique()
-
-inner_join(solid_df %>% filter(proportion <= 0.5), count_df %>% filter(proportion > 0.5) , by= "theword") %>% select(theword) %>% unique()
-
-inner_join(solid_df %>% filter(proportion > 0.5), count_df %>% filter(proportion <= 0.5) , by= "theword") %>% select(theword) %>% unique()
-
-inner_join(solid_df %>% filter(proportion <= 0.5), shape_df %>% filter(proportion <= 0.5) , by= "theword") %>% select(theword) %>% unique()
-
-inner_join(solid_df %>% filter(proportion > 0.5), shape_df %>% filter(proportion > 0.5) , by= "theword") %>% select(theword) %>% unique()
-
-inner_join(solid_df %>% filter(proportion <= 0.5), shape_df %>% filter(proportion > 0.5) , by= "theword") %>% select(theword) %>% unique()
-
-inner_join(solid_df %>% filter(proportion > 0.5), shape_df %>% filter(proportion <= 0.5) , by= "theword") %>% select(theword) %>% unique()
+```{r}
+eng <- filter(category_overlap, language == "English (American)") |>
+  select(-language) |>
+  filter(!is.na(count_noun))
+ggvenn(eng, c("count_noun","solid","shape"))
 ```
+Lots of plots. 
+
+```{r}
+venns <- category_overlap |>
+  group_by(language) |>
+  nest() |>
+  mutate(plot = map(data, ~ggvenn(.x, c("count_noun","solid","shape"),
+                                  show_percentage = FALSE, 
+                                  text_size = 3,
+                                  set_name_size = 3)
+                    + ggtitle(language))) |>
+  pull(plot)
+
+grid.arrange(grobs = venns, ncol = 4)
+```
+
+
+
+
+
+
+
+
+```{r}
+inner_join(solid_df %>% filter(proportion <= 0.5), 
+           count_df %>% filter(proportion <= 0.5), 
+           by= "word") %>% 
+  select(word) %>% 
+  unique()
+
+inner_join(solid_df %>% filter(proportion > 0.5), 
+           count_df %>% filter(proportion > 0.5) , by= "word") %>% select(word) %>% unique()
+
+inner_join(solid_df %>% filter(proportion <= 0.5), count_df %>% filter(proportion > 0.5) , by= "word") %>% select(word) %>% unique()
+
+inner_join(solid_df %>% filter(proportion > 0.5), count_df %>% filter(proportion <= 0.5) , by= "word") %>% select(word) %>% unique()
+
+inner_join(solid_df %>% filter(proportion <= 0.5), shape_df %>% filter(proportion <= 0.5) , by= "word") %>% select(word) %>% unique()
+
+inner_join(solid_df %>% filter(proportion > 0.5), shape_df %>% filter(proportion > 0.5) , by= "word") %>% select(word) %>% unique()
+
+inner_join(solid_df %>% filter(proportion <= 0.5), shape_df %>% filter(proportion > 0.5) , by= "word") %>% select(word) %>% unique()
+
+inner_join(solid_df %>% filter(proportion > 0.5), shape_df %>% filter(proportion <= 0.5) , by= "word") %>% select(word) %>% unique()
+```
+
+
 
 ``` {r }
 dfs <- list(solid_df, count_df, shape_df)
@@ -329,7 +457,6 @@ results <- comparison_combinations %>%
  print(results)
 
 results %>% group_by(source1, source2, condition1, condition2) %>% summarize(count = n())
-
 ```
 
 randomly sample 50 words: 
@@ -338,18 +465,20 @@ randomly sample 50 words:
 randm_solid <- category_counts %>%
   filter(block == "solidity") %>% 
   {                               
-    sampled_words <- sample(unique(.$theword), 50, replace = FALSE)
-    filter(., theword %in% sampled_words)
+    sampled_words <- sample(unique(.$word), 50, replace = FALSE)
+    filter(., word %in% sampled_words)
   }
 
 randm_syntax <- category_counts %>% filter(block == "count_mass") %>% 
-    sampled_words <- sample(unique(.$theword), 50, replace = FALSE)
-    filter(., theword %in% sampled_words)
+  {
+    sampled_words <- sample(unique(.$word), 50, replace = FALSE)
+    filter(., word %in% sampled_words)
   }
 
 randm_categ <- category_counts %>% filter(block == "category_organization") %>% 
-    sampled_words <- sample(unique(.$theword), 50, replace = FALSE)
-    filter(., theword %in% sampled_words)
+  {
+    sampled_words <- sample(unique(.$word), 50, replace = FALSE)
+    filter(., word %in% sampled_words)
   }
 ```
 reorder
@@ -358,89 +487,36 @@ reorder
 
 solid_proportions <- randm_solid %>%
   filter(response == "solid") %>%
-  select(theword, solid_proportion = proportion)
+  select(word, solid_proportion = proportion)
 
 # merge the proportion of "solid" back into the main data frame
 randm_solid <- randm_solid %>%
-  left_join(solid_proportions, by = "theword") %>%
+  left_join(solid_proportions, by = "word") %>%
   mutate(solid_proportion = replace_na(solid_proportion, 0))
 
-# reorder 'theword' based on 'solid_proportion'
+# reorder 'word' based on 'solid_proportion'
 randm_solid <- randm_solid %>% 
-  mutate(theword = fct_reorder(theword, solid_proportion, .desc = TRUE))
+  mutate(word = fct_reorder(word, solid_proportion, .desc = TRUE))
 
-#length(unique(languages$theword))
+#length(unique(languages$word))
 
 ```
-
-# Plots
-
 ```{r}
-ggplot(randm_solid, aes(x = theword, y = proportion, fill = response)) +           geom_bar(position = "stack", stat = "identity") + coord_flip()
+ggplot(randm_solid, aes(x = word, y = proportion, fill = response)) +           geom_bar(position = "stack", stat = "identity") + coord_flip()
 
-ggplot(randm_syntax, aes(x = theword, y = proportion, fill = response)) +           geom_bar(position = "stack", stat = "identity") + coord_flip()
+ggplot(randm_syntax, aes(x = word, y = proportion, fill = response)) +           geom_bar(position = "stack", stat = "identity") + coord_flip()
 
-ggplot(randm_categ, aes(x = theword, y = proportion, fill = response)) +           geom_bar(position = "stack", stat = "identity") + coord_flip()
+ggplot(randm_categ, aes(x = word, y = proportion, fill = response)) +           geom_bar(position = "stack", stat = "identity") + coord_flip()
 ```
 
 ordered
 
 ```{r}
 
-ggplot(randm_solid, aes(x = theword, y = proportion, fill = response)) +
+ggplot(randm_solid, aes(x = word, y = proportion, fill = response)) +
   geom_bar(position = "stack", stat = "identity") +
   coord_flip() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 # rotate x-axis text for better readability
 
 ```
-
-``` {r}
-
-# proportion_solid<- category_counts %>% filter(response == "solid")
-# proportion_count <- category_counts %>% filter(response == "count noun")
-# proportion_shape <-  category_counts %>% filter(response == "shape")
-
-lang_df1 <- lang_df %>% filter(response == "solid" | response == "count noun" | response == "shape" | response == "none of these" )
-lang_df2 <- lang_df %>% filter(response == "shape" | response == "material" | response == "none of these" | response == "color")
-
-
-# Create combined density plot
-ggplot(lang_df1, aes(x = proportion, color = response, fill = response)) +
-  geom_density(alpha = 0.5) +
-  facet_wrap(~ language) +
-  labs(
-    title = "Density of Proportions by Language",
-    x = "Proportion Value",
-    y = "Density (words)"
-  ) +
-  theme_minimal()
-
-# Create combined density plot
-ggplot(lang_df2, aes(x = proportion, color = response, fill = response)) +
-  geom_density(alpha = 0.5) +
-  facet_wrap(~ language) +
-  labs(
-    title = "Density of Proportions by Language",
-    x = "Proportion Value",
-    y = "Density (words)"
-  ) +
-  theme_minimal()
-
-```
-
-```{r}
-ggplot(filter(lang_df1, response != "none of these"),
-       aes(x = proportion, color = response, fill = response)) +
-  geom_density(alpha = 0.5, aes(y = after_stat(count))) +
-  # geom_histogram(position = "dodge", binwidth = .05)
-  facet_wrap(~ language) +
-  labs(
-    title = "Density of Proportions by Language",
-    x = "Proportion Value",
-    y = "Density"
-  ) +
-  theme_minimal()
-```
-
-
