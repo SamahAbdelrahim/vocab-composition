@@ -38,7 +38,7 @@ full_data <- full_data %>%
 
 full_data %>% group_by(theword, block) %>% summarize( count = n()) %>% ungroup() %>% mutate(mean = sum(count)/ n())
 
-print(paste("mean number of ratings per word",  6.33))
+print(paste("mean number of ratings per word",  6.926))
 
 ```
 
