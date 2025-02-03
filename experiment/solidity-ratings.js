@@ -19,7 +19,7 @@ var jsPsych = initJsPsych({
         Promise.all(all_trials.map(trial => logExpData(trial)))
             .then(() => {
                 console.log("All data logged, redirecting...");
-                //window.location.href = "https://app.prolific.com/submissions/complete?cc=C1O4GW39";
+                window.location.href = "https://app.prolific.com/submissions/complete?cc=C1O4GW39";
             })
             .catch(error => {
                 console.error("Failed to log all data", error);
@@ -30,23 +30,6 @@ var jsPsych = initJsPsych({
 
 
 let timeline = [];
-// var subject_id = jsPsych.randomization.randomID(15);
-
-// jsPsych.data.addProperties({
-//     subject: subject_id,
-//   });
-
-
-var words_array = [];
-let words = [{"uni_lemma":"banana"},{"uni_lemma":"shoe"},{"uni_lemma":"bird"},{"uni_lemma":"cat"},{"uni_lemma":"duck"},{"uni_lemma":"car"},{"uni_lemma":"eye"},{"uni_lemma":"nose"},{"uni_lemma":"kitty"},{"uni_lemma":"balloon"},{"uni_lemma":"bubbles"},{"uni_lemma":"apple"},{"uni_lemma":"cheese"},{"uni_lemma":"cookie"},{"uni_lemma":"milk"},{"uni_lemma":"hat"},{"uni_lemma":"ear"},{"uni_lemma":"bear"},{"uni_lemma":"fish (animal)"},{"uni_lemma":"truck"},{"uni_lemma":"juice"},{"uni_lemma":"water (beverage)"},{"uni_lemma":"diaper"},{"uni_lemma":"owie"},{"uni_lemma":"bottle"},{"uni_lemma":"cow"},{"uni_lemma":"airplane"},{"uni_lemma":"cracker"},{"uni_lemma":"sock"},{"uni_lemma":"belly button"},{"uni_lemma":"hair"},{"uni_lemma":"mouth"},{"uni_lemma":"cup"},{"uni_lemma":"spoon"},{"uni_lemma":"bed"},{"uni_lemma":"door"},{"uni_lemma":"tree"},{"uni_lemma":"water (not beverage)"},{"uni_lemma":"bee"},{"uni_lemma":"bunny"},{"uni_lemma":"horse"},{"uni_lemma":"monkey"},{"uni_lemma":"pig"},{"uni_lemma":"puppy"},{"uni_lemma":"boat"},{"uni_lemma":"bus"},{"uni_lemma":"train"},{"uni_lemma":"toy (object)"},{"uni_lemma":"pizza"},{"uni_lemma":"foot"},{"uni_lemma":"hand"},{"uni_lemma":"head"},{"uni_lemma":"toe"},{"uni_lemma":"tummy"},{"uni_lemma":"blanket"},{"uni_lemma":"key"},{"uni_lemma":"light (object)"},{"uni_lemma":"telephone"},{"uni_lemma":"chair"},{"uni_lemma":"potty"},{"uni_lemma":"flower"},{"uni_lemma":"moon"},{"uni_lemma":"bug"},{"uni_lemma":"chicken (animal)"},{"uni_lemma":"elephant"},{"uni_lemma":"frog"},{"uni_lemma":"turtle"},{"uni_lemma":"bicycle"},{"uni_lemma":"blocks"},{"uni_lemma":"doll"},{"uni_lemma":"bread"},{"uni_lemma":"cake"},{"uni_lemma":"cereal"},{"uni_lemma":"chicken (food)"},{"uni_lemma":"drink (beverage)"},{"uni_lemma":"egg"},{"uni_lemma":"grapes"},{"uni_lemma":"ice cream"},{"uni_lemma":"orange (food)"},{"uni_lemma":"boots"},{"uni_lemma":"pants"},{"uni_lemma":"shirt"},{"uni_lemma":"arm"},{"uni_lemma":"butt"},{"uni_lemma":"finger"},{"uni_lemma":"tooth"},{"uni_lemma":"bowl"},{"uni_lemma":"box"},{"uni_lemma":"brush (object)"},{"uni_lemma":"fork"},{"uni_lemma":"pillow"},{"uni_lemma":"toothbrush"},{"uni_lemma":"bathtub"},{"uni_lemma":"tv"},{"uni_lemma":"rain"},{"uni_lemma":"rock (object)"},{"uni_lemma":"star"},{"uni_lemma":"sun"},{"uni_lemma":"swing (object)"},{"uni_lemma":"butterfly"},{"uni_lemma":"lion"},{"uni_lemma":"mouse"},{"uni_lemma":"owl"},{"uni_lemma":"sheep"},{"uni_lemma":"teddybear"},{"uni_lemma":"tiger"},{"uni_lemma":"crayon"},{"uni_lemma":"candy"},{"uni_lemma":"carrot"},{"uni_lemma":"fish (food)"},{"uni_lemma":"food"},{"uni_lemma":"french fries"},{"uni_lemma":"ice"},{"uni_lemma":"strawberry"},{"uni_lemma":"yogurt"},{"uni_lemma":"button"},{"uni_lemma":"coat"},{"uni_lemma":"jacket"},{"uni_lemma":"pajamas"},{"uni_lemma":"cheek"},{"uni_lemma":"face"},{"uni_lemma":"knee"},{"uni_lemma":"leg"},{"uni_lemma":"tongue"},{"uni_lemma":"paper"},{"uni_lemma":"soap"},{"uni_lemma":"towel"},{"uni_lemma":"bathroom"},{"uni_lemma":"table"},{"uni_lemma":"grass"},{"uni_lemma":"slide (object)"},{"uni_lemma":"animal"},{"uni_lemma":"giraffe"},{"uni_lemma":"firetruck"},{"uni_lemma":"stroller"},{"uni_lemma":"pen"},{"uni_lemma":"puzzle"},{"uni_lemma":"story"},{"uni_lemma":"cheerios"},{"uni_lemma":"chocolate"},{"uni_lemma":"corn"},{"uni_lemma":"pasta"},{"uni_lemma":"pancake"},{"uni_lemma":"peanut butter"},{"uni_lemma":"popcorn"},{"uni_lemma":"chips"},{"uni_lemma":"sandwich"},{"uni_lemma":"toast"},{"uni_lemma":"bib"},{"uni_lemma":"chin"},{"uni_lemma":"broom"},{"uni_lemma":"clock"},{"uni_lemma":"glasses"},{"uni_lemma":"money"},{"uni_lemma":"picture"},{"uni_lemma":"plate"},{"uni_lemma":"trash"},{"uni_lemma":"vacuum"},{"uni_lemma":"couch"},{"uni_lemma":"kitchen"},{"uni_lemma":"room"},{"uni_lemma":"shower"},{"uni_lemma":"stairs"},{"uni_lemma":"window"},{"uni_lemma":"pool"},{"uni_lemma":"sky"},{"uni_lemma":"snow"},{"uni_lemma":"stick"},{"uni_lemma":"alligator"},{"uni_lemma":"ant"},{"uni_lemma":"squirrel"},{"uni_lemma":"zebra"},{"uni_lemma":"helicopter"},{"uni_lemma":"motorcycle"},{"uni_lemma":"tractor"},{"uni_lemma":"pencil"},{"uni_lemma":"present"},{"uni_lemma":"applesauce"},{"uni_lemma":"beans"},{"uni_lemma":"butter"},{"uni_lemma":"coffee"},{"uni_lemma":"hamburger"},{"uni_lemma":"peas"},{"uni_lemma":"popsicle"},{"uni_lemma":"potato"},{"uni_lemma":"pumpkin"},{"uni_lemma":"raisin"},{"uni_lemma":"soup"},{"uni_lemma":"dress (object)"},{"uni_lemma":"shorts"},{"uni_lemma":"sweater"},{"uni_lemma":"zipper"},{"uni_lemma":"lip"},{"uni_lemma":"basket"},{"uni_lemma":"comb (object)"},{"uni_lemma":"knife"},{"uni_lemma":"medicine"},{"uni_lemma":"napkin"},{"uni_lemma":"purse"},{"uni_lemma":"scissors"},{"uni_lemma":"tissue"},{"uni_lemma":"watch (object)"},{"uni_lemma":"bedroom"},{"uni_lemma":"crib"},{"uni_lemma":"refrigerator"},{"uni_lemma":"sink"},{"uni_lemma":"cloud"},{"uni_lemma":"street"},{"uni_lemma":"deer"},{"uni_lemma":"penguin"},{"uni_lemma":"bat (object)"},{"uni_lemma":"chalk"},{"uni_lemma":"game"},{"uni_lemma":"play dough"},{"uni_lemma":"pastry"},{"uni_lemma":"meat"},{"uni_lemma":"muffin"},{"uni_lemma":"pickle"},{"uni_lemma":"pretzel"},{"uni_lemma":"belt"},{"uni_lemma":"glove"},{"uni_lemma":"necklace"},{"uni_lemma":"slipper"},{"uni_lemma":"penis"},{"uni_lemma":"bucket"},{"uni_lemma":"camera"},{"uni_lemma":"glass"},{"uni_lemma":"hammer"},{"uni_lemma":"plant"},{"uni_lemma":"tape (object)"},{"uni_lemma":"closet"},{"uni_lemma":"garage"},{"uni_lemma":"high chair"},{"uni_lemma":"oven"},{"uni_lemma":"flag"},{"uni_lemma":"shovel"},{"uni_lemma":"wind"},{"uni_lemma":"goose"},{"uni_lemma":"lamb"},{"uni_lemma":"pony"},{"uni_lemma":"rooster"},{"uni_lemma":"turkey"},{"uni_lemma":"green beans"},{"uni_lemma":"jelly"},{"uni_lemma":"lollipop"},{"uni_lemma":"nut"},{"uni_lemma":"sauce"},{"uni_lemma":"soda"},{"uni_lemma":"vitamin"},{"uni_lemma":"jeans"},{"uni_lemma":"mitten"},{"uni_lemma":"underpants"},{"uni_lemma":"shoulder"},{"uni_lemma":"can (object)"},{"uni_lemma":"dish"},{"uni_lemma":"penny"},{"uni_lemma":"radio"},{"uni_lemma":"drawer"},{"uni_lemma":"dryer"},{"uni_lemma":"living room"},{"uni_lemma":"rocking chair"},{"uni_lemma":"stove"},{"uni_lemma":"washing machine"},{"uni_lemma":"yard"},{"uni_lemma":"hose"},{"uni_lemma":"ladder"},{"uni_lemma":"lawn mower"},{"uni_lemma":"sandbox"},{"uni_lemma":"sidewalk"},{"uni_lemma":"snowman"},{"uni_lemma":"donkey"},{"uni_lemma":"moose"},{"uni_lemma":"wolf"},{"uni_lemma":"glue (object)"},{"uni_lemma":"gum"},{"uni_lemma":"jello"},{"uni_lemma":"melon"},{"uni_lemma":"salt"},{"uni_lemma":"lamp"},{"uni_lemma":"nail (object)"},{"uni_lemma":"garden"},{"uni_lemma":"roof"},{"uni_lemma":"sprinkler"},{"uni_lemma":"tricycle"},{"uni_lemma":"coke"},{"uni_lemma":"pudding"},{"uni_lemma":"sneaker"},{"uni_lemma":"ankle"},{"uni_lemma":"jar"},{"uni_lemma":"mop (object)"},{"uni_lemma":"stone"},{"uni_lemma":"bag"},{"uni_lemma":"book"},{"uni_lemma":"bun"},{"uni_lemma":"sugar"},{"uni_lemma":"dog"},{"uni_lemma":"chick"},{"uni_lemma":"porridge"},{"uni_lemma":"rice"},{"uni_lemma":"dumpling"},{"uni_lemma":"shrimp"},{"uni_lemma":"pear"},{"uni_lemma":"basin"},{"uni_lemma":"pocket"},{"uni_lemma":"watermelon"},{"uni_lemma":"chopstick"},{"uni_lemma":"pot"},{"uni_lemma":"gun"},{"uni_lemma":"song"},{"uni_lemma":"clothes"},{"uni_lemma":"stool"},{"uni_lemma":"soil"},{"uni_lemma":"kefir"},{"uni_lemma":"tea"},{"uni_lemma":"tomato"},{"uni_lemma":"cucumber"},{"uni_lemma":"eyebrow"},{"uni_lemma":"pigeon"},{"uni_lemma":"newspaper"},{"uni_lemma":"handkerchief"},{"uni_lemma":"mirror"},{"uni_lemma":"leaf"},{"uni_lemma":"road"},{"uni_lemma":"umbrella"},{"uni_lemma":"cabbage"},{"uni_lemma":"tofu"},{"uni_lemma":"peanut"},{"uni_lemma":"flour"},{"uni_lemma":"brain"},{"uni_lemma":"neck"},{"uni_lemma":"panda"},{"uni_lemma":"swallow (animal)"},{"uni_lemma":"battery"},{"uni_lemma":"rope"},{"uni_lemma":"cloth"},{"uni_lemma":"scarf"},{"uni_lemma":"sleeve"},{"uni_lemma":"house"},{"uni_lemma":"mountain"},{"uni_lemma":"sand"},{"uni_lemma":"scallion"},{"uni_lemma":"fruit"},{"uni_lemma":"dragon"},{"uni_lemma":"mosquito"},{"uni_lemma":"fly (animal)"},{"uni_lemma":"snake"},{"uni_lemma":"fan"},{"uni_lemma":"piano"},{"uni_lemma":"rag"},{"uni_lemma":"thing"},{"uni_lemma":"kite"},{"uni_lemma":"wheel"},{"uni_lemma":"vest"},{"uni_lemma":"liver (food)"},{"uni_lemma":"sprouts"},{"uni_lemma":"spinach"},{"uni_lemma":"mushroom"},{},{"uni_lemma":"pepper"},{"uni_lemma":"vinegar"},{"uni_lemma":"thumb"},{"uni_lemma":"camel"},{"uni_lemma":"peacock"},{"uni_lemma":"dragonfly"},{"uni_lemma":"wood"},{"uni_lemma":"bell"},{"uni_lemma":"skirt"},{"uni_lemma":"faucet"},{"uni_lemma":"air conditioner"},{"uni_lemma":"balcony"},{"uni_lemma":"elevator"},{"uni_lemma":"traffic light"},{"uni_lemma":"taxi"},{"uni_lemma":"donut"},{"uni_lemma":"gorilla"},{"uni_lemma":"voice recorder"},{"uni_lemma":"dustpan"},{"uni_lemma":"board game"},{"uni_lemma":"sandal"},{"uni_lemma":"puddle"},{"uni_lemma":"gas"},{"uni_lemma":"branch"},{"uni_lemma":"trampoline"},{"uni_lemma":"crane"},{"uni_lemma":"hedgehog"},{"uni_lemma":"eagle"},{"uni_lemma":"dinosaur"},{"uni_lemma":"jeep"},{"uni_lemma":"tangerine"},{"uni_lemma":"dried seaweed"},{"uni_lemma":"crocodile"},{"uni_lemma":"kimchi"},{"uni_lemma":"hip"},{"uni_lemma":"hippopotamus"},{"uni_lemma":"rice cake"},{"uni_lemma":"toothpaste"},{"uni_lemma":"sweet potato"},{"uni_lemma":"trash can"},{"uni_lemma":"fire"},{"uni_lemma":"noodles"},{"uni_lemma":"seesaw"},{"uni_lemma":"fox"},{"uni_lemma":"dress shoe"},{"uni_lemma":"Persimmon"},{"uni_lemma":"radish"},{"uni_lemma":"back (body part)"},{"uni_lemma":"blood"},{"uni_lemma":"wallet"},{"uni_lemma":"robot"},{"uni_lemma":"goat"},{"uni_lemma":"sparrow"},{"uni_lemma":"fingernail"},{"uni_lemma":"peach"},{"uni_lemma":"body"},{"uni_lemma":"hanger"},{"uni_lemma":"calf"},{"uni_lemma":"waist"},{"uni_lemma":"ground"},{"uni_lemma":"sled"},{"uni_lemma":"microwave"},{"uni_lemma":"hot dog"},{"uni_lemma":"tray"},{"uni_lemma":"spaghetti"},{"uni_lemma":"boulder"}]
-for (let i = 0; i < words.length; ++i) {
-    var word = words[i];
-    words_array.push(word);
-};
-
-var words1= words_array.slice(0,141);
-var words2 = words_array.slice(142,283);
-var words3 = words_array.slice(284,424);
 
 
 // Function to shuffle an array using Fisher-Yates algorithm
@@ -58,9 +41,21 @@ function shuffleArray(array) {
     return array;
 }
 
+var words_array = [];
+let words = [{"theword":"air conditioner"},{"theword":"airplane"},{"theword":"ankle"},{"theword":"ant"},{"theword":"apple"},{"theword":"applesauce"},{"theword":"apricot"},{"theword":"apron"},{"theword":"backyard"},{"theword":"bag"},{"theword":"balcony"},{"theword":"banana"},{"theword":"bank"},{"theword":"bath"},{"theword":"battery"},{"theword":"beads"},{"theword":"beard"},{"theword":"bed"},{"theword":"bedroom"},{"theword":"beet"},{"theword":"beetle"},{"theword":"belly button"},{"theword":"biscuit"},{"theword":"blood"},{"theword":"blouse"},{"theword":"board game"},{"theword":"body"},{"theword":"book"},{"theword":"bowl"},{"theword":"bracelet"},{"theword":"brain"},{"theword":"breast"},{"theword":"bridge"},{"theword":"broom"},{"theword":"brush (object)"},{"theword":"bucket"},{"theword":"bun"},{"theword":"bus"},{"theword":"bush"},{"theword":"butt"},{"theword":"buttocks"},{"theword":"cabbage"},{"theword":"cake"},{"theword":"camera"},{"theword":"cap"},{"theword":"card"},{"theword":"cart"},{"theword":"cassava"},{"theword":"cell phone"},{"theword":"cheese"},{"theword":"chicken"},{"theword":"chicken (animal)"},{"theword":"chickpea"},{"theword":"chin"},{"theword":"chocolate"},{"theword":"chopstick"},{"theword":"clam"},{"theword":"closet"},{"theword":"cloth"},{"theword":"clothes"},{"theword":"clothing"},{"theword":"cockroach"},{"theword":"cocoa"},{"theword":"coffee"},{"theword":"coffee table"},{"theword":"coke"},{"theword":"colors"},{"theword":"comb (object)"},{"theword":"computer"},{"theword":"cookie"},{"theword":"corridor"},{"theword":"cow"},{"theword":"crayon"},{"theword":"crocodile"},{"theword":"croissant"},{"theword":"croquette"},{"theword":"crow"},{"theword":"cucumber"},{"theword":"cupboard"},{"theword":"cushion"},{"theword":"dessert"},{"theword":"diaper"},{"theword":"dining room"},{"theword":"dinosaur"},{"theword":"dish"},{"theword":"dog"},{"theword":"dolphin"},{"theword":"donut"},{"theword":"dragon"},{"theword":"dragonfly"},{"theword":"dress (object)"},{"theword":"dress shoe"},{"theword":"dried seaweed"},{"theword":"drink (beverage)"},{"theword":"drum"},{"theword":"drum (object)"},{"theword":"dryer"},{"theword":"dumpling"},{"theword":"dustpan"},{"theword":"ear"},{"theword":"eggplant"},{"theword":"elbow"},{"theword":"elevator"},{"theword":"eye"},{"theword":"eyelash"},{"theword":"fan"},{"theword":"finger"},{"theword":"fire"},{"theword":"fireplace"},{"theword":"flag"},{"theword":"floor"},{"theword":"flour"},{"theword":"foot"},{"theword":"forehead"},{"theword":"fork"},{"theword":"frost"},{"theword":"garden"},{"theword":"gas"},{"theword":"glass"},{"theword":"glove"},{"theword":"goat"},{"theword":"goose"},{"theword":"gorilla"},{"theword":"green beans"},{"theword":"ground"},{"theword":"guava"},{"theword":"gum"},{"theword":"gun"},{"theword":"hair clip"},{"theword":"ham"},{"theword":"hammer"},{"theword":"hanger"},{"theword":"hat"},{"theword":"head"},{"theword":"headband"},{"theword":"helmet"},{"theword":"hen"},{"theword":"high chair"},{"theword":"hip"},{"theword":"hippopotamus"},{"theword":"hole"},{"theword":"honey"},{"theword":"hot dog"},{"theword":"house"},{"theword":"ice cream"},{"theword":"icicle"},{"theword":"insect"},{"theword":"jam"},{"theword":"jar"},{"theword":"jeans"},{"theword":"jello"},{"theword":"ketchup"},{"theword":"keys"},{"theword":"kimchi"},{"theword":"kitchen"},{"theword":"kite"},{"theword":"kitty"},{"theword":"kiwi"},{"theword":"knee"},{"theword":"knife"},{"theword":"ladder"},{"theword":"ladybug"},{"theword":"lake"},{"theword":"lamb"},{"theword":"lamp"},{"theword":"lawn mower"},{"theword":"leaf"},{"theword":"lemon"},{"theword":"lettuce"},{"theword":"locomotive"},{"theword":"lollipop"},{"theword":"macaroni"},{"theword":"mango"},{"theword":"marker"},{"theword":"mat"},{"theword":"matches"},{"theword":"meatball"},{"theword":"microphone"},{"theword":"microwave"},{"theword":"mirror"},{"theword":"money"},{"theword":"monkey"},{"theword":"moon"},{"theword":"mop (object)"},{"theword":"motorcycle"},{"theword":"mountain"},{"theword":"mouth"},{"theword":"muffin"},{"theword":"mug"},{"theword":"mushroom"},{"theword":"mustache"},{"theword":"nail (body part)"},{"theword":"nail (finger)"},{"theword":"nail (object)"},{"theword":"neck"},{"theword":"necklace"},{"theword":"neighborhood"},{"theword":"nose"},{"theword":"nugget"},{"theword":"nut"},{"theword":"olive"},{"theword":"orange (food)"},{"theword":"oven"},{"theword":"overalls"},{"theword":"paint (object)"},{"theword":"painting"},{"theword":"pajamas"},{"theword":"palm"},{"theword":"pan"},{"theword":"papaya"},{"theword":"paper"},{"theword":"parrot"},{"theword":"pasta"},{"theword":"peach"},{"theword":"peacock"},{"theword":"peanut butter"},{"theword":"pencil"},{"theword":"penguin"},{"theword":"penis"},{"theword":"photo"},{"theword":"pie"},{"theword":"pillow"},{"theword":"pineapple"},{"theword":"pipe"},{"theword":"pizza"},{"theword":"plug"},{"theword":"plum"},{"theword":"pocket"},{"theword":"police car"},{"theword":"pork"},{"theword":"porridge"},{"theword":"pot"},{"theword":"present"},{"theword":"pretzel"},{"theword":"pudding"},{"theword":"puddle"},{"theword":"puppet"},{"theword":"puppy"},{"theword":"puree"},{"theword":"puzzle"},{"theword":"quesadilla"},{"theword":"rabbit"},{"theword":"radiator"},{"theword":"radio"},{"theword":"radish"},{"theword":"rag"},{"theword":"raisin"},{"theword":"rice"},{"theword":"rice cake"},{"theword":"road"},{"theword":"rock (object)"},{"theword":"roof"},{"theword":"room"},{"theword":"rooster"},{"theword":"rope"},{"theword":"salami"},{"theword":"salt"},{"theword":"samosa"},{"theword":"sand"},{"theword":"sandal"},{"theword":"sandbox"},{"theword":"sandwich"},{"theword":"sausage"},{"theword":"scallion"},{"theword":"scissors"},{"theword":"seal (animal)"},{"theword":"seesaw"},{"theword":"shed"},{"theword":"sheep"},{"theword":"ship"},{"theword":"shoulder"},{"theword":"shovel"},{"theword":"shower"},{"theword":"shrimp"},{"theword":"sidewalk"},{"theword":"sink"},{"theword":"skate (object)"},{"theword":"sled"},{"theword":"slipper"},{"theword":"smoke"},{"theword":"snack"},{"theword":"snail"},{"theword":"sneaker"},{"theword":"snow"},{"theword":"snowsuit"},{"theword":"soda"},{"theword":"soil"},{"theword":"song"},{"theword":"soup"},{"theword":"sour cream"},{"theword":"soy sauce"},{"theword":"spade"},{"theword":"spaghetti"},{"theword":"sparrow"},{"theword":"spider"},{"theword":"spoon"},{"theword":"sprinkler"},{"theword":"stairs"},{"theword":"steak"},{"theword":"stick"},{"theword":"sticker"},{"theword":"stool"},{"theword":"stork"},{"theword":"story"},{"theword":"sunglasses"},{"theword":"swallow (animal)"},{"theword":"sweets"},{"theword":"swimsuit"},{"theword":"table"},{"theword":"tablecloth"},{"theword":"taco"},{"theword":"tail"},{"theword":"tape"},{"theword":"tape (object)"},{"theword":"taxi"},{"theword":"tea"},{"theword":"teapot"},{"theword":"teddybear"},{"theword":"telephone"},{"theword":"thing"},{"theword":"thunder"},{"theword":"toast"},{"theword":"toe"},{"theword":"tofu"},{"theword":"toilet"},{"theword":"tongue"},{"theword":"toothpaste"},{"theword":"tortilla"},{"theword":"towel"},{"theword":"toy (object)"},{"theword":"tracksuit"},{"theword":"traffic"},{"theword":"train"},{"theword":"trampoline"},{"theword":"tray"},{"theword":"tricycle"},{"theword":"trumpet"},{"theword":"tunnel"},{"theword":"turkey"},{"theword":"umbrella"},{"theword":"underpants"},{"theword":"vacuum cleaner"},{"theword":"vagina"},{"theword":"vest"},{"theword":"vinegar"},{"theword":"vitamin"},{"theword":"voice recorder"},{"theword":"wallet"},{"theword":"wardrobe"},{"theword":"washing machine"},{"theword":"water (not beverage)"},{"theword":"watering can"},{"theword":"watermelon"},{"theword":"whale"},{"theword":"whistle (object)"},{"theword":"wind"},{"theword":"wolf"},{"theword":"yard"},{"theword":"yogurt drink"}] 
+for (let i = 0; i < words.length; ++i) {
+    var word = words[i];
+    words_array.push(word);
+};
+
+var words1= words_array.slice(0,120);
+var words2 = words_array.slice(120,240);
+var words3 = words_array.slice(240,359);
+
+
 var arrayof_arrays = [words1, words2, words3]; 
-//console.log("length");
-//console.log(arrayof_arrays);
+
+
 
 var chosenarrayindex = Math.floor(Math.random() * arrayof_arrays.length);
 var chosenarray = arrayof_arrays[chosenarrayindex];
@@ -69,7 +64,7 @@ var chosenarray = arrayof_arrays[chosenarrayindex];
 // Shuffle the words_array to randomize the order
 shuffleArray(chosenarray);
 // Select the first 100 rows
-var selectedWords = chosenarray.slice(0, 2);
+var selectedWords = chosenarray.slice(0, 20);
 
 
 var trial1 = {
@@ -110,7 +105,8 @@ var opening = {
         var study_id = jsPsych.data.getURLVariable('STUDY_ID');
         var session_id = jsPsych.data.getURLVariable('SESSION_ID');
         
-        console.log(study_id, session_id, subject_id);
+        console.log("subject");
+        console.log(subject_id);
         
         jsPsych.data.addProperties({
             subject_id: subject_id,
@@ -125,30 +121,26 @@ var opening = {
 
 timeline.push(opening);
 
-var practice_solidity= {
+var practice_solidity1= {
     timeline: [
         {
             type: jsPsychSurveyMultiChoice,
             questions: [
                 {
-                    prompt: "A block of metal",
+                    prompt: "In the sentence [this is a block of metal], a block of metal is: ",
                     options: ['solid', 'non-solid'],
                     required: true,
                 },
     
             ],
             on_finish: function(data) {
-                var currentWord = "A block of metal";
+                var currentWord = "In the sentence [this is a block of metal], a block of metal is:";
                 console.log("testing");
-                //console.log(jsPsych.data.get().values()[2].response.Q0);
                 console.log(jsPsych.data.getLastTrialData().values()[0].response.Q0);
 
-                //var response = JSON.parse(jsPsych.data.get().values()[2].response.Q0); 
-                //var response = JSON.parse(data.response).Q0; // Get the participant's response
-                //var response = jsPsych.data.get().values()[2].response.Q0; 
                 var response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
                 var isCorrect = response === 'solid'; 
-                var blockname = "solidity";
+                var blockname = "practice_solidity";
 
                 jsPsych.data.addDataToLastTrial({
                     theword: currentWord,
@@ -160,14 +152,54 @@ var practice_solidity= {
                 });
 
 
-                var feedbackMessage = isCorrect ? "Correct! Now let's begin" : "Incorrect! a block of metal is a solid object. Now let's begin! "; 
+                var feedbackMessage = isCorrect ? "Correct! Now, let's go forward!" : "Incorrect! a block of metal is a solid object. Let's go forward! "; 
                 alert(feedbackMessage); 
                 
             } 
         }
     ],
 };
-//timeline.push(practice_solidity);
+
+var practice_solidity2= {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: "In the sentence [this is a pile of sand], a pile of sand is: ",
+                    options: ['solid', 'non-solid'],
+                    required: true,
+                },
+    
+            ],
+            on_finish: function(data) {
+                var currentWord = "In the sentence [this is a pile of sand], a pile of sand is:";
+                console.log("testing");
+                //console.log(jsPsych.data.get().values()[2].response.Q0);
+                console.log(jsPsych.data.getLastTrialData().values()[0].response.Q0);
+
+
+                var response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
+                var isCorrect = response === 'non-solid'; 
+                var blockname = "practice_solidity";
+
+                jsPsych.data.addDataToLastTrial({
+                    theword: currentWord,
+                    theblock: blockname,
+                });
+
+                jsPsych.data.addDataToLastTrial({
+                    correct: isCorrect,
+                });
+
+
+                var feedbackMessage = isCorrect ? "Correct! Now let's begin" : "Incorrect! a pile of sand is a non-solid entity. Now let's begin! "; 
+                alert(feedbackMessage); 
+                
+            } 
+        }
+    ],
+};
 
 // trial : 1
 const instructions_solidity = {
@@ -179,8 +211,9 @@ const instructions_solidity = {
             '<p> <font size="4"> For example, consider the sentence <b>“I need several pens”</b>. <font><p>' +
             '<p> <font size="4"> In this sentence, <b>[pen]</b> refers to a <b>solid object</b>.<font> <p>' +
             '<p> <font size="4"> Now think about the sentence <b>“I need some water”</b>, <b>[Water]</b> is <b>not solid</b>. <font> <p>' +
-            '<p> <font size="4"> <b>Note</b>: when you see the word <b>"PURPLE"</b> click <b>"Solid"</b> <font> <p>' +
-            '<p> <font size="4"> Now, lets begin <font> <p> ',
+            '<p> <font size="4"> Next, we’d like you to judge whether other words refer to something solid. <font> <p> '+
+            '<p> <font size="4"> <b>Note</b>: when you see the word <b>"Purple"</b> click <b>"solid"</b> <font> <p>' +
+            '<p> <font size="4"> Let’s begin! <font> <p>',
             choices: ['Continue'], 
 
         }, ]
@@ -195,7 +228,7 @@ var block_solidity = {
             type: jsPsychSurveyMultiChoice,
             questions: [
                 {
-                    prompt: jsPsych.timelineVariable('uni_lemma'),
+                    prompt: jsPsych.timelineVariable('theword'),
                     options: ['solid', 'non-solid', 'unclear/unknown'],
                     required: true,
                 }
@@ -204,7 +237,7 @@ var block_solidity = {
             
             on_finish: function(data) {
                 // Access the value of 'uni_lemma' for the current trial
-                var currentWord = jsPsych.timelineVariable('uni_lemma');
+                var currentWord = jsPsych.timelineVariable('theword');
                 var blockname = "solidity";
 
 
@@ -212,8 +245,7 @@ var block_solidity = {
                     theword: currentWord,
                     theblock: blockname,
                 });
-                // Add the 'word' property to the jsPsych data for this trial
-                //jsPsych.data.addProperties({ word: currentWord });
+
             } 
         }
     ],
@@ -221,11 +253,11 @@ var block_solidity = {
     randomize_order: true
 };
 
-var attention = {
+var attention_solidity = {
     type: jsPsychSurveyMultiChoice,
     questions: [
       {
-        prompt: "PURPLE", 
+        prompt: "purple", 
         options: ['solid', 'non-solid', 'unclear/unknown'], 
         required: true,
         horizontal: false
@@ -233,8 +265,8 @@ var attention = {
     ],
     on_finish: function(data) {
         // Access the value of 'uni_lemma' for the current trial
-        var currentWord = "PURPLE";
-        var blockname = "attention";
+        var currentWord = "purple";
+        var blockname = "attention_solidity";
 
 
         jsPsych.data.addDataToLastTrial({
@@ -246,7 +278,7 @@ var attention = {
 };
 
 var solidity = {
-    timeline: [instructions_solidity, practice_solidity, block_solidity, attention], 
+    timeline: [instructions_solidity, practice_solidity1,practice_solidity2 ,block_solidity, attention_solidity], 
     randomization: false,
 }
 
@@ -256,42 +288,63 @@ var solidity = {
 const instructions_countmass = {
     type: jsPsychHtmlButtonResponse,
     stimulus:
-    '<p> <font size="4"> One Judegment is whether a word is a count or a mass noun. A <b>count noun</b> refers to objects that can be divided into <b>individual units and counted</b>.<font> <p>' +
+    '<p> <font size="4"> One judgment is whether a word is a count or a mass noun. A <b>count noun</b> refers to objects that can be divided into <b>individual units and counted</b>.<font> <p>' +
     '<p> <font size="4"> For example, consider the sentence: <b>“I need several pens”</b>. <font> <p>' +
     '<p> <font size="4"> [<b>Pen</b>] is a count noun.</font> <p>' +
     '<p> <font size="4">A noun that refers to <b>undifferentiated and uncountable substances</b> is called a <b>mass noun</b>. <font> <p>' +
     '<p> <font size="4"> For example, consider the sentence: <b>“I need some water”</b>. <font> <p>' +
     '<p> <font size="4"> [<b>Water</b>] is a mass noun.<font> <p>'+ 
-    '<p> <font size="4"> <b>Note</b>: when you see the word <b>"GREY"</b> click <b>"count noun"</b> <font> <p>' +
-    '<p> <font size="4"> Lets begin!<font> <p>',
+    '<p> <font size="4"> Next, we’d like you to judge whether other words are count or mass nouns. <font> <p> '+
+    '<p> <font size="4"> <b>Note</b>: when you see the word <b>"Grey"</b> click <b>"count noun"</b> <font> <p>' +
+    '<p> <font size="4"> Let’s begin! <font> <p>',
     choices: ['Continue']
 };
 //timeline.push(instructions_countmass);
 
 
-// Shuffle the words_array to randomize the order
-shuffleArray(chosenarray);
-// Select the first 100 rows
-var selectedWords2 = chosenarray.slice(0, 2);
+var words_array2 = [];
+let words_c2 = [{"theword":"ankle"},{"theword":"applesauce"},{"theword":"apron"},{"theword":"arm"},{"theword":"armchair"},{"theword":"atole"},{"theword":"back (body part)"},{"theword":"backyard"},{"theword":"bag"},{"theword":"balcony"},{"theword":"ball"},{"theword":"balloon"},{"theword":"bank"},{"theword":"basin"},{"theword":"basket"},{"theword":"bathroom"},{"theword":"bathtub"},{"theword":"beads"},{"theword":"beans"},{"theword":"bed"},{"theword":"bee"},{"theword":"beet"},{"theword":"belly button"},{"theword":"bib"},{"theword":"bicycle"},{"theword":"bird"},{"theword":"biscuit"},{"theword":"boat"},{"theword":"body"},{"theword":"book"},{"theword":"boots"},{"theword":"boulder"},{"theword":"bracelet"},{"theword":"brain"},{"theword":"breast"},{"theword":"brush (object)"},{"theword":"bubbles"},{"theword":"bug"},{"theword":"bun"},{"theword":"bus"},{"theword":"butt"},{"theword":"butter"},{"theword":"buttocks"},{"theword":"button"},{"theword":"cabbage"},{"theword":"calf"},{"theword":"camel"},{"theword":"camera"},{"theword":"can (object)"},{"theword":"candy"},{"theword":"cap"},{"theword":"car"},{"theword":"carpet"},{"theword":"carrot"},{"theword":"cassava"},{"theword":"cat"},{"theword":"caterpillar"},{"theword":"cd"},{"theword":"cereal"},{"theword":"chair"},{"theword":"chalk"},{"theword":"cheek"},{"theword":"cherry"},{"theword":"chick"},{"theword":"chicken"},{"theword":"chicken (animal)"},{"theword":"chickpea"},{"theword":"chili"},{"theword":"chin"},{"theword":"clam"},{"theword":"clay"},{"theword":"closet"},{"theword":"clothes"},{"theword":"clothing"},{"theword":"cloud"},{"theword":"clown"},{"theword":"coke"},{"theword":"colors"},{"theword":"computer"},{"theword":"cook"},{"theword":"corridor"},{"theword":"cottage cheese"},{"theword":"cotton"},{"theword":"crab"},{"theword":"cracker"},{"theword":"crane"},{"theword":"crayon"},{"theword":"crib"},{"theword":"crocodile"},{"theword":"cucumber"},{"theword":"cupboard"},{"theword":"curtain"},{"theword":"cutlet"},{"theword":"digger"},{"theword":"dining room"},{"theword":"dog"},{"theword":"door"},{"theword":"doorbell"},{"theword":"dragon"},{"theword":"dragonfly"},{"theword":"drawer"},{"theword":"dress shoe"},{"theword":"drink (beverage)"},{"theword":"dryer"},{"theword":"duck"},{"theword":"dumpling"},{"theword":"dustpan"},{"theword":"eagle"},{"theword":"earring"},{"theword":"earth"},{"theword":"elbow"},{"theword":"elevator"},{"theword":"eye"},{"theword":"face"},{"theword":"fan"},{"theword":"faucet"},{"theword":"finger"},{"theword":"fingernail"},{"theword":"fir"},{"theword":"fire"},{"theword":"fish (food)"},{"theword":"flag"},{"theword":"floor"},{"theword":"flour"},{"theword":"flower pot"},{"theword":"fly (animal)"},{"theword":"fork"},{"theword":"fountain"},{"theword":"fox"},{"theword":"french fries"},{"theword":"frost"},{"theword":"fruit"},{"theword":"furniture"},{"theword":"garage"},{"theword":"garden"},{"theword":"gas"},{"theword":"glove"},{"theword":"glue (object)"},{"theword":"goat"},{"theword":"goose"},{"theword":"green beans"},{"theword":"gum"},{"theword":"gun"},{"theword":"gut"},{"theword":"handkerchief"},{"theword":"headband"},{"theword":"hedgehog"},{"theword":"helicopter"},{"theword":"hen"},{"theword":"hip"},{"theword":"hippopotamus"},{"theword":"hole"},{"theword":"honey"},{"theword":"house"},{"theword":"ice cream"},{"theword":"insect"},{"theword":"jam"},{"theword":"jeans"},{"theword":"jeep"},{"theword":"jello"},{"theword":"jelly"},{"theword":"juice"},{"theword":"kefir"},{"theword":"ketchup"},{"theword":"kimchi"},{"theword":"kite"},{"theword":"kitty"},{"theword":"knee"},{"theword":"koala"},{"theword":"ladder"},{"theword":"lamp"},{"theword":"lawn mower"},{"theword":"leg"},{"theword":"lemon"},{"theword":"light"},{"theword":"light (object)"},{"theword":"living room"},{"theword":"lollipop"},{"theword":"macaroni"},{"theword":"mango"},{"theword":"marker"},{"theword":"mask"},{"theword":"mat"},{"theword":"matches"},{"theword":"meatball"},{"theword":"microphone"},{"theword":"microwave"},{"theword":"milk"},{"theword":"mitten"},{"theword":"mold"},{"theword":"mop (object)"},{"theword":"mud"},{"theword":"muffin"},{"theword":"mug"},{"theword":"mushroom"},{"theword":"mustache"},{"theword":"nail (body part)"},{"theword":"nail (object)"},{"theword":"napkin"},{"theword":"neck"},{"theword":"neighborhood"},{"theword":"newspaper"},{"theword":"nugget"},{"theword":"oven"},{"theword":"overalls"},{"theword":"owl"},{"theword":"pacifier"},{"theword":"paint (object)"},{"theword":"painting"},{"theword":"pajamas"},{"theword":"panda"},{"theword":"pants"},{"theword":"papaya"},{"theword":"paper"},{"theword":"park"},{"theword":"parking lot"},{"theword":"parrot"},{"theword":"patio"},{"theword":"peach"},{"theword":"peacock"},{"theword":"peanut"},{"theword":"pear"},{"theword":"pen"},{"theword":"pencil"},{"theword":"penis"},{"theword":"penny"},{"theword":"photo"},{"theword":"piano"},{"theword":"pie"},{"theword":"pig"},{"theword":"pigeon"},{"theword":"piglet"},{"theword":"pillow"},{"theword":"pineapple"},{"theword":"pipe"},{"theword":"plantain"},{"theword":"plate"},{"theword":"pocket"},{"theword":"pomegranate"},{"theword":"pony"},{"theword":"pool"},{"theword":"porch"},{"theword":"porridge"},{"theword":"pot"},{"theword":"pudding"},{"theword":"puppet"},{"theword":"puree"},{"theword":"purse"},{"theword":"push"},{"theword":"quesadilla"},{"theword":"rabbit"},{"theword":"racket"},{"theword":"radiator"},{"theword":"radish"},{"theword":"raisin"},{"theword":"rake (object)"},{"theword":"raspberry"},{"theword":"remote control"},{"theword":"ribbon"},{"theword":"rice cake"},{"theword":"road"},{"theword":"robot"},{"theword":"roof"},{"theword":"rooster"},{"theword":"salt"},{"theword":"samosa"},{"theword":"sandal"},{"theword":"sandbox"},{"theword":"sandwich"},{"theword":"sausage"},{"theword":"scallion"},{"theword":"scarf"},{"theword":"seesaw"},{"theword":"shark"},{"theword":"shed"},{"theword":"sheep"},{"theword":"ship"},{"theword":"shoe"},{"theword":"shovel"},{"theword":"skate (object)"},{"theword":"sky"},{"theword":"sled"},{"theword":"sleeve"},{"theword":"smoke"},{"theword":"smoothie"},{"theword":"snail"},{"theword":"snake"},{"theword":"sneaker"},{"theword":"snow"},{"theword":"snowman"},{"theword":"sour cream"},{"theword":"soy milk"},{"theword":"soy sauce"},{"theword":"spaghetti"},{"theword":"sparrow"},{"theword":"spider"},{"theword":"spinach"},{"theword":"sprinkler"},{"theword":"steak"},{"theword":"sticker"},{"theword":"stool"},{"theword":"stork"},{"theword":"stroller"},{"theword":"sugar"},{"theword":"sun"},{"theword":"sweater"},{"theword":"sweet potato"},{"theword":"t-shirt"},{"theword":"tail"},{"theword":"tangerine"},{"theword":"tape (object)"},{"theword":"taxi"},{"theword":"tea"},{"theword":"thing"},{"theword":"thumb"},{"theword":"thunder"},{"theword":"tiger"},{"theword":"tights"},{"theword":"toast"},{"theword":"tofu"},{"theword":"toilet"},{"theword":"tongue"},{"theword":"toothpaste"},{"theword":"top"},{"theword":"tracksuit"},{"theword":"traffic light"},{"theword":"trampoline"},{"theword":"tray"},{"theword":"trolley"},{"theword":"trumpet"},{"theword":"tummy"},{"theword":"tuna"},{"theword":"tunnel"},{"theword":"turkey"},{"theword":"umbrella"},{"theword":"underpants"},{"theword":"vacuum cleaner"},{"theword":"vegetable"},{"theword":"video"},{"theword":"vitamin"},{"theword":"voice recorder"},{"theword":"waist"},{"theword":"washing machine"},{"theword":"watch (object)"},{"theword":"water (not beverage)"},{"theword":"watering can"},{"theword":"waves"},{"theword":"wind"},{"theword":"window"},{"theword":"wolf"},{"theword":"wood"},{"theword":"worm"},{"theword":"yogurt"}] 
+for (let i = 0; i < words_c2.length; ++i) {
+    var word = words_c2[i];
+    words_array2.push(word);
+};
 
-var practice_countmass= {
+var wordsc1= words_array2.slice(0,117);
+var wordsc2 = words_array2.slice(117,234);
+var wordsc3 = words_array2.slice(234,353);
+
+
+var arrayof_arrays_c = [wordsc1, wordsc2, wordsc3]; 
+
+
+
+var chosenarrayindex_c = Math.floor(Math.random() * arrayof_arrays_c.length);
+var chosenarray_c = arrayof_arrays_c[chosenarrayindex_c];
+
+
+// Shuffle the words_array to randomize the order
+shuffleArray(chosenarray_c);
+// Select the first 100 rows
+var selectedWords2 = chosenarray_c.slice(0, 20);
+
+var practice_countmass1= {
     timeline: [
         {
             type: jsPsychSurveyMultiChoice,
             questions: [
                 {
-                    prompt: "Would you like a chair? chair is a",
-                    options: ['count noun', 'Mass noun'],
+                    prompt: " In the sentence [would you like a Chair?], a chair is: ",
+                    options: ['count noun', 'mass noun'],
                     required: true,
                 },
             ],
             on_finish: function(data) {
-                var currentWord = "Would you like a chair? chair is a";
+                var currentWord = " In the sentence [would you like a Chair?], a chair is:";
                 console.log("testing");
                 console.log(jsPsych.data.get().values()[2].response.Q0);
                 var response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
                 var isCorrect = response === 'count noun'; 
-                blockname = "count_mass";
+                blockname = "practice_countmass";
 
                 jsPsych.data.addDataToLastTrial({
                     theword: currentWord,
@@ -299,7 +352,39 @@ var practice_countmass= {
                     correct: isCorrect,
                 });
 
-                var feedbackMessage = isCorrect ? "Correct! Now let's begin" : "Incorrect! chair is a count noun. Now let's begin!"; 
+                var feedbackMessage = isCorrect ? "Correct! Now let's go forward!" : "Incorrect! chair is a count noun. Let's go forward!"; 
+                alert(feedbackMessage); 
+            } 
+        }
+    ],
+};
+
+var practice_countmass2= {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: " In the sentence [This is so much sugar?], sugar is: ",
+                    options: ['count noun', 'mass noun'],
+                    required: true,
+                },
+            ],
+            on_finish: function(data) {
+                var currentWord = " In the sentence [This is so much sugar?], sugar is: ";
+                console.log("testing");
+                console.log(jsPsych.data.get().values()[2].response.Q0);
+                var response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
+                var isCorrect = response === 'mass noun'; 
+                blockname = "practice_countmass";
+
+                jsPsych.data.addDataToLastTrial({
+                    theword: currentWord,
+                    theblock: blockname,
+                    correct: isCorrect,
+                });
+
+                var feedbackMessage = isCorrect ? "Correct! Now let's begin! " : "Incorrect! sugar is a mass noun. Now let's begin!"; 
                 alert(feedbackMessage); 
             } 
         }
@@ -312,8 +397,8 @@ var block_countmass = {
             type: jsPsychSurveyMultiChoice,
             questions: [
                 {
-                    prompt: jsPsych.timelineVariable('uni_lemma'),
-                    options: ['Count noun', 'Mass noun' , 'Unclear/unknown'],
+                    prompt: jsPsych.timelineVariable('theword'),
+                    options: ['count noun', 'mass noun' , 'unclear/unknown'],
                     required: true ,
                     // on_finish: function(data){
                     //       data.word = selectedWords2['uni_lemma'];
@@ -322,7 +407,7 @@ var block_countmass = {
             ],
             on_finish: function(data) {
                 // Access the value of 'uni_lemma' for the current trial
-                var currentWord = jsPsych.timelineVariable('uni_lemma');
+                var currentWord = jsPsych.timelineVariable('theword');
                 var blockname= "count_mass";
 
                 jsPsych.data.addDataToLastTrial({
@@ -336,12 +421,12 @@ var block_countmass = {
     randomize_order: true
 };
 
-var attention2 = {
+var attention_countmass = {
     type: jsPsychSurveyMultiChoice,
     questions: [
       {
         prompt: "grey", 
-        options: ['count noun', 'mass noun' , 'unclear/ unknown'], 
+        options: ['count noun', 'mass noun' , 'unclear/unknown'], 
         required: true,
         horizontal: false
       }, 
@@ -349,7 +434,7 @@ var attention2 = {
     on_finish: function(data) {
         // Access the value of 'uni_lemma' for the current trial
         var currentWord = "grey";
-        var blockname = "attention";
+        var blockname = "attention_countmass";
 
 
         jsPsych.data.addDataToLastTrial({
@@ -361,16 +446,36 @@ var attention2 = {
 };
 
 var countmass = {
-    timeline: [instructions_countmass, practice_countmass, block_countmass, attention2], 
+    timeline: [instructions_countmass, practice_countmass1, practice_countmass2 ,block_countmass, attention_countmass], 
     randomization: false,
 }
 
 //timeline.push(countmass);
 
+var words_array3 = [];
+let words_cat3 = [{"theword":"accident"},{"theword":"alligator"},{"theword":"ambulance"},{"theword":"ankle"},{"theword":"ant"},{"theword":"applesauce"},{"theword":"apricot"},{"theword":"apron"},{"theword":"atole"},{"theword":"back"},{"theword":"back (body part)"},{"theword":"backyard"},{"theword":"balcony"},{"theword":"ball"},{"theword":"bat (object)"},{"theword":"bath"},{"theword":"bathtub"},{"theword":"battery"},{"theword":"bed"},{"theword":"bedroom"},{"theword":"bell"},{"theword":"belt"},{"theword":"bench"},{"theword":"biscuit"},{"theword":"blood"},{"theword":"blouse"},{"theword":"board game"},{"theword":"body"},{"theword":"book"},{"theword":"boots"},{"theword":"boulder"},{"theword":"bowl"},{"theword":"box"},{"theword":"brain"},{"theword":"branch"},{"theword":"breast"},{"theword":"bubbles"},{"theword":"bucket"},{"theword":"bug"},{"theword":"bull"},{"theword":"bus"},{"theword":"bush"},{"theword":"buttocks"},{"theword":"camel"},{"theword":"camera"},{"theword":"candle"},{"theword":"car"},{"theword":"carpet"},{"theword":"caterpillar"},{"theword":"chair"},{"theword":"cheerios"},{"theword":"cheese"},{"theword":"chick"},{"theword":"chicken"},{"theword":"chicken (food)"},{"theword":"chin"},{"theword":"closet"},{"theword":"cloth"},{"theword":"clown"},{"theword":"coat"},{"theword":"cockroach"},{"theword":"cocoa"},{"theword":"coin"},{"theword":"coke"},{"theword":"compote"},{"theword":"computer"},{"theword":"corn"},{"theword":"cottage cheese"},{"theword":"couch"},{"theword":"cow"},{"theword":"crane"},{"theword":"crayon"},{"theword":"croissant"},{"theword":"cucumber"},{"theword":"curtain"},{"theword":"dessert"},{"theword":"digger"},{"theword":"dinosaur"},{"theword":"doll"},{"theword":"donut"},{"theword":"door"},{"theword":"doorbell"},{"theword":"dragon"},{"theword":"dragonfly"},{"theword":"drawer"},{"theword":"dress (object)"},{"theword":"dress shoe"},{"theword":"dried seaweed"},{"theword":"dryer"},{"theword":"duck"},{"theword":"dumpling"},{"theword":"dustpan"},{"theword":"eagle"},{"theword":"ear"},{"theword":"earring"},{"theword":"eggplant"},{"theword":"elbow"},{"theword":"elevator"},{"theword":"eyebrow"},{"theword":"eyelash"},{"theword":"face"},{"theword":"fan"},{"theword":"faucet"},{"theword":"finger"},{"theword":"fingernail"},{"theword":"fir"},{"theword":"fireplace"},{"theword":"firetruck"},{"theword":"flour"},{"theword":"flower pot"},{"theword":"fly (animal)"},{"theword":"foot"},{"theword":"frog"},{"theword":"fruit"},{"theword":"garbage"},{"theword":"garden"},{"theword":"gas"},{"theword":"giraffe"},{"theword":"glasses"},{"theword":"glove"},{"theword":"gloves"},{"theword":"glue (object)"},{"theword":"goat"},{"theword":"goose"},{"theword":"grapes"},{"theword":"ground"},{"theword":"guitar"},{"theword":"gum"},{"theword":"gun"},{"theword":"gut"},{"theword":"hair"},{"theword":"hair clip"},{"theword":"hair dryer"},{"theword":"hammer"},{"theword":"handkerchief"},{"theword":"hanger"},{"theword":"head"},{"theword":"headband"},{"theword":"heart"},{"theword":"helicopter"},{"theword":"hen"},{"theword":"high chair"},{"theword":"hip"},{"theword":"hippopotamus"},{"theword":"hole"},{"theword":"honey"},{"theword":"hose"},{"theword":"hot dog"},{"theword":"house"},{"theword":"ice cream"},{"theword":"insect"},{"theword":"iron (object)"},{"theword":"jacket"},{"theword":"jam"},{"theword":"jar"},{"theword":"jeans"},{"theword":"jeep"},{"theword":"jello"},{"theword":"juice"},{"theword":"kayak"},{"theword":"keys"},{"theword":"kitchen"},{"theword":"kite"},{"theword":"kitty"},{"theword":"knife"},{"theword":"lake"},{"theword":"lamp"},{"theword":"leaf"},{"theword":"lemon"},{"theword":"light"},{"theword":"light (object)"},{"theword":"lion"},{"theword":"lip"},{"theword":"living room"},{"theword":"lollipop"},{"theword":"macaroni"},{"theword":"mango"},{"theword":"mat"},{"theword":"matches"},{"theword":"meat"},{"theword":"melon"},{"theword":"minibus"},{"theword":"mirror"},{"theword":"mitten"},{"theword":"mosquito"},{"theword":"motorcycle"},{"theword":"mountain"},{"theword":"mouth"},{"theword":"mug"},{"theword":"music"},{"theword":"nail (finger)"},{"theword":"napkin"},{"theword":"neck"},{"theword":"necklace"},{"theword":"neighborhood"},{"theword":"notebook"},{"theword":"nugget"},{"theword":"olive"},{"theword":"orange (food)"},{"theword":"oven"},{"theword":"owie"},{"theword":"pacifier"},{"theword":"painting"},{"theword":"pajamas"},{"theword":"palm"},{"theword":"panda"},{"theword":"pants"},{"theword":"paper"},{"theword":"park"},{"theword":"parking lot"},{"theword":"pastry"},{"theword":"patio"},{"theword":"peach"},{"theword":"peacock"},{"theword":"peanut"},{"theword":"peanut butter"},{"theword":"pear"},{"theword":"pencil"},{"theword":"persimmon"},{"theword":"phone"},{"theword":"piano"},{"theword":"pickle"},{"theword":"picture"},{"theword":"piglet"},{"theword":"pill"},{"theword":"pipe"},{"theword":"plant"},{"theword":"plate"},{"theword":"pocket"},{"theword":"police car"},{"theword":"pomegranate"},{"theword":"pony"},{"theword":"porch"},{"theword":"porridge"},{"theword":"pudding"},{"theword":"push"},{"theword":"puzzle"},{"theword":"rabbit"},{"theword":"radiator"},{"theword":"radish"},{"theword":"rag"},{"theword":"raincoat"},{"theword":"raspberry"},{"theword":"refrigerator"},{"theword":"remote control"},{"theword":"ribbon"},{"theword":"rice"},{"theword":"road"},{"theword":"rooster"},{"theword":"rope"},{"theword":"salt"},{"theword":"samosa"},{"theword":"sandbox"},{"theword":"sauce"},{"theword":"sausage"},{"theword":"scallion"},{"theword":"scarf"},{"theword":"sea"},{"theword":"shed"},{"theword":"ship"},{"theword":"shovel"},{"theword":"shower"},{"theword":"shrimp"},{"theword":"sidewalk"},{"theword":"skirt"},{"theword":"sled"},{"theword":"sleeve"},{"theword":"slipper"},{"theword":"smoothie"},{"theword":"snail"},{"theword":"snake"},{"theword":"sneaker"},{"theword":"snow"},{"theword":"snowsuit"},{"theword":"soap"},{"theword":"soda"},{"theword":"soil"},{"theword":"song"},{"theword":"soy milk"},{"theword":"sparrow"},{"theword":"spider"},{"theword":"spinach"},{"theword":"sponge"},{"theword":"stairs"},{"theword":"steak"},{"theword":"stick"},{"theword":"sticker"},{"theword":"stone"},{"theword":"story"},{"theword":"straw"},{"theword":"stroller"},{"theword":"sunglasses"},{"theword":"swallow (animal)"},{"theword":"sweet potato"},{"theword":"swimsuit"},{"theword":"table"},{"theword":"tablecloth"},{"theword":"tape (object)"},{"theword":"thing"},{"theword":"thumb"},{"theword":"thunder"},{"theword":"tiger"},{"theword":"tofu"},{"theword":"tongue"},{"theword":"top"},{"theword":"tortilla"},{"theword":"toy (object)"},{"theword":"traffic"},{"theword":"train"},{"theword":"trampoline"},{"theword":"trash can"},{"theword":"tray"},{"theword":"tricycle"},{"theword":"trolley"},{"theword":"tuna"},{"theword":"turkey"},{"theword":"turtle"},{"theword":"tv"},{"theword":"underpants"},{"theword":"vegetable"},{"theword":"vest"},{"theword":"video"},{"theword":"vinegar"},{"theword":"vitamin"},{"theword":"wallet"},{"theword":"washing machine"},{"theword":"watch (object)"},{"theword":"watering can"},{"theword":"whale"},{"theword":"wheel"},{"theword":"wind"},{"theword":"window"},{"theword":"wolf"},{"theword":"worm"},{"theword":"yard"},{"theword":"yogurt"},{"theword":"yogurt drink"},{"theword":"zipper"}] 
+for (let i = 0; i < words_cat3.length; ++i) {
+    var word = words_cat3[i];
+    words_array3.push(word);
+};
+
+var wordscat1= words_array3.slice(0,112);
+var wordscat2 = words_array3.slice(112,224);
+var wordscat3 = words_array3.slice(224,338);
+
+
+var arrayof_arrays_cat = [wordscat1, wordscat2, wordscat3]; 
+
+
+
+var chosenarrayindex_cat = Math.floor(Math.random() * arrayof_arrays_cat.length);
+var chosenarray_cat = arrayof_arrays_cat[chosenarrayindex_cat];
+
+
 // Shuffle the words_array to randomize the order
-shuffleArray(chosenarray);
+shuffleArray(chosenarray_cat);
 // Select the first 100 rows
-var selectedWords3 = chosenarray.slice(0, 2);
+var selectedWords3 = chosenarray_cat.slice(0, 20);
 
 const instructions_category = {
     type: jsPsychHtmlButtonResponse,
@@ -379,31 +484,31 @@ const instructions_category = {
     '<p> <font size="4"> <b>[Pen]</b> belongs to a <b>category that is organized by shape</b>. All pens have the same shape but could have different colors, or made of different materials.<font> <p>' +
     '<p> <font size="4"> Now consider the sentence: <b>“I need some water”</b>.<font> <p>' +
     '<p> <font size="4"> <b>[Water]</b> belongs to a category of entities organized by <b>material</b>. Water can be many colors and can take many shapes but it always has to be made of water.  <font> <p>'+
-    '<p> <font size="4"> Now you will be asked to make some judgments about other words and how they are organized. Some of these may be tricky, but just try your best.<font> <p>'+
-    '<p> <font size="4"> <b>Note</b>: when you see the word <b>"LAVENDER"</b> click <b>"color"</b> <font> <p>' +
-    '<p><font size="4"> Lets begin! <font> <p>' ,
+    '<p> <font size="4"> Next, you will be asked to make some judgments about other words and how they are organized. Some of these may be tricky, but just try your best.<font> <p>'+
+    '<p> <font size="4"> <b>Note</b>: when you see the word <b>"Lavender"</b> click <b>"color"</b> <font> <p>' +
+    '<p><font size="4"> Let’s begin! <font> <p>' ,
     choices: ['Continue']
 };
 //timeline.push(instructions_category);
 
-var practice_category= {
+var practice_category1= {
     timeline: [
         {
             type: jsPsychSurveyMultiChoice,
             questions: [
                 {
-                    prompt: "A square belongs to a category that is organized by",
+                    prompt: "In the sentence [this is a square table], a 'square' belongs to a category that is organized by:",
                     options: ['shape', 'material', 'color'],
                     required: true,
                 },
             ],
             on_finish: function(data) {
-                var currentWord = "A square belongs to a category that is organized by";
+                var currentWord = "In the sentence [this is a square table], a 'square' belongs to a category that is organized by:";
                 console.log("testing");
                 console.log(jsPsych.data.get().values()[2].response.Q0);
                 var response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
                 var isCorrect = response === 'shape'; 
-                var blockname = "category" ;
+                var blockname = "practice_category" ;
 
                 jsPsych.data.addDataToLastTrial({
                     theword: currentWord,
@@ -411,7 +516,39 @@ var practice_category= {
                     correct: isCorrect
                 });
 
-                var feedbackMessage = isCorrect ? "Correct!, Now let's begin" : "Incorrect! square is organized around shape, all squares are of the same shape. Now let's begin!"; 
+                var feedbackMessage = isCorrect ? "Correct! Now let's go forward!" : "Incorrect! square is organized around shape, all squares are of the same shape. Let's go forward!"; 
+                alert(feedbackMessage); 
+            } 
+        }
+    ],
+};
+
+var practice_category2= {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: "In the sentence [this is a red table], 'red' belongs to a category that is organized by:",
+                    options: ['shape', 'material', 'color'],
+                    required: true,
+                },
+            ],
+            on_finish: function(data) {
+                var currentWord = "In the sentence [this is a red table], 'red' belongs to a category that is organized by:";
+                console.log("testing");
+                console.log(jsPsych.data.get().values()[2].response.Q0);
+                var response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
+                var isCorrect = response === 'color'; 
+                var blockname = "practice_category" ;
+
+                jsPsych.data.addDataToLastTrial({
+                    theword: currentWord,
+                    theblock: blockname,
+                    correct: isCorrect
+                });
+
+                var feedbackMessage = isCorrect ? "Correct! Now let's begin" : "Incorrect! red is organized around color, red things should always be of the same color 'red'. Now let's begin!"; 
                 alert(feedbackMessage); 
             } 
         }
@@ -426,7 +563,7 @@ var block_category = {
             questions: [
                 {
                     // prompt: jsPsych.timelineVariable('uni_lemma') + 'belongs to a category that is organized by: ' ,
-                    prompt: () => `${jsPsych.timelineVariable('uni_lemma')} belongs to a category that is organized by:`,
+                    prompt: () => `${jsPsych.timelineVariable('theword')} belongs to a category that is organized by:`,
                     options: ['shape', 'color', 'material', 'none of these'],
                     required: true ,
                     add_other_option: true,
@@ -438,7 +575,7 @@ var block_category = {
         
             on_finish: function(data) {
                 // Access the value of 'uni_lemma' for the current trial
-                var currentWord = jsPsych.timelineVariable('uni_lemma');
+                var currentWord = jsPsych.timelineVariable('theword');
                 var blockname = "category_organization";
                 jsPsych.data.addDataToLastTrial({
                     theword: currentWord, 
@@ -451,7 +588,7 @@ var block_category = {
     randomize_order: true
 };
 
-var attention3 = {
+var attention_category = {
     type: jsPsychSurveyMultiChoice,
     questions: [
       {
@@ -464,7 +601,7 @@ var attention3 = {
     on_finish: function(data) {
         // Access the value of 'uni_lemma' for the current trial
         var currentWord = "lavender";
-        var blockname = "attention";
+        var blockname = "attention_category";
 
 
         jsPsych.data.addDataToLastTrial({
@@ -474,12 +611,12 @@ var attention3 = {
 
   },
 };
-console.log(jsPsych.timelineVariable('uni_lemma'));
+console.log(jsPsych.timelineVariable('theword'));
 
 //timeline.push(block_category);
 
 var category = {
-    timeline: [instructions_category,practice_category, block_category, attention3],
+    timeline: [instructions_category,practice_category1, practice_category2 ,block_category, attention_category ],
     randomization: false,
 }
 

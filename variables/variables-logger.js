@@ -13,8 +13,7 @@ const varlogschema = new mongoose.Schema( {
     study_id: String,
     session_id: String,
 }) ;
-console.log("varlogschema");
-console.log(varlogschema);
+
 
 const varlog = mongoose.model('varlog', varlogschema);
 module.exports = varlog ;

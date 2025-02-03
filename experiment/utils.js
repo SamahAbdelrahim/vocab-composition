@@ -20,8 +20,7 @@ function logExpData(data) {
         study_id: data.study_id,
         session_id: data.session_id,
     };
-    console.log("logdata from function");
-    console.log(logData);
+
     
 
     fetch('/api/log', {
@@ -36,6 +35,6 @@ function logExpData(data) {
     .then(response => response.text())
     .then(data => console.log(data))
     .catch(error => console.error('Error logging action:', error));
-    console.log("req.body");
-    console.log(body); // Log req.b
+    //console.log("req.body");
+    //console.log(body); // Log req.b
 };

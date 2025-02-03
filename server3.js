@@ -8,6 +8,21 @@ const varlog = require('./variables/variables-logger.js'); // Import the model
 const app = express();
 const port = process.env.PORT || 3002;
 
+const server = app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  });
+  
+  server.on('error', error => {
+    if (error.code === 'EADDRINUSE') {
+      console.log(`Port ${port} is in use, trying another port.`);
+      port += 1; // increment port number by one
+      server.close();
+      server.listen(port);
+    } else {
+      console.error(error);
+    }
+  });
+
 // Middleware to parse JSON
 app.use(express.json());
 
@@ -31,8 +46,7 @@ mongoose.connect(mongoDBUri)
 
 // Logging
 app.post('/api/log', (req, res) => {
-    console.log("req.body");
-    console.log(req.body); // Log req.body to check the presence of study_id, session_id, and block
+
     const { rt, trial_type, trial_index, time_elapsed, internal_node_id, subject, response, theword, block, study_id, session_id } = req.body;
   
     const newLog = new varlog({ rt, trial_type, trial_index, time_elapsed, internal_node_id, subject, response, theword , block, study_id, session_id});
