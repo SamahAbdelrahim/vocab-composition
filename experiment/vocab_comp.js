@@ -312,3 +312,5 @@ const solidity = {
     timeline: [instructions_solidity, practice_solidity1, practice_solidity2, block_solidity, attention_solidity],
     randomization: false,
 };
+
+timeline.push(solidity);
