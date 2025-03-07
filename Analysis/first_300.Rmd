@@ -1,0 +1,190 @@
+---
+title: "AOA-first300"
+author: "Samah"
+date: "2024-02-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+# remotes::install_github("langcog/wordbankr")
+library(wordbankr)
+library(jsonlite)
+
+```
+
+``` {r function for getting the first 300 words by AoA}
+
+calculate_first300 <- function(chosenlanguage) {
+  ws_data <- get_instrument_data(language = chosenlanguage,
+                                     form = "WS",
+                                     item_info = TRUE,
+                                     administration_info = TRUE)
+  
+  ws_aoa <- fit_aoa(filter(ws_data, item_kind == "word"),
+                    age_min = 16, age_max = 36)
+  
+  first_300 <- ws_aoa |>
+  filter(!is.na(aoa) & lexical_category == "nouns") |>
+  arrange(aoa) |>
+  slice(1:300) |> 
+  mutate( language = chosenlanguage)
+  
+  return(first_300)
+}
+
+#ask about using Words and gestures 
+
+
+```
+
+```{r}
+languages <- c("English (American)", "Mandarin (Beijing)", "Korean", "English (Australian)", "Cantonese", "Catalan" , "Japanese", "Turkish" , "Spanish (Mexican)", "Russian", "Kiswahili", "Mandarin (Taiwanese)", "Spanish (Peruvian)", "Spanish (European)", "Hebrew", "French (French)")
+
+# arabic, spanish chile, english uk , "Persian" , "Kigiriama", "Slovak", , "Spanish (Chilean)"
+
+```
+
+```{r}
+# Use purrr::map_df to apply the function and bind the results
+allangs <- map_df(languages, ~ calculate_first300(chosenlanguage = .x))
+
+words <- allangs %>% 
+  select(uni_lemma, language) %>% 
+  filter(!is.na(uni_lemma)) |>
+  mutate(uni_lemma = str_to_lower(uni_lemma)) |>
+  unique()
+
+toJSON(words)
+
+words |> filter( uni_lemma == "cracker")
+
+write_csv(as.data.frame(words), "alllangs.csv")
+
+korean_words <- allangs %>% 
+  filter(language == "Korean") %>%
+  select(item_definition, uni_lemma)
+write_csv(as.data.frame(korean_words), "koreanwords.csv")
+
+toJSON(as.data.frame(korean_words) %>% mutate(theword = item_definition ) %>% select(theword))
+
+```
+
+``` {r}
+
+#allnouns <- data.frame(unilemma = first_300$uni_lemma, language = first_300$lan)
+#allnouns[nrow(allnouns)+1,] <- 
+  
+# eng_ws_data <- get_instrument_data(language = "English (American)",
+#                                    form = "WS",
+#                                    item_info = TRUE,
+#                                    administration_info = TRUE)
+# 
+# eng_ws_aoa <- fit_aoa(filter(eng_ws_data, item_kind == "word"))
+# 
+# first_300 <- eng_ws_aoa |>
+#   filter(!is.na(aoa)) |>
+#   arrange(aoa) |>
+#   slice(1:300) |> 
+#   mutate( language = "English")
+
+
+```
+
+# exact aoas rather than integer aoas
+``` {r}
+fit_bglm <- function(df, max_steps = 200) {
+  model <- arm::bayesglm(cbind(num_true, num_false) ~ age,
+                         family = "binomial",
+                         prior.mean = .3,
+                         prior.scale = c(.01),
+                         prior.mean.for.intercept = 0,
+                         prior.scale.for.intercept = 2.5,
+                         prior.df = 1,
+                         data = df,
+                         maxit = max_steps)
+  intercept <- model$coefficients[["(Intercept)"]]
+  slope <- model$coefficients[["age"]]
+  tibble(intercept = intercept, slope = slope, aoa = -intercept / slope)
+}
+
+fit_aoas <- function(wb_data, max_steps = 200, min_aoa = 0, max_aoa = 72) {
+  aoas <- wb_data |>
+    mutate(num_false = total - num_true) |>
+    nest(data = -c(language, measure, uni_lemma, item_definition)) |>
+    mutate(aoas = map(data, fit_bglm)) |>
+    dplyr::select(-data) |>
+    unnest(aoas) |>
+    filter(aoa >= min_aoa, aoa <= max_aoa)
+}
+
+#aoa <- fit_aoas(wb_data)
+
+```
+
+``` {r}
+  ws_data <- get_instrument_data(language = "Mandarin (Beijing)",
+                                     form = "WS",
+                                     item_info = TRUE,
+                                     administration_info = TRUE)
+  
+  wb_data <- ws_data %>%
+  filter(item_kind == "word") %>%
+  group_by(age, uni_lemma, language, lexical_category, item_definition) %>%
+  summarise(num_true = sum(produces),
+            total = n(), 
+            item_definition = first(item_definition), # Retain one definition
+          .groups = "drop") %>%
+  mutate(measure = "produces") %>%
+  filter(!is.na(uni_lemma), lexical_category == "nouns")
+  
+  ws_aoa <- fit_aoas(wb_data)
+```
+
+``` {r}
+
+calculate_first300_aoa <- function(chosenlanguage) {
+  ws_data <- get_instrument_data(language = chosenlanguage,
+                                     form = "WS",
+                                     item_info = TRUE,
+                                     administration_info = TRUE)
+  
+  wb_data <- ws_data %>%
+  filter(item_kind == "word") %>%
+  group_by(age, uni_lemma, language, lexical_category, item_definition) %>%
+  summarise(num_true = sum(produces),
+            total = n(), 
+            item_definition = first(item_definition), # Retain one definition
+          .groups = "drop") %>%
+  mutate(measure = "produces") %>%
+  filter(!is.na(uni_lemma), lexical_category == "nouns")
+  
+  ws_aoa <- fit_aoas(wb_data)
+  
+  first_300 <- ws_aoa |>
+  filter(!is.na(aoa) ) |>
+  arrange(aoa) |>
+  slice(1:300) |> 
+  mutate( language = chosenlanguage)
+  
+  return(first_300)
+}
+
+allangs_aoa <- map_df(languages, ~ calculate_first300_aoa(chosenlanguage = .x))
+
+allangs_aoa %>% group_by(language) %>% summarize(unique_items = n_distinct(item_definition))
+
+words_aoa <- allangs_aoa %>% 
+  select(uni_lemma, language) %>% 
+  filter(!is.na(uni_lemma)) |>
+  mutate(uni_lemma = str_to_lower(uni_lemma)) |>
+  unique()
+
+words_aoa %>% group_by(language) %>% summarize(count = n())
+
+
+toJSON(words_aoa)
+
+```

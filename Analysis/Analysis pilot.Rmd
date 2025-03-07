@@ -22,6 +22,7 @@ library(here)
 library(irr)
 library(ggvenn)
 library(gridExtra)
+library(psych)
 source(here("..","helper.R"))
 ```
 
@@ -101,8 +102,9 @@ Divide the lang_df by block. shared words amongst (solidity, syntax, and categor
 solid_df <- lang_df %>% filter(response == "solid")
 count_df <- lang_df %>% filter(response == "count noun")
 shape_df <- lang_df %>% filter(response == "shape")
-```
 
+meansolid_perlanguage <- solid_df %>% group_by(language) %>% summarize(estimates = mean(proportion))
+```
 
 # Distribution plots
 
@@ -156,13 +158,37 @@ lang_df |>
            response == "shape") |>
 ggplot(aes(x = proportion, color = response, fill = response)) +
   geom_density(alpha = 0.5) +
+  geom_vline(xintercept = mean(lang_df$proportion), color = "red", linetype = "dashed") +
   facet_wrap(~ language) +
   labs(
     title = "Density of Proportions by Language",
     x = "Proportion Value",
-    y = "Density (words)"
+    y = "Density"
   ) +
   theme_minimal()
+
+
+mean_proportions <- lang_df |>
+  filter(response %in% c("solid", "count noun", "shape")) |>
+  group_by(language, response) |>
+  summarize(mean_proportion = mean(proportion, na.rm = TRUE), groups = "drop")
+
+dist <- lang_df |>
+  filter(response %in% c("solid", "count noun", "shape")) |>
+  ggplot(aes(x = proportion, color = response, fill = response)) +
+  geom_density(alpha = 0.5) +
+  geom_vline(data = mean_proportions, aes(xintercept = mean_proportion, color = response), 
+            linetype = "dashed", size = 0.3) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of Proportions by Language",
+    x = "Proportion Value",
+    y = "Density"
+  ) +
+  theme_minimal()
+
+ggsave("distribution.png", dist, width = 12, height = 8, dpi = 300)
+
 ```
 
 
@@ -328,7 +354,7 @@ pairwise_kappas <- sapply(pairs, function(pair) {
   
   #are there enough ratings to calculate kappa?
   if (nrow(ratings_pair) > 1) {
-    kappa2(as.matrix(ratings_pair[, -1]), weight = "unweighted")$value
+    suppressWarnings(kappa2(as.matrix(ratings_pair[, -1]), weight = "unweighted")$value)
   } else {
     NA 
   }
@@ -357,13 +383,84 @@ ggplot(pairwise_results, aes(x = Kappa)) +
   theme_minimal()
 
 ```
+inter-rater agreement in the word level: by word-level consensus
+``` {r}
+
+get_mode <- function(v) {
+  uniq_v <- unique(na.omit(v))
+  uniq_v[which.max(tabulate(match(v, uniq_v)))]
+}
+
+
+consensus_data <- full_data %>%
+  group_by(block, theword) %>%
+  summarise(
+    mode_rating = get_mode(response_numeric),
+    agreement_score = mean(response_numeric == mode_rating, na.rm = TRUE) * 100,
+    sd_rating = sd(response_numeric, na.rm = TRUE)
+  ) 
+
+
+ggplot(consensus_data, aes(x = sd_rating, y = agreement_score, color = block)) +
+  geom_point(size = 3, alpha = 0.7) +
+  labs(title = "Agreement Score vs. Rating Standard Deviation", x = "Standard Deviation of Ratings", y = "Agreement Score (%)") +
+  theme_minimal() +
+  scale_color_brewer(palette = "Set3")
+
+```
+ incorporating rater count into the plot
+```{r}
+
+consensus_data <- full_data %>%
+  group_by(block, theword) %>%
+  summarise(
+    mode_rating = get_mode(response_numeric),
+    agreement_score = mean(response_numeric == mode_rating, na.rm = TRUE) * 100,
+    sd_rating = sd(response_numeric, na.rm = TRUE),
+    rater_count = n() 
+  )
+
+
+# rater count as point size
+agreementword <- ggplot(consensus_data, aes(x = sd_rating, y = agreement_score, color = block, size = rater_count)) +
+  geom_point(alpha = 0.7) +
+  labs(
+    title = "Agreement Score vs. Rating Standard Deviation with Rater Count",
+    x = "Standard Deviation of Ratings",
+    y = "Agreement Score (%)",
+    size = "Rater Count"
+  ) +
+  theme_minimal() +
+  scale_color_brewer(palette = "Set3")
+
+ggsave("wordagreement.png", agreementword)
+
+```
+
+``` {r}
+ggplot(consensus_data, aes(x = reorder(theword, -agreement_score), y = agreement_score, fill = block)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Agreement Score by Word and Block", x = "Word", y = "Agreement Score (%)") +
+  coord_flip() +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set3") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+ggplot(word_agreement, aes(x = agreement_score)) +
+  geom_histogram(binwidth = 0.1, fill = "blue", color = "black") +
+  labs(title = "Distribution of Word-Level Agreement Scores",
+       x = "Agreement Score (SD of Ratings)",
+       y = "Frequency")
+
+```
 
 # Venn diagram
 
 Try to get a venn diagram-type representation. 
 
 ```{r}
-threshold <- .5
+threshold <- .7
 
 category_thresholds <- category_counts |>
   filter(response %in% c("solid","count noun","shape")) |>
@@ -384,8 +481,8 @@ One example.
 eng <- filter(category_overlap, language == "English (American)") |>
   select(-language) |>
   filter(!is.na(count_noun))
-ggvenn(eng, c("count_noun","solid","shape"))
-```
+ggvenn(eng, show_elements = TRUE, c("count_noun","solid","shape"))
+``` 
 Lots of plots. 
 
 ```{r}
@@ -394,20 +491,60 @@ venns <- category_overlap |>
   nest() |>
   mutate(plot = map(data, ~ggvenn(.x, c("count_noun","solid","shape"),
                                   show_percentage = FALSE, 
-                                  text_size = 3,
-                                  set_name_size = 3)
+                                  text_size = 2,
+                                  set_name_size = 2)
                     + ggtitle(language))) |>
   pull(plot)
 
 grid.arrange(grobs = venns, ncol = 4)
+
+```
+venn diagram: 
+```{r}
+
+# Define and generate the Venn diagrams with adjusted aesthetics
+venns <- category_overlap |>
+  group_by(language) |>
+  nest() |>
+  mutate(plot = map(data, ~ggvenn(.x, c("count_noun", "solid", "shape"),
+                                  show_percentage = FALSE, 
+                                  text_size = 7,       # Smaller text size for numbers
+                                  set_name_size = 3) # Smaller text size for set names
+                    + ggtitle(unique(language))    # Use language as the title
+                    + theme(
+                        plot.title = element_text(size = 10, hjust = 0.5),   # Adjust title size
+                        plot.margin = margin(2, 2, 2, 2)                     # Adjust margins
+                    ))) |>
+  pull(plot)
+
+# Define number of columns
+ncol <- 4
+# Dynamically determine number of rows
+nrow <- ceiling(length(venns) / ncol)
+
+# Arrange and save with specified layout
+venn_grid <- grid.arrange(grobs = venns, ncol = ncol, nrow = nrow)
+ggsave("venn_grid.png", venn_grid, width = 16, height = 16, dpi = 300)
+
 ```
 
+``` {r}
 
+# Group data by word and count_noun, shape, and solid properties, retaining languages where overlaps occur
+overlap_df <- category_overlap %>%
+  group_by(word, count_noun, shape, solid) %>%
+  filter(n() > 1) %>%  # Only include words that overlap across languages
+  ungroup()
 
+# Expand rows so that each word-language combination appears separately
+expanded_overlap_df <- overlap_df %>%
+  select(word, count_noun, shape, solid, language) %>%
+  distinct()  # Ensure unique word-language combinations
 
+# Display the result
+expanded_overlap_dfe
 
-
-
+```
 
 ```{r}
 inner_join(solid_df %>% filter(proportion <= 0.5), 
@@ -459,6 +596,40 @@ results <- comparison_combinations %>%
 results %>% group_by(source1, source2, condition1, condition2) %>% summarize(count = n())
 ```
 
+# correspondence: uisng lms and correlations
+
+``` {r }
+correspodence_date <-  category_counts %>%
+  filter(response %in% c("solid", "shape", "count noun")) %>%  # Filter only the desired responses
+  select(word, response, proportion) %>%  # Keep only relevant columns
+  pivot_wider(names_from = response, values_from = proportion, values_fill = 0)  # Reshape
+
+summary(lm(data = correspodence_date, solid ~ `count noun`))
+summary(lm(data = correspodence_date,  `count noun` ~ solid))
+
+correspodence_date %>% select(`count noun`, shape, solid) %>% corr.test()
+
+
+
+```
+
+correlation
+``` {r }
+category_overlap %>% select(count_noun, shape, solid) %>% corr.test()
+
+```
+multivariarte model:
+``` {r }
+multivariable_model <- lm(shape ~ `count noun` + solid, data = correspodence_date)
+summary(multivariable_model)
+
+interaction_model <- lm(shape ~ `count noun` * solid, data = correspodence_date)
+summary(interaction_model)
+
+```
+
+
+# more plot
 randomly sample 50 words: 
 
 ``` {r}
@@ -519,4 +690,26 @@ ggplot(randm_solid, aes(x = word, y = proportion, fill = response)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 # rotate x-axis text for better readability
 
+```
+
+#MA estimates
+``` {r}
+MA_estimates <- tibble(
+  language = c("Mandarin (Beijing)", "English (American)", "Spanish (Mexican)", "Korean", "Japanese"),
+estimates = c(0.8260, 1.0327,2.4976,1.682 ,1.1436), 
+se = c(0.8389, 0.8477	, 1.1928	,  0.9035	, 0.9251)
+  
+)
+
+MA_estimates <- left_join(MA_estimates, meansolid_perlanguage, by= "language")
+
+ggplot(MA_estimates, aes(x = estimates.y, y = estimates.x, color = language)) +
+  geom_point(size = 1) +
+  geom_errorbar(aes(ymin = estimates.x - se, ymax = estimates.x + se), width = 0.001) + 
+
+  labs(
+    x = "Solidity Proportion",
+    y = "Meta-analytic estimates"
+  ) +
+  theme_minimal()
 ```
