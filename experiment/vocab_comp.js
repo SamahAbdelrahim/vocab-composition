@@ -1,5 +1,11 @@
+
+import { words_array } from "./words.js";
+
+console.log(words_array);  
+
 var jsPsych = initJsPsych({
     use_webaudio: false,
+    override_safe_mode: true,
     on_finish: function(data){
         console.log("starting")
         jsPsych.data.displayData();
@@ -17,7 +23,7 @@ var jsPsych = initJsPsych({
         Promise.all(all_trials.map(trial => logExpData(trial)))
             .then(() => {
                 console.log("All data logged, redirecting...");
-                window.location.href = "https://app.prolific.com/submissions/complete?cc=C1O4GW39";
+                //window.location.href = "https://app.prolific.com/submissions/complete?cc=C1O4GW39";
             })
             .catch(error => {
                 console.error("Failed to log all data", error);
@@ -29,19 +35,9 @@ var jsPsych = initJsPsych({
 
 let timeline = [];
 
-const words = [
-    {"uni_lemma": "banana"}, {"uni_lemma": "shoe"}, {"uni_lemma": "bird"},
-    {"uni_lemma": "cat"}, {"uni_lemma": "duck"}, {"uni_lemma": "car"},
-    {"uni_lemma": "eye"}, {"uni_lemma": "nose"}, {"uni_lemma": "kitty"},
-    {"uni_lemma": "balloon"}, {"uni_lemma": "bubbles"}, {"uni_lemma": "apple"},
-    {"uni_lemma": "cheese"}, {"uni_lemma": "cookie"}, {"uni_lemma": "milk"},
-    {"uni_lemma": "lighter"}, {"uni_lemma": "play pen"}, {"uni_lemma": "tablecloth"},
-    {"uni_lemma": "overalls"}
-]; // Replace with 748 words
+//const words_array = words.map(w => w.uni_lemma);
 
-const words_array = words.map(w => w.uni_lemma);
-
-// Function to shuffle an array using Fisher-Yates algorithm
+// Function to shuffle an array using the Fisher-Yates algorithm
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -49,17 +45,28 @@ function shuffleArray(array) {
     }
 }
 
-// Split the words into roughly equal groups
+// Shuffle the full word array first to ensure randomness across all words
+shuffleArray(words_array);
+
+// Split the shuffled words into roughly equal groups
 const numGroups = 3;
 const groupSize = Math.ceil(words_array.length / numGroups);
 const wordGroups = Array.from({ length: numGroups }, (_, i) => 
     words_array.slice(i * groupSize, (i + 1) * groupSize)
 );
 
-// Select a random group, shuffle it, and pick 20 words
-const chosenArray = wordGroups[Math.floor(Math.random() * numGroups)];
-shuffleArray(chosenArray);
-const selectedWords = chosenArray.slice(0, 20);
+// Randomly select one group
+const chosenGroup = wordGroups[Math.floor(Math.random() * numGroups)];
+
+// Shuffle the selected group (extra randomization within the chosen group)
+shuffleArray(chosenGroup);
+
+// Pick 20 random words from the selected group
+const selectedWords = chosenGroup.slice(0, 20);
+const selectedWords3 = [...selectedWords]; 
+
+
+console.log(words_array);
 
 console.log(selectedWords);
 
@@ -86,7 +93,7 @@ const trial1 = {
 
 timeline.push(trial1);
 
-console.log("Logging Variables");
+console.log("Logging Variables 1");
 
 // Opening instructions
 const opening = {
@@ -209,52 +216,31 @@ const practice_solidity2 = generatePracticeTrial(
 
 //--------------------------------------------------------------------------------------------
 // Define the main experiment trials
-// Function to create a formatted solidity trial
-const generateSolidityTrial = (prompt) => {
-    return {
-        timeline: [
-            {
-                type: jsPsychSurveyMultiChoice,
-                questions: [
-                    {
-                        prompt: `<div style="font-size: 22px; text-align: center; max-width: 700px; margin: auto;">${prompt}</div>`,
-                        options: ['solid', 'non-solid', 'unclear/unknown'],
-                        required: true,
-                    }
-                ],
-                data: { word: prompt },
-            },
-            {
-                type: jsPsychHtmlButtonResponse,
-                stimulus: function () {
-                    let currentWord = jsPsych.timelineVariable('uni_lemma');
-                    let response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
-                    let blockname = "solidity";
-
-                    jsPsych.data.addDataToLastTrial({
-                        theword: currentWord,
-                        theblock: blockname,
-                    });
-
-                    return `
-                        <div style="text-align: center; font-size: 22px; max-width: 700px; margin: auto; padding: 20px; 
-                                    border-radius: 10px; background-color: #f0f0f0; color: #333;">
-                            <p><b>You selected:</b> ${response}</p>
-                            <p>Click "Next" to continue.</p>
-                        </div>
-                    `;
-                },
-                choices: ['Next'],
-                button_html: '<button class="jspsych-btn" style="font-size: 18px; padding: 10px 20px; margin-top: 10px;">%choice%</button>'
-            }
-        ],
-    };
-};
-
-// Generate the main solidity trials
 const block_solidity = {
-    timeline: [generateSolidityTrial(jsPsych.timelineVariable('uni_lemma'))],
-    timeline_variables: selectedWords,
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: function() { 
+                        return jsPsych.timelineVariable('uni_lemma'); // Ensures the variable is properly retrieved
+                    },
+                    options: ['solid', 'non-solid', 'unclear/unknown'],
+                    required: true,
+                }
+            ],
+            on_finish: function(data) {
+                var currentWord = jsPsych.timelineVariable('uni_lemma'); // Correctly access the variable
+                var blockname = "solidity";
+
+                jsPsych.data.addDataToLastTrial({
+                    theword: currentWord,
+                    theblock: blockname,
+                });
+            }
+        }
+    ],
+    timeline_variables: selectedWords, // Ensure this is an array of objects like [{ uni_lemma: "word1" }, { uni_lemma: "word2" }]
     randomize_order: true
 };
 
@@ -287,18 +273,6 @@ const attention_solidity = {
                     theword: "purple",
                     theblock: "attention_solidity",
                 });
-
-                return `
-                    <div style="text-align: center; font-size: 22px; max-width: 700px; margin: auto; padding: 20px; 
-                                border-radius: 10px; background-color: ${isCorrect ? '#d4edda' : '#f8d7da'}; 
-                                color: ${isCorrect ? '#155724' : '#721c24'};">
-                        <p><b>${isCorrect ? 'Correct!' : 'Incorrect!'}</b></p>
-                        <p>${isCorrect ? 
-                            'You correctly identified <span style="color: purple;"><b>purple</b></span> as solid.' : 
-                            'Remember: when you see <span style="color: purple;"><b>purple</b></span>, click "solid".'}
-                        </p>
-                    </div>
-                `;
             },
             choices: ['Next'],
             button_html: '<button class="jspsych-btn" style="font-size: 18px; padding: 10px 20px;">%choice%</button>'
@@ -313,4 +287,171 @@ const solidity = {
     randomization: false,
 };
 
-timeline.push(solidity);
+// -----------------------------------------------------------------------------------------------//
+
+const instructions_category = {
+    timeline: [
+        {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+            <div style="text-align: center; max-width: 700px; margin: auto; font-size: 18px; line-height: 1.6;">
+                <p>One judgment in this task is about <b>word category</b>.</p>
+                
+                <p>For example, consider the sentence:</p>
+                <p><b>"I need several pens."</b></p>
+                <p>In this sentence, <b>pen</b> belongs to a <b>category that is organized by shape</b>. All pens have the same shape but could have different colors or be made of different materials.</p>
+                
+                <p>Now, think about the sentence:</p>
+                <p><b>"I need some water."</b></p>
+                <p>Here, <b>water</b> belongs to a <b>category that is organized by material</b>. Water can be many colors and take many shapes, but it is always made of water.</p>
+                
+                <p>Next, we’d like you to judge how other words are organized.</p>
+
+                <p><b>Note:</b> When you see the word <b style="color: purple; background-color: lavender;">"Lavender"</b>, always click <b>"Color"</b>.</p>
+
+                <p style="margin-top: 20px; font-weight: bold;">Let’s begin!</p>
+            </div>`,
+            choices: ['Continue'],
+            button_html: '<button class="jspsych-btn" style="font-size: 20px; padding: 12px 24px; margin: 10px;">%choice%</button>'
+        }
+    ]
+};
+
+
+// Practice trial 1
+const generatePracticeCategoryTrial = (prompt, correctAnswer, feedbackCorrect, feedbackIncorrect, theword) => {
+    return {
+        timeline: [
+            {
+                type: jsPsychSurveyMultiChoice,
+                questions: [
+                    {
+                        prompt: `<div style="font-size: 20px; text-align: center; max-width: 700px; margin: auto;">${prompt}</div>`,
+                        options: ['shape', 'material', 'color'],
+                        required: true,
+                    }
+                ],
+                data: { correct_answer: correctAnswer, theword: theword, theblock: "practice_category" },
+            },
+            {
+                type: jsPsychHtmlButtonResponse,
+                stimulus: function () {
+                    let lastResponse = jsPsych.data.getLastTrialData().values()[0].response.Q0;
+                    let correctAnswer = jsPsych.timelineVariable('correct_answer');
+                    let isCorrect = lastResponse === correctAnswer;
+                    
+                    jsPsych.data.addDataToLastTrial({ correct: isCorrect });
+
+                    return `
+                        <div style="text-align: center; font-size: 22px; max-width: 700px; margin: auto; padding: 20px; 
+                                    border-radius: 10px; background-color: ${isCorrect ? '#d4edda' : '#f8d7da'}; 
+                                    color: ${isCorrect ? '#155724' : '#721c24'};">
+                            <p><b>${isCorrect ? 'Correct!' : 'Incorrect!'}</b></p>
+                            <p>${isCorrect ? feedbackCorrect : feedbackIncorrect}</p>
+                        </div>
+                    `;
+                },
+                choices: ['Continue'],
+                button_html: '<button class="jspsych-btn" style="font-size: 18px; padding: 10px 20px; margin-top: 10px;">%choice%</button>'
+            }
+        ],
+        timeline_variables: [{ correct_answer: correctAnswer }]
+    };
+};
+
+// Define the two practice category trials
+const practice_category1 = generatePracticeCategoryTrial(
+    "In the sentence [This is a square table], 'square' belongs to a category that is organized by:",
+    "shape",
+    "Correct! Now let's go forward!",
+    "Incorrect! 'Square' is organized around shape. All squares have the same shape. Let's go forward!",
+    "square"
+);
+
+const practice_category2 = generatePracticeCategoryTrial(
+    "In the sentence [This is a red table], 'red' belongs to a category that is organized by:",
+    "color",
+    "Correct! Now let's begin!",
+    "Incorrect! 'Red' is organized around color. Red things always have the same color 'red'. Now let's begin!",
+    "red"
+);
+
+// Define the main category trials
+const block_category = {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: function() { 
+                        return `<div style="font-size: 22px; text-align: center; max-width: 700px; margin: auto;">
+                                    <b>${jsPsych.timelineVariable('uni_lemma')}</b> belongs to a category that is organized by:
+                                </div>`;
+                    },
+                    options: ['shape', 'color', 'material', 'none of these'],
+                    required: true,
+                    add_other_option: true,
+                }
+            ],
+            on_finish: function(data) {
+                var currentWord = jsPsych.timelineVariable('uni_lemma');
+                jsPsych.data.addDataToLastTrial({
+                    theword: currentWord,
+                    theblock: "category_organization",
+                });
+            }
+        }
+    ],
+    timeline_variables: selectedWords3, // Ensure this is an array of objects like [{ uni_lemma: "word1" }, { uni_lemma: "word2" }]
+    randomize_order: true
+};
+
+
+// Attention check with feedback
+const attention_category = {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: `
+                        <div style="font-size: 22px; text-align: center; max-width: 700px; margin: auto;">
+                            <span style="background-color: lavender; color: purple; padding: 3px 6px; border-radius: 5px;">
+                                lavender
+                            </span> belongs to a category that is organized by:
+                        </div>
+                    `,
+                    options: ['shape', 'color', 'material', 'none of these'],
+                    required: true,
+                }
+            ],
+            data: { word: "lavender" },
+        },
+        {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: function () {
+                let response = jsPsych.data.getLastTrialData().values()[0].response.Q0;
+                let isCorrect = response === 'color';
+
+                jsPsych.data.addDataToLastTrial({
+                    correct: isCorrect,
+                    theword: "lavender",
+                    theblock: "attention_category",
+                });
+            },
+            choices: ['Continue'],
+            button_html: '<button class="jspsych-btn" style="font-size: 18px; padding: 10px 20px; margin-top: 10px;">%choice%</button>'
+        }
+    ]
+};
+
+// Full Category Block
+const category = {
+    timeline: [instructions_category, practice_category1, practice_category2, block_category, attention_category],
+    randomization: false,
+};
+
+timeline.push(category)
+//-----------------------------------------------------------------------------------------------//
+
+jsPsych.run(timeline);
