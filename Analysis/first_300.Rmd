@@ -184,7 +184,28 @@ words_aoa <- allangs_aoa %>%
 
 words_aoa %>% group_by(language) %>% summarize(count = n())
 
+# how many overlap in the uni_lemma column is in words_aoa %>% group_by(language) %>% summarize(count = n())
+
+word_overlap <- words_aoa %>%
+  group_by(uni_lemma) %>%
+  summarize(n_languages = n_distinct(language))
+
+overlap_count <- word_overlap %>%
+  filter(n_languages > 1) %>%
+  nrow()
+
+word_overlap_1 <- words %>%
+  group_by(uni_lemma) %>%
+  summarize(n_languages = n_distinct(language))
+
+overlap_count_1 <- word_overlap_1 %>%
+  filter(n_languages > 1) %>%
+  nrow()
+
 
 toJSON(words_aoa)
+
+# writing into JSON file 
+write(toJSON(words_aoa), "result.json") 
 
 ```

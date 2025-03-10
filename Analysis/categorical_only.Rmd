@@ -1,0 +1,23 @@
+# Preprocessing 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(jsonlite)
+library(tidyverse)
+library(purrr)
+library(ggrepel)
+library(here)
+library(irr)
+library(ggvenn)
+library(gridExtra)
+library(psych)
+source(here("..","helper.R"))
+```
+
+Read in correct data. 
+
+```{r}
+# pilot_data = read_csv("samah.varlogs.pilot.csv")
+# full_data1 = read_csv("samah.varlogs.csv")
+full_data = read_csv("redo.csv")
+```
