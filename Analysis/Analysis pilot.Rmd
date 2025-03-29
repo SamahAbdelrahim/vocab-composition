@@ -13,7 +13,7 @@ To do items:
 # Preprocessing 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(echo = TRUE)
 library(jsonlite)
 library(tidyverse)
 library(purrr)
@@ -31,7 +31,7 @@ Read in correct data.
 ```{r}
 # pilot_data = read_csv("samah.varlogs.pilot.csv")
 # full_data1 = read_csv("samah.varlogs.csv")
-full_data = read_csv("redo.csv")
+full_data = read_csv(here("data", "redo.csv"))
 ```
 
 Apply the helper function to the jsonData column
@@ -58,7 +58,7 @@ full_data %>% group_by(word, block) %>% summarize( count = n()) %>% ungroup() %>
 Read in language data. 
 
 ```{r}
-word_language_mappings <- read_csv("alllangs.csv") %>% 
+word_language_mappings <- read_csv(here("data", "alllangs.csv")) %>% 
   filter(!is.na(uni_lemma))  %>% 
   mutate(word = uni_lemma) %>%
   select(word, language)

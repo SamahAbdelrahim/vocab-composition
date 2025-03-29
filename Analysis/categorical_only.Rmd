@@ -1,3 +1,5 @@
+# redo with longer forms and categorical only, March 9 2025
+
 # Preprocessing 
 
 ```{r setup, include=FALSE}
@@ -17,7 +19,87 @@ source(here("..","helper.R"))
 Read in correct data. 
 
 ```{r}
-# pilot_data = read_csv("samah.varlogs.pilot.csv")
-# full_data1 = read_csv("samah.varlogs.csv")
-full_data = read_csv("redo.csv")
+#categorical_df = read_csv(here("data", "samah.categories.csv"))
+categorical_df = read_csv(here("data", "samah.categories2.csv"))
+
+lang_df = read_csv(here("data", "wordsaoa.csv"))
+
+
+df <- categorical_df %>% filter(block == "category_organization")
+df$word <- df$theword
+
+lang_df <- lang_df %>%filter(!is.na(uni_lemma)) %>% 
+  mutate(word = uni_lemma) %>%
+  select(word, language)
+```
+
+``` {r}
+df <- df %>% group_by(word) %>%
+  mutate(totcount = n()) %>% ungroup()
+```
+
+``` {r}
+df$response <- sapply(df$response, extractValue)
+
+df <- df %>% filter(!is.na(word))
+
+# Apply the mapping function in helper.R to the response column
+categorical_map <- c("color" = 3, "material" = 2, "shape" = 1, "none of these" = 4)
+
+df$response_numeric <- categorical_map[df$response]
+
+```
+
+``` {r}
+# how many ratings per response per block
+props <- df %>%
+  group_by(word, response, totcount) %>%
+  summarise(count = n(), .groups = 'drop') 
+
+
+props <- props %>%
+  mutate(proportion = count/totcount)
+```
+
+with language
+``` {r}
+props <- full_join(props, lang_df) %>% 
+  filter( !is.na(word), !is.na(language))
+```
+
+```{r}
+props |>
+ggplot(aes(x = proportion, color = response, fill = response)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ language) +
+  labs(
+    title = "Density of Proportions by Language",
+    x = "Proportion Value",
+    y = "Density (words)"
+  ) +
+  theme_minimal()
+```
+
+interrater agreement
+``` {r}
+get_mode <- function(v) {
+  uniq_v <- unique(na.omit(v))
+  uniq_v[which.max(tabulate(match(v, uniq_v)))]
+}
+
+
+consensus_data <- df %>%
+  group_by(block, word) %>%
+  summarise(
+    mode_rating = get_mode(response_numeric),
+    agreement_score = mean(response_numeric == mode_rating, na.rm = TRUE) * 100,
+    sd_rating = sd(response_numeric, na.rm = TRUE)
+  ) 
+
+
+ggplot(consensus_data, aes(x = sd_rating, y = agreement_score, color = block)) +
+  geom_point(size = 3, alpha = 0.7) +
+  labs(title = "Agreement Score vs. Rating Standard Deviation", x = "Standard Deviation of Ratings", y = "Agreement Score (%)") +
+  theme_minimal() +
+  scale_color_brewer(palette = "Set3")
 ```

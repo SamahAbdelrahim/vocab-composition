@@ -1,0 +1,144 @@
+Analyze the korean data from jongmin
+
+# Preprocessing 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(jsonlite)
+library(tidyverse)
+library(purrr)
+library(ggrepel)
+library(here)
+library(irr)
+library(ggvenn)
+library(gridExtra)
+library(psych)
+source(here("..","helper.R"))
+```
+
+```{r}
+korean_df = read_csv(here("data", "jongmin.csv"))
+
+korean_df_long <- korean_df %>%
+  pivot_longer(cols = -c("Category", "Word"), names_to = "subject", values_to = "response") %>%
+  mutate(
+    count_mass = ifelse(response %in% c("Can be counted.", "I don't know/It's hard to say", "Cannot be counted."), response, NA),
+    category_organization = ifelse(str_detect(response, "Form|Color|Material|Not applicable"), response, NA),
+    solidity = ifelse(response %in% c("Solid", "Not a solid", "I don't know/It's hard to say"), response, NA), 
+    trash = ifelse(is.na(count_mass) & is.na(category_organization) & is.na(solidity), response, NA)
+  ) %>%
+  select(-response) %>% 
+  pivot_longer(cols = c(count_mass, category_organization, solidity), names_to = "block", values_to = "response") %>%
+  drop_na(response)  
+  
+```
+```{r}
+# Apply the mapping function in helper.R to the response column
+categorical_map <- c("Color" = 3, "Material" = 2, "Form" = 1, "Not applicable" = 4)
+
+korean_df_long$response_numeric <- categorical_map[korean_df_long$response]
+```
+
+```{r}
+korean_df_long <- korean_df_long %>% group_by(Word, block) %>%
+  mutate(totcount = n()) %>% ungroup()
+
+```
+ reframe instead of summarize !!!!
+```{r}
+props <- korean_df_long %>%
+  group_by(Word, block, response, totcount) %>%
+  reframe(proportion = n()/totcount, ) %>%
+  mutate(proportion = as.numeric(proportion))
+
+props <- props %>%
+  filter(!is.na(proportion), is.finite(proportion))
+
+```
+cleaning responses
+```{r}
+props <- props %>%
+  mutate(
+    response = str_trim(response),  # Remove leading/trailing spaces
+    response = str_replace_all(response, "\\.$", ""),  # Remove trailing dots
+    response = str_replace_all(response, "해당사항 없음", "Not applicable"),  # Standardize
+    response = case_when(
+      response %in% c("Not applicable.", "Not applicable") ~ "Not applicable",
+      response %in% c("Material, Not applicable.", "Material, Not applicable") ~ "Material, Not applicable",
+      response %in% c("Form, Material, Not applicable.", "Form, Material, Not applicable") ~ "Form, Material, Not applicable",
+      response == "Form, Color, Material, 해당사항 없음" ~ "Form, Color, Material, Not applicable",
+      TRUE ~ response  # Keep everything else unchanged
+    )
+  )
+
+unique(props$response)
+```
+
+# category
+
+```{r}
+props %>%
+  filter(block == "category_organization") %>%
+  group_by(response) %>%
+  summarize(n = n()) %>%
+  print()
+```
+
+```{r}
+suppressWarnings({
+    props %>%
+      filter(block == "category_organization") %>%
+      ggplot(aes(x = proportion, color = response, fill = response)) +
+      geom_histogram(alpha = 0.5) +
+      labs(
+        title = "Density of Proportions",
+        x = "Proportion Value",
+        y = "Density (words)"
+      ) +
+      scale_fill_discrete(name = "Response") +
+      scale_color_discrete(name = "Response")+
+      theme_minimal(base_size = 14) +
+      theme(legend.position = "top")
+
+  })
+
+```
+# solidity
+```{r}
+  suppressWarnings({
+    props %>%
+      filter(block == "solidity") %>%
+      ggplot(aes(x = proportion, color = response, fill = response)) +
+      geom_histogram(alpha = 0.5) +
+      labs(
+        title = "Density of Proportions",
+        x = "Proportion Value",
+        y = "Density (words)"
+      ) +
+      scale_fill_discrete(name = "Response") +
+      scale_color_discrete(name = "Response")+
+      theme_minimal(base_size = 14) +
+      theme(legend.position = "top")
+
+  })
+```
+
+#countability i.e. count mass
+```{r}
+  suppressWarnings({
+    props %>%
+      filter(block == "count_mass") %>%
+      ggplot(aes(x = proportion, color = response, fill = response)) +
+      geom_histogram(alpha = 0.5) +
+      labs(
+        title = "Density of Proportions",
+        x = "Proportion Value",
+        y = "Density (words)"
+      ) +
+      scale_fill_discrete(name = "Response") +
+      scale_color_discrete(name = "Response")+
+      theme_minimal(base_size = 14) +
+      theme(legend.position = "top")
+
+  })
+```
